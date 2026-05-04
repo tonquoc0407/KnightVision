@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+.mypy_cache/
+.pyre/
+
+# Data lake and generated artifacts
+data/
+*.duckdb
+*.duckdb.wal
+*.parquet
+*.pgn.zst
+*.zst
+*.crc
+_SUCCESS
+._SUCCESS.crc
+warehouse/*.duckdb
+warehouse/*.duckdb.wal
+
+# Airflow
+airflow_logs/
+orchestration/logs/
+orchestration/airflow_logs/
+
+# dbt
+target/
+dbt_packages/
+logs/
+analytics/dbt/target/
+analytics/dbt/dbt_packages/
+analytics/dbt/logs/
+analytics/dbt/.user.yml
+
+# Notebooks and local tooling
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+.env
+.env.*
+.codex
+.codex/
+.agents/
+
+# Local planning/status notes not intended for GitHub
+/DATA_QUALITY.md
+/PREPARE.MD
+/PROJECT.MD
+/PROGRESS_*.MD
+/STATUS.MD
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local runtime output
+*.log
+spark-warehouse/
+metastore_db/
+
+# Generated ML rows with public player identifiers
+models/player_style_clusters/cluster_assignments.csv

@@ -1,0 +1,20 @@
+services:
+  duckdb:
+    image: python:3.11-slim
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: tail -f /dev/null
+
+  streamlit:
+    image: python:3.11-slim
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    ports:
+      - "8501:8501"
+    command: >
+      sh -c "pip install -r requirements.txt &&
+             streamlit run dashboard/app.py --server.address=0.0.0.0"
+    profiles:
+      - dashboard

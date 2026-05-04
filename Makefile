@@ -1,0 +1,164 @@
+SHELL := /bin/bash
+MONTH ?= 2024-01
+UV ?= uv
+UV_CACHE_DIR ?= /tmp/uv-cache
+UV_PYTHON_INSTALL_DIR ?= /tmp/uv-python
+UV_LINK_MODE ?= copy
+UV_RUN := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11
+PYTHON ?= env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN) python
+DBT ?= $(UV_RUN) dbt
+STREAMLIT ?= $(UV_RUN) streamlit
+DBT_DIR ?= analytics/dbt
+AIRFLOW_COMPOSE ?= orchestration/docker-compose.airflow.yml
+RAW_DUMP ?= data/raw/lichess_db_standard_rated_$(MONTH).pgn.zst
+LANDING_GAMES ?= data/landing/games/$(MONTH)
+QUALITY_DIR ?= data/quality/$(MONTH)
+SAMPLE_MONTH ?= 2024-01
+SAMPLE_ROOT ?= data/sample
+SAMPLE_PGN ?= fixtures/sample_lichess.pgn
+SAMPLE_ECO ?= fixtures/eco_sample.csv
+SAMPLE_DB ?= warehouse/knightvision_sample.duckdb
+SAMPLE_QUALITY_DIR ?= $(SAMPLE_ROOT)/quality
+DUCKDB_PATH ?= warehouse/knightvision.duckdb
+STOCKFISH_PATH ?=
+BLUNDER_FRACTION ?= 0.01
+BLUNDER_MAX_GAMES ?= 1000
+BLUNDER_MAX_PLIES ?= 80
+BLUNDER_DEPTH ?= 12
+BLUNDER_THRESHOLD_CP ?= 200
+BLUNDER_INPUT ?= data/gold/blunder_positions
+SAMPLE_BLUNDER_INPUT ?= $(SAMPLE_ROOT)/gold/blunder_positions
+MODEL_DUCKDB ?= warehouse/knightvision_benchmark.duckdb
+MODEL_OUTPUT_DIR ?= models/blunder_predictor
+OPENING_MODEL_DUCKDB ?= warehouse/knightvision_benchmark.duckdb
+OPENING_MODEL_OUTPUT_DIR ?= models/opening_outcome
+PLAYER_STYLE_DUCKDB ?= warehouse/knightvision_benchmark.duckdb
+PLAYER_STYLE_OUTPUT_DIR ?= models/player_style_clusters
+PLAYER_STYLE_MIN_GAMES ?= 10
+PLAYER_STYLE_CLUSTERS ?= 5
+
+.PHONY: help setup install format lint test demo download parse bronze silver quality gold blunders sample-blunders train-blunder-model train-opening-outcome cluster-player-styles warehouse dbt-run dbt-test dbt-docs sample-dbt pipeline sample-pipeline dashboard dashboard-sample airflow-up airflow-down airflow-logs clean
+
+help:
+	@printf "KnightVision targets:\n"
+	@printf "  make setup                Install Python 3.11 dependencies with uv\n"
+	@printf "  make demo                 Run sample pipeline and sample dbt checks\n"
+	@printf "  make dashboard-sample     Open dashboard on the sample warehouse\n"
+	@printf "  make test                 Run tests with Spark env isolation\n"
+	@printf "  make download MONTH=YYYY-MM\n"
+	@printf "  make parse MONTH=YYYY-MM\n"
+	@printf "  make pipeline MONTH=YYYY-MM\n"
+	@printf "  make sample-pipeline       Run deterministic fixture pipeline\n"
+	@printf "  make blunders STOCKFISH_PATH=/path/to/stockfish\n"
+	@printf "  make sample-blunders STOCKFISH_PATH=/path/to/stockfish\n"
+	@printf "  make train-blunder-model Train XGBoost model from benchmark Stockfish rows\n"
+	@printf "  make train-opening-outcome Train XGBoost opening outcome models\n"
+	@printf "  make cluster-player-styles Train unsupervised player style clusters\n"
+	@printf "  make warehouse            Refresh DuckDB views over lake Parquet\n"
+	@printf "  make dbt-run && make dbt-test\n"
+	@printf "  make dbt-docs              Generate dbt lineage docs\n"
+	@printf "  make airflow-up           Start local Airflow on localhost:8080\n"
+
+setup:
+	UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) sync --python 3.11 --extra dev
+
+install:
+	$(MAKE) setup
+
+format:
+	$(UV_RUN) ruff format .
+
+lint:
+	$(UV_RUN) ruff check .
+
+test:
+	env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN) python -m pytest -q
+
+demo: sample-pipeline sample-dbt
+
+download:
+	$(PYTHON) -m ingestion.downloader --month $(MONTH) --output-dir data/raw
+
+parse:
+	$(PYTHON) -m ingestion.pgn_parser --input $(RAW_DUMP) --output $(LANDING_GAMES) --batch-id $(MONTH) --metrics-output $(QUALITY_DIR)/parser_metrics.json
+
+bronze:
+	$(PYTHON) -m pipeline.bronze.ingest --input $(LANDING_GAMES) --output data/bronze/games --metrics-output $(QUALITY_DIR)/bronze_metrics.json
+
+silver:
+	$(PYTHON) -m pipeline.silver.transform --input data/bronze/games --output data/silver/games
+
+quality:
+	$(PYTHON) -m pipeline.silver.quality_checks --bronze-batch-id $(MONTH) --silver-month $(MONTH) --bronze data/bronze/games --silver data/silver/games --metrics-output $(QUALITY_DIR)/silver_metrics.json
+
+gold:
+	$(PYTHON) -m pipeline.gold.player_stats --input data/silver/games --output data/gold/player_monthly_stats
+	$(PYTHON) -m pipeline.gold.opening_perf --input data/silver/games --output data/gold/opening_performance
+	$(PYTHON) -m pipeline.gold.time_pressure --input data/silver/games --output data/gold/time_pressure_analysis --blunder-input $(BLUNDER_INPUT)
+
+blunders:
+	@test -n "$(STOCKFISH_PATH)" || (printf "Set STOCKFISH_PATH=/path/to/stockfish\n" && exit 1)
+	$(PYTHON) -m pipeline.gold.blunder_positions --input data/silver/games --output data/gold/blunder_positions --stockfish-path $(STOCKFISH_PATH) --fraction $(BLUNDER_FRACTION) --max-games $(BLUNDER_MAX_GAMES) --max-plies $(BLUNDER_MAX_PLIES) --depth $(BLUNDER_DEPTH) --blunder-threshold-cp $(BLUNDER_THRESHOLD_CP)
+	$(PYTHON) -m pipeline.gold.time_pressure --input data/silver/games --output data/gold/time_pressure_analysis --blunder-input $(BLUNDER_INPUT)
+
+dbt-run:
+	cd $(DBT_DIR) && $(DBT) run --profiles-dir .
+
+dbt-test:
+	cd $(DBT_DIR) && $(DBT) test --profiles-dir .
+
+dbt-docs:
+	cd $(DBT_DIR) && $(DBT) docs generate --profiles-dir .
+
+sample-dbt:
+	cd $(DBT_DIR) && KNIGHTVISION_DUCKDB_PATH=../../$(SAMPLE_DB) $(DBT) run --profiles-dir .
+	cd $(DBT_DIR) && KNIGHTVISION_DUCKDB_PATH=../../$(SAMPLE_DB) $(DBT) test --profiles-dir .
+
+pipeline: download parse bronze silver quality gold warehouse dbt-run dbt-test
+
+sample-pipeline:
+	$(PYTHON) -m ingestion.pgn_parser --input $(SAMPLE_PGN) --output $(SAMPLE_ROOT)/landing/games --batch-id $(SAMPLE_MONTH) --metrics-output $(SAMPLE_QUALITY_DIR)/parser_metrics.json
+	$(PYTHON) -m pipeline.bronze.ingest --input $(SAMPLE_ROOT)/landing/games --output $(SAMPLE_ROOT)/bronze/games --metrics-output $(SAMPLE_QUALITY_DIR)/bronze_metrics.json
+	$(PYTHON) -m pipeline.silver.transform --input $(SAMPLE_ROOT)/bronze/games --output $(SAMPLE_ROOT)/silver/games --eco-reference $(SAMPLE_ECO) --drop-corrupt-pgn
+	$(PYTHON) -m pipeline.silver.quality_checks --bronze-batch-id $(SAMPLE_MONTH) --silver-month $(SAMPLE_MONTH) --bronze $(SAMPLE_ROOT)/bronze/games --silver $(SAMPLE_ROOT)/silver/games --metrics-output $(SAMPLE_QUALITY_DIR)/silver_quality.json
+	$(PYTHON) -m pipeline.gold.player_stats --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/player_monthly_stats
+	$(PYTHON) -m pipeline.gold.opening_perf --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/opening_performance
+	$(PYTHON) -m pipeline.gold.time_pressure --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/time_pressure_analysis --blunder-input $(SAMPLE_BLUNDER_INPUT)
+	$(PYTHON) warehouse/init_db.py --data-root $(SAMPLE_ROOT) --db-path $(SAMPLE_DB)
+
+sample-blunders:
+	@test -n "$(STOCKFISH_PATH)" || (printf "Set STOCKFISH_PATH=/path/to/stockfish\n" && exit 1)
+	$(PYTHON) -m pipeline.gold.blunder_positions --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/blunder_positions --stockfish-path $(STOCKFISH_PATH) --fraction 1.0 --max-games 3 --max-plies 20 --depth 8 --blunder-threshold-cp $(BLUNDER_THRESHOLD_CP)
+	$(PYTHON) -m pipeline.gold.time_pressure --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/time_pressure_analysis --blunder-input $(SAMPLE_BLUNDER_INPUT)
+	$(PYTHON) warehouse/init_db.py --data-root $(SAMPLE_ROOT) --db-path $(SAMPLE_DB)
+
+train-blunder-model:
+	$(PYTHON) -m ml.blunder_predictor.train --duckdb-path $(MODEL_DUCKDB) --output-dir $(MODEL_OUTPUT_DIR)
+
+train-opening-outcome:
+	$(PYTHON) -m ml.opening_outcome.train --duckdb-path $(OPENING_MODEL_DUCKDB) --output-dir $(OPENING_MODEL_OUTPUT_DIR)
+
+cluster-player-styles:
+	$(PYTHON) -m ml.player_style_clustering.train --duckdb-path $(PLAYER_STYLE_DUCKDB) --output-dir $(PLAYER_STYLE_OUTPUT_DIR) --min-games $(PLAYER_STYLE_MIN_GAMES) --clusters $(PLAYER_STYLE_CLUSTERS)
+
+warehouse:
+	$(PYTHON) warehouse/init_db.py
+
+dashboard:
+	KNIGHTVISION_DUCKDB_PATH=$(DUCKDB_PATH) PYTHONPATH=. $(STREAMLIT) run dashboard/app.py
+
+dashboard-sample:
+	$(MAKE) dashboard DUCKDB_PATH=$(SAMPLE_DB)
+
+airflow-up:
+	docker compose -f $(AIRFLOW_COMPOSE) up -d
+
+airflow-down:
+	docker compose -f $(AIRFLOW_COMPOSE) down
+
+airflow-logs:
+	docker compose -f $(AIRFLOW_COMPOSE) logs -f airflow-scheduler airflow-webserver
+
+clean:
+	find . -type d -name __pycache__ -prune -exec rm -rf {} +
+	find . -type d -name .pytest_cache -prune -exec rm -rf {} +

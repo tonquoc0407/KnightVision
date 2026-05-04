@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_games
+    columns:
+      - name: game_id
+        data_tests: [not_null, unique]
+      - name: result
+        data_tests:
+          - accepted_values:
+              values: ['white_win', 'black_win', 'draw']
+      - name: white_elo
+        description: Nullable rating. Range is enforced by tests/assert_elo_range.sql.
+      - name: black_elo
+        description: Nullable rating. Range is enforced by tests/assert_elo_range.sql.
+  - name: mart_opening_analysis
+    columns:
+      - name: eco_code
+        data_tests: [not_null]
+  - name: mart_player_profile
+    columns:
+      - name: player
+        data_tests: [not_null]

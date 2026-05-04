@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: lake
+    schema: main
+    tables:
+      - name: silver_games
+      - name: gold_player_monthly_stats
+      - name: gold_opening_performance
+      - name: gold_time_pressure_analysis
+      - name: gold_blunder_positions

@@ -1,0 +1,1268 @@
+feature,importance
+time_control_type_bullet,0.027977154
+opening_variation_Englund Gambit,0.007902593
+elo_diff,0.0071365936
+opening_variation_Caro-Kann Defense: Main Line,0.006466008
+opening_family_Barnes Defense,0.0055783936
+"opening_variation_Italian Game: Giuoco Pianissimo, Italian Four Knights Variation",0.0054172655
+opening_variation_Englund Gambit Declined: Reversed Alekhine,0.005294176
+opening_variation_King's Indian Defense: Normal Variation,0.005284728
+black_elo,0.0051731314
+abs_elo_diff,0.0051012477
+time_control_type_rapid,0.0050671035
+opening_variation_Ruy Lopez: Berlin Defense,0.0050187735
+opening_family_Modern Defense,0.005013228
+eco_code_E70,0.005003076
+eco_code_E67,0.0049767084
+"opening_variation_Indian Defense: Colle System, King's Indian Variation",0.004975488
+eco_code_D45,0.0049319295
+opening_variation_Rat Defense: Small Center Defense,0.00481088
+opening_family_Pterodactyl Defense,0.004807183
+eco_code_A21,0.0047900416
+opening_family_Anderssen's Opening,0.0047898213
+opening_family_Nimzo-Larsen Attack,0.004744264
+opening_variation_Italian Game: Hungarian Defense,0.0047318023
+eco_code_C65,0.0047284346
+eco_code_A34,0.0047055692
+eco_code_B12,0.0046091457
+"opening_variation_French Defense: Exchange Variation, Monte Carlo Variation",0.0045729815
+"opening_variation_French Defense: Advance Variation, Euwe Variation",0.00455526
+base_time_seconds,0.0045017838
+eco_code_D00,0.0044659926
+opening_family_Mieses Opening,0.0044642575
+"opening_variation_Nimzowitsch Defense: Kennedy Variation, Linksspringer Variation",0.004428925
+opening_variation_Mieses Opening,0.004409534
+"opening_variation_French Defense: Rubinstein Variation, Blackburne Defense",0.004405979
+opening_variation_English Opening: Agincourt Defense,0.004390399
+eco_code_A01,0.0043747844
+opening_variation_Italian Game: Rousseau Gambit,0.0043514017
+eco_code_C69,0.00430559
+eco_code_B27,0.0042654495
+eco_code_A40,0.0042576594
+opening_variation_Queen's Gambit Declined,0.004256014
+opening_variation_Zukertort Opening: Sicilian Invitation,0.0042469073
+eco_code_C21,0.004235248
+eco_code_B50,0.004220854
+eco_code_A25,0.0040471815
+opening_family_Petrov's Defense,0.0040139933
+eco_code_C01,0.0039971415
+opening_variation_Caro-Kann Defense: Endgame Variation,0.003986107
+white_elo,0.003976691
+opening_variation_Sicilian Defense: Classical Variation,0.0039179143
+opening_variation_Queen's Pawn Game: Zukertort Variation,0.0039099907
+opening_variation_Queen's Pawn Game: Mason Attack,0.003891778
+opening_variation_Englund Gambit: Soller Gambit Deferred,0.003888367
+opening_variation_Rat Defense: English Rat,0.0038220396
+opening_family_King's Gambit Declined,0.0038144484
+opening_variation_Queen's Gambit Accepted,0.0038058604
+opening_variation_Modern Defense: Standard Defense,0.003803112
+"opening_variation_Queen's Gambit Declined: Chigorin Defense, Modern Gambit",0.0037839913
+opening_variation_Nimzowitsch Defense: Williams Variation,0.0037736974
+eco_code_C62,0.0037674855
+opening_variation_Scandinavian Defense: Valencian Variation,0.003755123
+opening_family_Queen's Pawn Game,0.0037446718
+opening_variation_French Defense,0.003716986
+time_control_type_blitz,0.0037147175
+opening_family_Rat Defense,0.0037069635
+eco_code_C36,0.0037001371
+opening_variation_English Opening: King's English Variation,0.0036697157
+eco_code_B23,0.003662094
+opening_variation_King's Pawn Game: Leonardis Variation,0.0036323273
+opening_variation_Mieses Opening: Reversed Rat,0.0036247356
+eco_code_B32,0.003512717
+opening_family_Ware Defense,0.0034778179
+opening_variation_French Defense: Normal Variation,0.0034498093
+opening_variation_Rat Defense: Antal Defense,0.003444387
+opening_family_Scandinavian Defense,0.0034418965
+"opening_variation_Caro-Kann Defense: Advance Variation, Short Variation",0.0034414844
+eco_code_C46,0.003403635
+opening_family_Nimzowitsch Defense,0.0033382322
+opening_variation_Nimzowitsch Defense,0.0033253613
+opening_variation_Benoni Defense: French Benoni,0.0033097698
+opening_family_Yusupov-Rubinstein System,0.0033078701
+opening_family_Kádas Opening,0.0032606635
+eco_code_B29,0.003236381
+opening_variation_French Defense: Schlechter Variation,0.0032354626
+opening_variation_Indian Defense: Wade-Tartakower Defense,0.00321126
+eco_code_B08,0.003209586
+eco_code_C30,0.0032070044
+opening_variation_infrequent_sklearn,0.0031964774
+opening_variation_Queen's Pawn Game: Modern Defense,0.0031934062
+opening_family_King's Gambit Accepted,0.0031829507
+opening_variation_Caro-Kann Defense: Two Knights Attack,0.0031708786
+"opening_variation_Sicilian Defense: Closed, Traditional",0.0031675827
+opening_variation_Vienna Game: Paulsen Variation,0.0031588837
+"opening_variation_Scandinavian Defense: Main Line, Mieses Variation",0.0031530224
+eco_code_D21,0.00314789
+opening_family_Italian Game,0.0031300446
+eco_code_D24,0.0031192326
+"opening_variation_Queen's Pawn Game: Colle System, Anti-Colle",0.0031126945
+eco_code_B21,0.0031056523
+opening_variation_Queen's Gambit Declined: Harrwitz Attack,0.0030914552
+opening_variation_Petrov's Defense: Italian Variation,0.0030844477
+eco_code_A16,0.0030792973
+eco_code_D55,0.003069788
+"opening_variation_English Opening: Anglo-Indian Defense, Queen's Knight Variation",0.0030581697
+opening_variation_Italian Game: Two Knights Defense,0.003048012
+opening_variation_French Defense: Tarrasch Variation,0.0030441
+opening_variation_Queen's Pawn Game: Symmetrical Variation,0.0030052103
+opening_variation_Sicilian Defense: McDonnell Attack,0.0030015057
+opening_variation_Zukertort Opening: Lemberger Gambit,0.0029998724
+opening_family_Grob Opening,0.0029941907
+opening_variation_King's Knight Opening: Normal Variation,0.0029900193
+eco_code_D11,0.0029656778
+opening_variation_Caro-Kann Defense: Exchange Variation,0.0029640093
+eco_code_A41,0.002938592
+opening_variation_French Defense: Exchange Variation,0.0029035464
+opening_variation_Englund Gambit Declined,0.0028991455
+eco_code_B06,0.0028681771
+eco_code_D30,0.0028500154
+increment_seconds,0.002826276
+"opening_variation_Ruy Lopez: Exchange Variation, Lutikov Variation",0.0028138116
+opening_variation_French Defense: Knight Variation,0.002804791
+opening_family_Benoni Defense,0.0027909235
+opening_variation_Zukertort Opening: Queenside Fianchetto Variation,0.0027332292
+opening_variation_French Defense: Queen's Knight,0.0026800619
+"opening_variation_Italian Game: Giuoco Pianissimo, Normal",0.0026678576
+opening_variation_Hungarian Opening: Slav Formation,0.002655826
+time_control_type_None,0.0026467992
+opening_variation_Queen's Gambit Accepted: Old Variation,0.002641427
+opening_variation_Zukertort Opening: Dutch Variation,0.0026381959
+opening_variation_Scandinavian Defense: Mieses-Kotroc Variation,0.002614136
+eco_code_A04,0.0026129512
+opening_family_English Defense,0.0025549456
+eco_code_C20,0.0025527638
+opening_variation_Four Knights Game: Scotch Variation Accepted,0.0025506648
+opening_variation_St. George Defense,0.0025187272
+opening_variation_Englund Gambit: Felbecker Gambit,0.002465169
+opening_family_Barnes Opening,0.002448433
+opening_variation_Indian Defense: Przepiorka Variation,0.0024481323
+eco_code_C22,0.0024421967
+"opening_variation_Sicilian Defense: French Variation, Open",0.0024368851
+"opening_variation_French Defense: Advance Variation, Nimzowitsch System",0.0024290774
+eco_code_D01,0.0024266092
+opening_variation_Grünfeld Defense,0.0024248508
+opening_family_Réti Opening,0.002392257
+opening_variation_Sicilian Defense: Grand Prix Attack,0.0023744928
+opening_family_Hungarian Opening,0.002356441
+opening_variation_Queen's Pawn Game,0.0023535613
+eco_code_B00,0.0023458917
+opening_variation_Nimzo-Larsen Attack,0.0023323041
+opening_variation_Sicilian Defense: Taimanov Variation,0.0023303314
+opening_variation_Petrov's Defense: Stafford Gambit,0.0023264515
+opening_family_Alekhine Defense,0.0023163278
+opening_variation_Queen's Gambit Declined: Austrian Defense,0.0023049691
+opening_family_Dutch Defense,0.0022890288
+eco_code_C35,0.0022783682
+eco_code_C00,0.0022719859
+opening_family_King's Knight Opening,0.0022380436
+opening_variation_Queen's Pawn Game: Accelerated London System,0.0022373637
+opening_variation_King's Pawn Game: Busch-Gass Gambit,0.0022299935
+opening_variation_Queen's Gambit Declined: Ragozin Defense,0.0022289592
+opening_variation_Queen's Pawn Game: Anti-Torre,0.0022265231
+opening_variation_Caro-Kann Defense: Hillbilly Attack,0.0022103747
+opening_variation_Slav Defense: Modern Line,0.0022050603
+opening_variation_Rat Defense: Harmonist,0.0022040831
+eco_code_C02,0.0021731856
+eco_code_A38,0.0021660358
+opening_variation_Danish Gambit Accepted: Copenhagen Defense,0.00216367
+opening_family_Horwitz Defense,0.002160807
+eco_code_B41,0.0021582213
+"opening_variation_Italian Game: Two Knights Defense, Fried Liver Attack",0.0021377387
+opening_family_Zukertort Opening,0.0021246567
+eco_code_A05,0.0021074854
+opening_variation_Sicilian Defense: Four Knights Variation,0.0020917107
+opening_variation_Barnes Opening,0.0020825672
+eco_code_C41,0.0020717683
+eco_code_C60,0.0020588778
+eco_code_C44,0.002053165
+opening_family_Saragossa Opening,0.0020465192
+eco_code_D06,0.002030738
+opening_family_King's Pawn Game,0.0020216221
+opening_family_Slav Defense,0.0020168358
+eco_code_C05,0.0020115196
+"opening_variation_Scotch Game: Scotch Gambit, Advance Variation",0.0020086174
+opening_family_Vienna Game,0.00200724
+opening_variation_Indian Defense: Knights Variation,0.0020012348
+opening_family_Queen's Gambit Declined,0.002000862
+opening_variation_Italian Game,0.0019931768
+eco_code_B09,0.0019926098
+"opening_variation_King's Gambit Declined: Falkbeer Countergambit, Staunton Line",0.0019737622
+opening_variation_King's Pawn Game,0.0019499876
+eco_code_D79,0.0019471123
+eco_code_B01,0.0019467047
+opening_variation_Zukertort Opening: Tennison Gambit,0.0019396347
+opening_variation_Philidor Defense,0.0019307156
+opening_family_Ruy Lopez,0.001929453
+opening_variation_Bishop's Opening,0.001921209
+eco_code_C40,0.001912846
+eco_code_B03,0.0019086598
+opening_family_Indian Defense,0.0018935461
+opening_variation_Benoni Defense: Benoni Gambit Accepted,0.0018727632
+opening_variation_Four Knights Game: Scotch Variation,0.0018687794
+opening_family_Englund Gambit,0.0018685118
+opening_variation_Modern Defense: Three Pawns Attack,0.0018652944
+eco_code_D38,0.0018645632
+eco_code_C58,0.0018581578
+"opening_variation_Queen's Pawn Game: Accelerated London System, Steinitz Countergambit",0.0018567442
+opening_variation_Horwitz Defense,0.001837862
+opening_variation_Sicilian Defense: Alapin Variation,0.0018371267
+opening_variation_Vienna Game: Falkbeer Variation,0.0018369526
+opening_family_Caro-Kann Defense,0.0018304527
+opening_variation_Queen's Gambit Declined: Marshall Defense,0.0018239256
+opening_variation_Alekhine Defense: Exchange Variation,0.0018186545
+opening_variation_Kádas Opening,0.0018149769
+opening_variation_Philidor Defense: Hanham Variation,0.0018120845
+opening_variation_Nimzo-Indian Defense: Classical Variation,0.0017887839
+opening_variation_Center Game: Berger Variation,0.0017884964
+"opening_variation_Slav Defense: Quiet Variation, Pin Defense",0.0017882037
+eco_code_A18,0.0017719725
+opening_variation_Polish Opening,0.0017571304
+opening_variation_Scandinavian Defense,0.0017535611
+opening_variation_Center Game: Normal Variation,0.00174749
+opening_variation_King's Pawn Game: Beyer Gambit,0.0017361934
+opening_family_Pirc Defense,0.0017224586
+eco_code_A03,0.0017114485
+eco_code_D05,0.0017057224
+opening_family_St. George Defense,0.0017022862
+opening_variation_Nimzowitsch Defense: Declined Variation,0.0016991707
+opening_family_Queen's Gambit Accepted,0.0016908591
+opening_variation_King's Knight Opening,0.0016867339
+"opening_variation_Scandinavian Defense: Valencian Variation, Ilundain Variation",0.0016791419
+"opening_variation_Sicilian Defense: Delayed Alapin Variation, with d6",0.0016670801
+opening_variation_Caro-Kann Defense: Breyer Variation,0.001661639
+eco_code_B14,0.0016604757
+eco_code_B45,0.0016577473
+eco_code_A45,0.0016502021
+opening_variation_Latvian Gambit Accepted,0.0016501909
+"opening_variation_Sicilian Defense: Moscow Variation, Main Line",0.0016437036
+eco_code_D20,0.001635295
+opening_variation_Queen's Gambit Accepted: Saduleto Variation,0.001634283
+opening_family_Latvian Gambit,0.0016335564
+"opening_variation_Scotch Game: Göring Gambit, Double Pawn Sacrifice",0.0016331406
+eco_code_C70,0.0016323887
+"opening_variation_Sicilian Defense: Alapin Variation, Barmen Defense, Central Exchange",0.0016312608
+opening_variation_Caro-Kann Defense,0.00162167
+"opening_variation_Italian Game: Two Knights Defense, Polerio Defense, Bishop Check Line",0.0016182387
+eco_code_C53,0.0016152947
+opening_family_King's Indian Attack,0.0016133416
+eco_code_B52,0.0016088593
+eco_code_A49,0.001600193
+opening_family_Van't Kruijs Opening,0.0015993142
+time_control_type_classical,0.0015982742
+opening_family_Benko Gambit,0.0015963063
+opening_variation_Blackmar-Diemer Gambit: Blackmar Gambit,0.0015932368
+opening_variation_Alekhine Defense: Two Pawns Attack,0.0015866488
+eco_code_C10,0.0015847037
+opening_variation_Zukertort Opening: Ross Gambit,0.0015840948
+eco_code_A43,0.0015820398
+eco_code_infrequent_sklearn,0.001568684
+opening_family_Sicilian Defense,0.0015684307
+eco_code_C78,0.0015657463
+opening_variation_King's Pawn Game: Alapin Opening,0.0015648269
+opening_family_Owen Defense,0.0015605729
+opening_family_Scotch Game,0.0015568897
+opening_variation_French Defense: La Bourdonnais Variation,0.0015485813
+opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted,0.001546326
+opening_variation_Scandinavian Defense: Blackburne-Kloosterboer Gambit,0.0015462445
+opening_variation_Benoni Defense: King's Pawn Line,0.0015448851
+eco_code_D08,0.0015375344
+opening_family_London System,0.0015262448
+"opening_variation_Ruy Lopez: Classical Variation, Zukertort Gambit",0.0015261787
+opening_family_Queen's Indian Defense,0.0015258862
+opening_variation_Bishop's Opening: Philidor Counterattack,0.0015244276
+opening_variation_Caro-Kann Defense: Maróczy Variation,0.0015183553
+eco_code_A65,0.0015171418
+opening_variation_Slav Defense,0.0015025055
+eco_code_A57,0.0015022241
+opening_variation_Philidor Defense: Exchange Variation,0.0014840356
+"opening_variation_Nimzowitsch Defense: Scandinavian Variation, Exchange Variation",0.0014795503
+opening_variation_Sicilian Defense: Godiva Variation,0.0014785333
+opening_variation_Caro-Kann Defense: Endgame Offer,0.001477663
+eco_code_C55,0.0014734351
+eco_code_C37,0.0014731957
+"opening_variation_Benoni Defense: Benoni-Indian Defense, Kingside Move Order",0.0014718524
+opening_variation_Indian Defense: Budapest Defense,0.0014664921
+opening_variation_Sicilian Defense: Pin Variation,0.0014657789
+opening_variation_Center Game: Kieseritzky Variation,0.0014646174
+opening_variation_Ruy Lopez: Cozio Defense,0.0014605201
+opening_variation_Sicilian Defense: Closed,0.0014524625
+opening_variation_Van Geet Opening: Reversed Nimzowitsch,0.0014484614
+opening_variation_Vienna Game,0.0014462521
+opening_family_Polish Opening,0.0014446556
+opening_family_Ware Opening,0.0014444242
+"opening_variation_Scandinavian Defense: Main Line, Leonhardt Gambit",0.0014428549
+opening_variation_Sicilian Defense: French Variation,0.0014416949
+eco_code_C25,0.001440337
+eco_code_E32,0.0014370349
+opening_family_Amar Opening,0.001429091
+opening_variation_English Opening: Anglo-Indian Defense,0.0014259462
+opening_variation_Scotch Game,0.0014195193
+opening_variation_Zukertort Opening: Reversed Grünfeld,0.001416553
+opening_family_Queen's Gambit,0.0014142811
+opening_variation_Caro-Kann Defense: Karpov Variation,0.0014136555
+opening_variation_Scotch Game: Lolli Variation,0.0014076633
+opening_variation_Caro-Kann Defense: Advance Variation,0.0014064176
+"opening_variation_Ruy Lopez: Morphy Defense, Classical Defense Deferred",0.0014011781
+opening_variation_King's Gambit Accepted: MacLeod Defense,0.001387584
+"opening_variation_Sicilian Defense: Kan Variation, Maróczy Bind, Réti Variation",0.0013852576
+opening_variation_King's Gambit Accepted: Abbazia Defense,0.0013785614
+eco_code_A52,0.0013781026
+opening_variation_French Defense: Paulsen Variation,0.0013738461
+opening_variation_English Defense,0.0013664679
+opening_variation_Italian Game: Giuoco Piano,0.0013661014
+opening_variation_French Defense: Wing Gambit,0.0013660451
+opening_family_King's Indian Defense,0.0013631455
+eco_code_B31,0.0013613338
+"opening_variation_Sicilian Defense: Nyezhmetdinov-Rossolimo Attack, Fianchetto Variation",0.0013548562
+opening_variation_Benoni Defense: Old Benoni,0.0013512654
+eco_code_C23,0.0013454986
+opening_variation_Queen's Pawn Game: Stonewall Attack,0.0013378897
+eco_code_C67,0.0013374418
+opening_variation_Nimzo-Larsen Attack: Classical Variation,0.0013372003
+"opening_variation_Italian Game: Evans Gambit, McDonnell Defense",0.0013346625
+opening_variation_Sicilian Defense: Portsmouth Gambit,0.0013319434
+eco_code_D53,0.0013301746
+opening_variation_King's Pawn Game: Maróczy Defense,0.0013189617
+opening_family_Mikenas Defense,0.0013159637
+eco_code_A09,0.0013157995
+"opening_variation_Italian Game: Two Knights Defense, Max Lange Attack",0.0013113458
+eco_code_A23,0.0013075449
+opening_variation_Dutch Defense: Rubinstein Variation,0.0013053967
+opening_variation_Philidor Defense: Lopez Countergambit,0.0013016254
+"opening_variation_Queen's Pawn Game: London System, with e6",0.0012946966
+"opening_variation_Grob Opening: Spike, Hurst Attack",0.0012887844
+opening_variation_Grünfeld Defense: Exchange Variation,0.0012854012
+eco_code_D31,0.0012830384
+"opening_variation_Sicilian Defense: Najdorf Variation, Lipnitsky Attack",0.0012809617
+eco_code_C31,0.001280595
+"opening_variation_Caro-Kann Defense: Accelerated Panov Attack, Modern Variation",0.0012796369
+opening_variation_Scandinavian Defense: Gubinsky-Melts Defense,0.0012785079
+"opening_variation_Ruy Lopez: Morphy Defense, Anderssen Variation",0.0012773293
+eco_code_C57,0.0012756429
+opening_variation_Benoni Defense: Modern Variation,0.0012723592
+"opening_variation_French Defense: Advance Variation, Milner-Barry Gambit, Main Line",0.0012694591
+opening_variation_Zukertort Opening: Queen's Gambit Invitation,0.0012636172
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted, Fianchetto Defense",0.0012605307
+opening_variation_Center Game: Halasz-McDonnell Gambit,0.0012587415
+opening_variation_Four Knights Game: Gunsberg Variation,0.0012579059
+"opening_variation_Queen's Gambit Accepted: Central Variation, McDonnell Defense",0.0012538692
+opening_variation_Sicilian Defense: Bowdler Attack,0.0012515121
+opening_variation_Four Knights Game,0.0012427644
+opening_variation_Grob Opening: Grob Gambit,0.001241403
+opening_variation_Nimzo-Larsen Attack: Symmetrical Variation,0.0012369282
+opening_variation_Caro-Kann Defense: Euwe Attack,0.0012364062
+eco_code_C38,0.0012362753
+opening_variation_King's Gambit Accepted: Modern Defense,0.0012352589
+"opening_variation_Queen's Pawn Game: Chigorin Variation, Irish Gambit",0.0012313985
+eco_code_C56,0.0012306704
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted, Pin Defense",0.0012300446
+opening_variation_Queen's Gambit Declined: Chigorin Defense,0.0012298768
+eco_code_C24,0.001224951
+opening_variation_Van't Kruijs Opening,0.0012208001
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted, Scheveningen Formation",0.00121532
+opening_variation_Polish Opening: Bugayev Attack,0.001212191
+opening_variation_Modern Defense: Kotov Variation,0.0012113221
+opening_variation_Nimzo-Larsen Attack: Indian Variation,0.0012096901
+"opening_variation_Sicilian Defense: Dragon Variation, Yugoslav Attack",0.001204984
+"opening_variation_Italian Game: Two Knights Defense, Polerio Defense",0.0012013313
+"opening_variation_Scotch Game: Scotch Gambit, Sarratt Variation",0.0012008547
+opening_variation_Alekhine Defense: Normal Variation,0.0011954413
+opening_variation_Caro-Kann Defense: Accelerated Panov Attack,0.0011894761
+opening_variation_Zukertort Opening: Arctic Defense,0.0011878327
+opening_variation_Trompowsky Attack: Edge Variation,0.001186959
+eco_code_B07,0.001179188
+opening_variation_English Opening: Anglo-Lithuanian Variation,0.0011751468
+eco_code_E81,0.0011748858
+opening_variation_Sicilian Defense: Katalimov Variation,0.0011728663
+opening_variation_French Defense: Classical Variation,0.0011715927
+opening_family_Catalan Opening,0.001165825
+"opening_variation_French Defense: Winawer Variation, Advance Variation",0.0011632241
+opening_variation_King's Gambit Declined: Petrov's Defense,0.0011570429
+opening_variation_French Defense: Chigorin Variation,0.0011547401
+eco_code_C26,0.0011520232
+opening_variation_Vienna Game: Anderssen Defense,0.0011498709
+opening_variation_Indian Defense: London System,0.0011451727
+"opening_variation_Queen's Gambit Declined: Chigorin Defense, Exchange Variation",0.0011448098
+eco_code_A85,0.0011441059
+"opening_variation_Italian Game: Classical Variation, Giuoco Pianissimo",0.0011435221
+"opening_variation_French Defense: Advance Variation, Paulsen Attack",0.0011432932
+opening_variation_Queen's Gambit Declined: Modern Variation,0.0011388842
+eco_code_B13,0.0011362806
+"opening_variation_English Opening: King's English Variation, Two Knights Variation",0.0011264577
+"opening_variation_Four Knights Game: Spanish Variation, Ranken Variation",0.0011192237
+opening_variation_Owen Defense,0.0011188044
+eco_code_D91,0.0011185801
+opening_variation_Petrov's Defense: Damiano Variation,0.0010984547
+opening_family_Trompowsky Attack,0.0010940057
+eco_code_A48,0.0010830016
+opening_variation_Réti Opening,0.0010779456
+opening_variation_Queen's Gambit Declined: Exchange Variation,0.0010779382
+opening_variation_Indian Defense: Pawn Push Variation,0.0010649523
+opening_variation_King's Indian Attack,0.0010425184
+opening_variation_Vienna Game: Omaha Gambit,0.0010394995
+opening_variation_Queen's Pawn Game: Chigorin Variation,0.0010361265
+opening_variation_Hungarian Opening: Indian Defense,0.0010325861
+eco_code_B40,0.0010321485
+opening_variation_King's Gambit Declined: Queen's Knight Defense,0.001025641
+"opening_variation_Italian Game: Two Knights Defense, Polerio Defense, Bogoljubow Variation",0.0010228783
+opening_variation_King's Gambit Declined: Falkbeer Countergambit Accepted,0.0010212581
+opening_variation_Queen's Indian Accelerated,0.0010200924
+opening_variation_Scotch Game: Haxo Gambit,0.0010195223
+opening_variation_Sicilian Defense: Staunton-Cochrane Variation,0.0010024932
+opening_variation_Alekhine Defense,0.001001837
+opening_variation_Indian Defense,0.0009881121
+opening_variation_King's Indian Attack: Symmetrical Defense,0.0009849363
+opening_family_French Defense,0.00097506016
+opening_variation_Amar Opening,0.0009747538
+opening_variation_Scandinavian Defense: Modern Variation,0.00094885187
+opening_variation_Elephant Gambit: Paulsen Countergambit,0.00094714074
+eco_code_A82,0.0009363531
+"opening_variation_English Opening: King's English Variation, Reversed Sicilian",0.0009053984
+opening_family_Bishop's Opening,0.00089733524
+opening_variation_English Opening,0.00088965293
+eco_code_E18,0.0008852197
+opening_family_Semi-Slav Defense,0.00087083783
+opening_variation_Queen's Pawn Game: Hübsch Gambit,0.0008642669
+opening_variation_Grob Opening: Grob Gambit Declined,0.0008604232
+eco_code_C61,0.00082015106
+"opening_variation_English Opening: Symmetrical Variation, Two Knights, Fianchetto Variation",0.0008133117
+eco_code_C33,0.00080640864
+eco_code_B33,0.0007990321
+opening_family_Portuguese Opening,0.0007953146
+opening_family_Old Indian Defense,0.00074881257
+opening_family_Goldsmith Defense,0.00069291226
+eco_code_A06,0.000666961
+"opening_variation_Queen's Gambit Declined: Tarrasch Defense, Pseudo-Tarrasch",0.0006315032
+opening_variation_Ruy Lopez,0.00063049525
+eco_code_B10,0.00057258067
+eco_code_A00,0.0005713042
+eco_code_C42,0.0005604016
+opening_variation_Grob Opening,0.0005504943
+opening_variation_King's Pawn Game: King's Head Opening,0.0004938822
+opening_family_Center Game,0.0004899189
+eco_code_C47,0.00048539258
+opening_variation_Hungarian Opening: Symmetrical Variation,0.00047565938
+eco_code_B20,0.00043680254
+eco_code_A22,0.0004102069
+opening_variation_Pirc Defense,0.00038602832
+opening_family_English Opening,0.00038253458
+opening_variation_Scandinavian Defense: Main Line,0.00038080613
+opening_variation_Queen's Pawn Game: Levitsky Attack,0.00036494056
+opening_variation_King's Pawn Game: Wayward Queen Attack,0.00032965926
+opening_variation_Sicilian Defense: Franco-Sicilian Variation,0.00015484565
+opening_variation_King's Gambit Accepted: King's Knight's Gambit,8.42101e-05
+opening_variation_Ruy Lopez: Nürnberg Variation,0.0
+eco_code_C45,0.0
+"opening_variation_Queen's Pawn Game: Colle System, Traditional Colle",0.0
+opening_variation_Queen's Gambit Declined: Three Knights Variation,0.0
+"opening_variation_Queen's Pawn Game: Colle System, Grünfeld Formation",0.0
+eco_code_C50,0.0
+opening_variation_Queen's Pawn Game: Colle System,0.0
+"opening_variation_Queen's Pawn Game: Chigorin Variation, Shaviliuk Gambit",0.0
+eco_code_C66,0.0
+"opening_variation_Queen's Pawn Game: Chigorin Variation, Anti-Veresov",0.0
+"opening_variation_Ruy Lopez: Morphy Defense, Caro Variation",0.0
+"opening_variation_Queen's Pawn Game: Chigorin Variation, Alburt Defense",0.0
+eco_code_C43,0.0
+opening_variation_Richter-Veresov Attack,0.0
+"opening_variation_Ruy Lopez: Open, Riga Variation",0.0
+"opening_variation_Queen's Gambit Declined: Three Knights, Vienna Variation",0.0
+opening_variation_Queen's Pawn Game: Anglo-Slav Opening,0.0
+"opening_variation_Ruy Lopez: Morphy Defense, Modern Steinitz Defense",0.0
+opening_variation_Ruy Lopez: Morphy Defense,0.0
+opening_variation_Ruy Lopez: Schliemann Defense,0.0
+eco_code_A80,0.0
+eco_code_C71,0.0
+"opening_variation_Ruy Lopez: Morphy Defense, Neo-Arkhangelsk Variation",0.0
+eco_code_C72,0.0
+"opening_variation_Ruy Lopez: Morphy Defense, Tarrasch Variation",0.0
+opening_variation_Queen's Indian Defense: Kasparov Variation,0.0
+opening_variation_Rubinstein Opening,0.0
+"opening_variation_Queen's Gambit Declined: Vienna Variation, Quiet Variation",0.0
+opening_variation_Queen's Gambit Declined: Traditional Variation,0.0
+eco_code_C68,0.0
+"opening_variation_Rat Defense: English Rat, Lisbon Gambit",0.0
+opening_variation_Queen's Pawn Game: Krause Variation,0.0
+"opening_variation_Queen's Pawn Game: Veresov, Richter Attack",0.0
+"opening_variation_Queen's Pawn Game: Symmetrical Variation, Pseudo-Catalan",0.0
+opening_variation_Queen's Pawn Game: Torre Attack,0.0
+"opening_variation_Ruy Lopez: Berlin Defense, Rio Gambit Accepted",0.0
+"opening_variation_Queen's Pawn Game: Torre Attack, Gossip Variation",0.0
+"opening_variation_Ruy Lopez: Berlin Defense, Improved Steinitz Defense",0.0
+"opening_variation_Queen's Pawn Game: Veresov Attack, Classical Defense",0.0
+eco_code_A07,0.0
+opening_variation_Rat Defense: Balogh Defense,0.0
+eco_code_C52,0.0
+"opening_variation_Ruy Lopez: Berlin Defense, Beverwijk Variation",0.0
+opening_variation_Rapport-Jobava System,0.0
+"opening_variation_Rapport-Jobava System, with e6",0.0
+opening_variation_Rat Defense: Accelerated Gurgenidze,0.0
+"opening_variation_Queen's Gambit Declined: Semi-Tarrasch Defense, Pillsbury Variation",0.0
+opening_variation_Ruy Lopez: Bird Variation,0.0
+opening_variation_Ruy Lopez: Classical Variation,0.0
+"opening_variation_Ruy Lopez: Classical Variation, Central Variation",0.0
+eco_code_C49,0.0
+opening_variation_Ruy Lopez: Closed,0.0
+eco_code_A84,0.0
+eco_code_C63,0.0
+eco_code_A08,0.0
+eco_code_C48,0.0
+eco_code_C64,0.0
+opening_variation_Ruy Lopez: Exchange Variation,0.0
+"opening_variation_Ruy Lopez: Exchange Variation, Keres Variation",0.0
+opening_variation_Queen's Pawn Game: London System,0.0
+"opening_variation_Ruy Lopez: Exchange Variation, King's Bishop Variation",0.0
+eco_code_C51,0.0
+opening_variation_Queen's Pawn Game: Liedmann Gambit,0.0
+"opening_variation_Ruy Lopez: Exchange Variation, Normal Variation",0.0
+eco_code_C54,0.0
+opening_family_Sodium Attack,0.0
+opening_variation_Queen's Gambit Declined: Semi-Tarrasch Defense,0.0
+opening_variation_Petrov's Defense: Nimzowitsch Attack,0.0
+opening_variation_Old Indian Defense: Ukrainian Variation,0.0
+opening_variation_Owen Defense: Guatemala Defense,0.0
+opening_variation_Owen Defense: Smith Gambit,0.0
+opening_variation_Paleface Attack,0.0
+opening_variation_Petrov's Defense,0.0
+opening_variation_Petrov's Defense: Classical Attack,0.0
+opening_variation_Petrov's Defense: Cozio Attack,0.0
+"opening_variation_Petrov's Defense: Damiano Variation, Kholmov Gambit",0.0
+eco_code_D35,0.0
+opening_variation_Petrov's Defense: Modern Attack,0.0
+"opening_variation_Petrov's Defense: Modern Attack, Symmetrical Variation",0.0
+eco_code_D32,0.0
+opening_variation_Pirc Defense: Austrian Attack,0.0
+opening_variation_Petrov's Defense: Three Knights Game,0.0
+eco_code_D26,0.0
+opening_variation_Philidor Defense: Bird Gambit,0.0
+eco_code_D25,0.0
+eco_code_D23,0.0
+opening_variation_Philidor Defense: Lion Variation,0.0
+eco_code_D16,0.0
+opening_variation_Philidor Defense: Morphy Gambit,0.0
+opening_variation_Philidor Defense: Nimzowitsch Variation,0.0
+"opening_variation_Philidor Defense: Nimzowitsch Variation, Klein Variation",0.0
+opening_variation_Philidor Defense: Philidor Countergambit,0.0
+"opening_variation_Old Indian Defense: Czech Variation, with Nf3",0.0
+"opening_variation_Old Indian Defense: Czech Variation, with Nc3",0.0
+opening_variation_Old Indian Defense,0.0
+eco_code_A13,0.0
+opening_variation_Nimzo-Indian Defense: Three Knights Variation,0.0
+eco_code_D46,0.0
+eco_code_A60,0.0
+opening_variation_Nimzo-Larsen Attack: Dutch Variation,0.0
+opening_variation_Nimzo-Larsen Attack: English Variation,0.0
+eco_code_D44,0.0
+opening_variation_Nimzo-Larsen Attack: Modern Variation,0.0
+eco_code_D43,0.0
+eco_code_D41,0.0
+eco_code_D40,0.0
+opening_variation_Nimzowitsch Defense: Franco-Nimzowitsch Variation,0.0
+opening_variation_Nimzowitsch Defense: French Connection,0.0
+opening_variation_Nimzowitsch Defense: Kennedy Variation,0.0
+"opening_variation_Nimzowitsch Defense: Kennedy Variation, Keres Attack",0.0
+eco_code_A14,0.0
+"opening_variation_Nimzowitsch Defense: Kennedy Variation, Paulsen Attack",0.0
+"opening_variation_Nimzowitsch Defense: Kennedy Variation, de Smet Gambit",0.0
+opening_variation_Nimzowitsch Defense: Mikenas Variation,0.0
+opening_variation_Nimzowitsch Defense: Pseudo-Spanish Variation,0.0
+"opening_variation_Nimzowitsch Defense: Scandinavian Variation, Advance Variation",0.0
+"opening_variation_Nimzowitsch Defense: Scandinavian Variation, Bogoljubow Variation",0.0
+eco_code_D37,0.0
+"opening_variation_Nimzowitsch Defense: Scandinavian Variation, Exchange Variation, Marshall Gambit",0.0
+opening_variation_Philidor Defense: Steinitz Variation,0.0
+"opening_variation_Pirc Defense: Austrian Attack, Weiss Variation",0.0
+eco_code_C77,0.0
+"opening_variation_Ruy Lopez: Schliemann Defense, Jaenisch Gambit Accepted",0.0
+eco_code_D10,0.0
+opening_variation_Queen's Gambit Accepted: Rosenthal Variation,0.0
+eco_code_D07,0.0
+opening_variation_Queen's Gambit Accepted: Showalter Variation,0.0
+eco_code_A10,0.0
+opening_variation_Queen's Gambit Declined: Albin Countergambit,0.0
+"opening_variation_Queen's Gambit Declined: Albin Countergambit, Normal Line",0.0
+eco_code_D04,0.0
+opening_variation_Queen's Gambit Declined: Baltic Defense,0.0
+"opening_variation_Queen's Gambit Declined: Baltic Defense, Pseudo-Slav",0.0
+eco_code_D03,0.0
+"opening_variation_Queen's Gambit Declined: Chigorin Defense, Janowski Variation",0.0
+opening_variation_Pirc Defense: Byrne Variation,0.0
+"opening_variation_Queen's Gambit Declined: Chigorin Defense, Main Line",0.0
+eco_code_D02,0.0
+"opening_variation_Queen's Gambit Declined: Exchange Variation, Positional Variation",0.0
+eco_code_C88,0.0
+"opening_variation_Queen's Gambit Declined: Harrwitz Attack, Orthodox Defense",0.0
+opening_variation_Queen's Gambit Declined: Janowski Variation,0.0
+eco_code_C80,0.0
+"opening_variation_Queen's Gambit Declined: Marshall Defense, Tan Gambit",0.0
+"opening_variation_Queen's Gambit Declined: Modern Variation, Normal Line",0.0
+opening_variation_Queen's Gambit Declined: Normal Defense,0.0
+opening_variation_Queen's Gambit Declined: Queen's Knight Variation,0.0
+"opening_variation_Queen's Gambit Accepted: Normal Variation, Traditional System",0.0
+opening_variation_Queen's Gambit Accepted: Normal Variation,0.0
+"opening_variation_Queen's Gambit Accepted: Central Variation, Modern Defense",0.0
+eco_code_D12,0.0
+opening_variation_Pirc Defense: Classical Variation,0.0
+"opening_variation_Pirc Defense: Classical Variation, Quiet System",0.0
+"opening_variation_Pirc Defense: Classical Variation, Schlechter Variation",0.0
+opening_variation_Pirc Defense: Kholmov System,0.0
+opening_variation_Pirc Defense: Roscher Gambit,0.0
+opening_variation_Polish Defense,0.0
+eco_code_D15,0.0
+opening_variation_Polish Opening: Birmingham Gambit,0.0
+eco_code_D13,0.0
+opening_variation_Polish Opening: Czech Defense,0.0
+opening_variation_Polish Opening: King's Indian Variation,0.0
+opening_variation_Polish Opening: Outflank Variation,0.0
+opening_variation_Ponziani Opening,0.0
+opening_variation_Ponziani Opening: Jaenisch Counterattack,0.0
+opening_variation_Ponziani Opening: Neumann Gambit,0.0
+opening_variation_Ponziani Opening: Ponziani Countergambit,0.0
+opening_variation_Portuguese Opening,0.0
+opening_variation_Pseudo Queen's Indian Defense,0.0
+opening_variation_Queen's Gambit,0.0
+eco_code_A11,0.0
+opening_variation_Queen's Gambit Accepted: Accelerated Mannheim Variation,0.0
+"opening_variation_Queen's Gambit Accepted: Central Variation, Alekhine System",0.0
+"opening_variation_Queen's Gambit Accepted: Central Variation, Greco Variation",0.0
+"opening_variation_Ruy Lopez: Schliemann Defense, Exchange Variation",0.0
+eco_code_C29,0.0
+opening_variation_Ruy Lopez: Steinitz Defense,0.0
+"opening_variation_Sicilian Defense: Taimanov Variation, Bastrikov Variation, English Attack",0.0
+opening_variation_Sicilian Defense: Wing Gambit,0.0
+"opening_variation_Sicilian Defense: Wing Gambit, Carlsbad Variation",0.0
+"opening_variation_Sicilian Defense: Wing Gambit, Marshall Variation",0.0
+eco_code_B43,0.0
+opening_variation_Slav Defense: Chebanenko Variation,0.0
+opening_variation_Slav Defense: Diemer Gambit,0.0
+opening_variation_Slav Defense: Exchange Variation,0.0
+opening_variation_Slav Defense: Geller Gambit,0.0
+opening_variation_Slav Defense: Quiet Variation,0.0
+eco_code_B38,0.0
+"opening_variation_Slav Defense: Quiet Variation, Schallopp Defense",0.0
+opening_variation_Slav Defense: Schlechter Variation,0.0
+"opening_variation_Slav Defense: Slav Gambit, Alekhine Attack",0.0
+opening_variation_Slav Defense: Three Knights Variation,0.0
+opening_variation_Slav Indian,0.0
+opening_variation_Sodium Attack,0.0
+eco_code_B35,0.0
+opening_variation_Tarrasch Defense,0.0
+opening_variation_Tarrasch Defense: Symmetrical Variation,0.0
+opening_variation_Tarrasch Defense: Two Knights Variation,0.0
+opening_variation_Three Knights Opening,0.0
+opening_variation_Three Knights Opening: Winawer Defense,0.0
+opening_variation_Torre Attack: Classical Defense,0.0
+"opening_variation_Sicilian Defense: Taimanov Variation, Normal Variation",0.0
+"opening_variation_Sicilian Defense: Taimanov Variation, Bastrikov Variation",0.0
+opening_variation_Sicilian Defense: Nyezhmetdinov-Rossolimo Attack,0.0
+eco_code_B44,0.0
+opening_variation_Sicilian Defense: O'Kelly Variation,0.0
+"opening_variation_Sicilian Defense: O'Kelly Variation, Normal System",0.0
+"opening_variation_Sicilian Defense: O'Kelly Variation, Venice System",0.0
+"opening_variation_Sicilian Defense: O'Kelly Variation, Yerevan System",0.0
+opening_variation_Sicilian Defense: Old Sicilian,0.0
+opening_variation_Sicilian Defense: Open,0.0
+opening_variation_Sicilian Defense: Paulsen-Basman Defense,0.0
+eco_code_B56,0.0
+eco_code_B54,0.0
+opening_variation_Sicilian Defense: Scheveningen Variation,0.0
+"opening_variation_Sicilian Defense: Scheveningen Variation, Classical Variation",0.0
+opening_variation_Sicilian Defense: Smith-Morra Gambit,0.0
+eco_code_B53,0.0
+eco_code_B51,0.0
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted, Kan Formation",0.0
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Accepted, Paulsen Formation",0.0
+eco_code_B48,0.0
+eco_code_B46,0.0
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Declined, Center Formation",0.0
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Declined, Push Variation",0.0
+"opening_variation_Sicilian Defense: Smith-Morra Gambit Declined, Scandinavian Formation",0.0
+opening_variation_Sicilian Defense: Smith-Morra Gambit Deferred,0.0
+opening_variation_Sicilian Defense: Snyder Variation,0.0
+opening_variation_Torre Attack: Fianchetto Defense,0.0
+opening_variation_Trompowsky Attack,0.0
+opening_variation_Trompowsky Attack: Classical Defense,0.0
+"opening_variation_Trompowsky Attack: Classical Defense, Big Center Variation",0.0
+eco_code_B04,0.0
+opening_variation_Zukertort Opening: Black Mustang Defense,0.0
+eco_code_B22,0.0
+opening_variation_Zukertort Opening: Kingside Fianchetto,0.0
+opening_variation_Zukertort Opening: Lisitsyn Gambit,0.0
+opening_variation_Zukertort Opening: Nimzo-Larsen Variation,0.0
+opening_variation_Zukertort Opening: Old Indian Attack,0.0
+opening_variation_Zukertort Opening: Pirc Invitation,0.0
+eco_code_B19,0.0
+eco_code_B18,0.0
+opening_variation_Zukertort Opening: Quiet System,0.0
+eco_code_B17,0.0
+opening_variation_Zukertort Opening: Reversed Mexican Defense,0.0
+eco_code_B16,0.0
+opening_variation_Zukertort Opening: Slav Invitation,0.0
+opening_variation_Zukertort Opening: Speelsmet Gambit,0.0
+opening_variation_Zukertort Opening: St. George Defense,0.0
+eco_code_B15,0.0
+opening_variation_Zukertort Opening: Vos Gambit,0.0
+opening_variation_Zukertort Opening: Wade Defense,0.0
+month,0.0
+year,0.0
+eco_code_B11,0.0
+opening_variation_Zukertort Opening,0.0
+opening_variation_Yusupov-Rubinstein System,0.0
+opening_variation_Ware Opening: Crab Variation,0.0
+eco_code_B28,0.0
+eco_code_B34,0.0
+opening_variation_Valencia Opening,0.0
+opening_variation_Van Geet Opening,0.0
+opening_variation_Van Geet Opening: Dunst-Perrenet Gambit,0.0
+opening_variation_Van Geet Opening: Grünfeld Defense,0.0
+opening_variation_Van Geet Opening: Napoleon Attack,0.0
+eco_code_B02,0.0
+"opening_variation_Vienna Gambit, with Max Lange Defense",0.0
+"opening_variation_Vienna Gambit, with Max Lange Defense: Knight Variation",0.0
+eco_code_B30,0.0
+opening_variation_Vienna Game: Frankenstein-Dracula Variation,0.0
+opening_variation_Ware Opening,0.0
+opening_variation_Vienna Game: Max Lange Defense,0.0
+opening_variation_Vienna Game: Mieses Variation,0.0
+eco_code_B24,0.0
+opening_variation_Vienna Game: Stanley Variation,0.0
+"opening_variation_Vienna Game: Stanley Variation, Reversed Spanish",0.0
+"opening_variation_Vienna Game: Stanley Variation, Three Knights Variation",0.0
+opening_variation_Vienna Game: Vienna Gambit,0.0
+"opening_variation_Vienna Game: Vienna Gambit, Main Line",0.0
+opening_variation_Wade Defense,0.0
+opening_variation_Ware Defense,0.0
+eco_code_B57,0.0
+"opening_variation_Sicilian Defense: Nimzowitsch Variation, Closed Variation",0.0
+opening_variation_Réti Opening: Advance Variation,0.0
+opening_variation_Scotch Game: Mieses Variation,0.0
+opening_variation_Scotch Game: Schmidt Variation,0.0
+opening_variation_Scotch Game: Scotch Gambit,0.0
+eco_code_C17,0.0
+"opening_variation_Scotch Game: Scotch Gambit, Dubois Réti Defense",0.0
+"opening_variation_Scotch Game: Scotch Gambit, Kingside Variation",0.0
+"opening_variation_Scotch Game: Scotch Gambit, London Defense",0.0
+eco_code_C15,0.0
+opening_variation_Semi-Slav Defense,0.0
+opening_variation_Semi-Slav Defense: Accelerated Move Order,0.0
+opening_variation_Semi-Slav Defense: Main Line,0.0
+opening_variation_Semi-Slav Defense: Marshall Gambit,0.0
+opening_variation_Semi-Slav Defense: Normal Variation,0.0
+opening_variation_Semi-Slav Defense: Noteboom Variation,0.0
+opening_variation_Sicilian Defense,0.0
+opening_variation_Sicilian Defense: Accelerated Dragon,0.0
+"opening_variation_Sicilian Defense: Accelerated Dragon, Exchange Variation",0.0
+"opening_variation_Sicilian Defense: Accelerated Dragon, Maróczy Bind",0.0
+"opening_variation_Sicilian Defense: Accelerated Dragon, Modern Bc4 Variation",0.0
+"opening_variation_Sicilian Defense: Accelerated Dragon, Modern Variation",0.0
+eco_code_C14,0.0
+"opening_variation_Sicilian Defense: Alapin Variation, Barmen Defense",0.0
+eco_code_C13,0.0
+"opening_variation_Sicilian Defense: Alapin Variation, Smith-Morra Declined",0.0
+opening_variation_Scotch Game: Potter Variation,0.0
+opening_variation_Scotch Game: Malaniuk Variation,0.0
+opening_variation_Sicilian Defense: Nimzowitsch Variation,0.0
+eco_code_C19,0.0
+opening_variation_Réti Opening: Réti Accepted,0.0
+opening_variation_Saragossa Opening,0.0
+opening_variation_Scandinavian Defense: Blackburne Gambit,0.0
+eco_code_C39,0.0
+opening_variation_Scandinavian Defense: Boehnke Gambit,0.0
+opening_variation_Scandinavian Defense: Classical Variation,0.0
+opening_variation_Scandinavian Defense: Icelandic-Palme Gambit,0.0
+opening_variation_Scandinavian Defense: Kloosterboer Gambit,0.0
+eco_code_C34,0.0
+opening_variation_Scandinavian Defense: Marshall Variation,0.0
+opening_variation_Nimzo-Indian Defense: Rubinstein System,0.0
+"opening_variation_Scandinavian Defense: Modern Variation, Gipslis Variation",0.0
+opening_variation_Scandinavian Defense: Panov Transfer,0.0
+eco_code_C28,0.0
+eco_code_C27,0.0
+"opening_variation_Scandinavian Defense: Valencian Variation, Main Line",0.0
+opening_variation_Scotch Game: Benima Defense,0.0
+opening_variation_Scotch Game: Classical Variation,0.0
+"opening_variation_Scotch Game: Classical Variation, Intermezzo Variation",0.0
+opening_variation_Scotch Game: Göring Gambit,0.0
+"opening_variation_Scotch Game: Göring Gambit, Bardeleben Variation",0.0
+eco_code_A90,0.0
+"opening_variation_Scotch Game: Göring Gambit, Main Line",0.0
+eco_code_C11,0.0
+opening_variation_Sicilian Defense: Chekhover Variation,0.0
+eco_code_A02,0.0
+eco_code_C07,0.0
+"opening_variation_Sicilian Defense: Kan Variation, Wing Attack",0.0
+opening_variation_Sicilian Defense: Keres Variation,0.0
+opening_variation_Sicilian Defense: Kramnik Variation,0.0
+opening_variation_Sicilian Defense: Lasker-Dunne Attack,0.0
+opening_variation_Sicilian Defense: Lasker-Pelikan Variation,0.0
+"opening_variation_Sicilian Defense: Lasker-Pelikan Variation, Retreat Variation",0.0
+"opening_variation_Sicilian Defense: Lasker-Pelikan Variation, Schlechter Variation",0.0
+"opening_variation_Sicilian Defense: Lasker-Pelikan Variation, Sveshnikov Variation, Chelyabinsk Variation",0.0
+opening_variation_Sicilian Defense: Löwenthal Variation,0.0
+opening_variation_Sicilian Defense: Marshall Counterattack,0.0
+eco_code_B76,0.0
+opening_variation_Sicilian Defense: Mengarini Variation,0.0
+opening_variation_Sicilian Defense: Modern Variations,0.0
+"opening_variation_Sicilian Defense: Modern Variations, Main Line",0.0
+"opening_variation_Sicilian Defense: Modern Variations, Tartakower",0.0
+opening_variation_Sicilian Defense: Morphy Gambit,0.0
+opening_variation_Sicilian Defense: Moscow Variation,0.0
+eco_code_B72,0.0
+opening_variation_Sicilian Defense: Najdorf Variation,0.0
+"opening_variation_Sicilian Defense: Najdorf Variation, Adams Attack",0.0
+"opening_variation_Sicilian Defense: Najdorf Variation, English Attack",0.0
+eco_code_B70,0.0
+"opening_variation_Sicilian Defense: Najdorf Variation, Opocensky Variation",0.0
+eco_code_B77,0.0
+"opening_variation_Sicilian Defense: Kan Variation, Knight Variation",0.0
+opening_variation_Sicilian Defense: Kan Variation,0.0
+eco_code_B94,0.0
+"opening_variation_Sicilian Defense: Closed, Fianchetto Variation",0.0
+eco_code_C03,0.0
+eco_code_B98,0.0
+"opening_variation_Sicilian Defense: Delayed Alapin Variation, with e6",0.0
+opening_variation_Sicilian Defense: Dragon Variation,0.0
+"opening_variation_Sicilian Defense: Dragon Variation, Accelerated Dragon",0.0
+"opening_variation_Sicilian Defense: Dragon Variation, Classical Variation",0.0
+eco_code_B95,0.0
+"opening_variation_Sicilian Defense: Dragon Variation, Yugoslav Attack, Modern Line",0.0
+opening_variation_Sicilian Defense: Drazic Variation,0.0
+"opening_variation_Sicilian Defense: Four Knights Variation, Exchange Variation",0.0
+opening_variation_Sicilian Defense: Kalashnikov Variation,0.0
+eco_code_B92,0.0
+"opening_variation_Sicilian Defense: French Variation, Normal",0.0
+eco_code_B90,0.0
+"opening_variation_Sicilian Defense: French Variation, Westerinen Attack",0.0
+eco_code_B84,0.0
+eco_code_B80,0.0
+opening_variation_Sicilian Defense: Hyperaccelerated Dragon,0.0
+opening_variation_Sicilian Defense: Hyperaccelerated Fianchetto,0.0
+opening_variation_Sicilian Defense: Hyperaccelerated Pterodactyl,0.0
+opening_variation_Sicilian Defense: Jalalabad Variation,0.0
+opening_variation_Nimzo-Indian Defense: Sämisch Variation,0.0
+eco_code_A17,0.0
+opening_variation_Nimzo-Indian Defense: Leningrad Variation,0.0
+opening_variation_Dutch Defense: Raphael Variation,0.0
+opening_variation_Dutch Defense: Staunton Gambit,0.0
+opening_variation_Dutch Defense: Staunton Gambit Accepted,0.0
+opening_variation_East Indian Defense,0.0
+opening_variation_Elephant Gambit,0.0
+opening_family_Danish Gambit Declined,0.0
+eco_code_A42,0.0
+"opening_variation_English Opening: Agincourt Defense, Catalan Defense, Semi-Slav Defense",0.0
+"opening_variation_English Opening: Agincourt Defense, Neo-Catalan Declined",0.0
+opening_variation_English Opening: Anglo-Dutch Defense,0.0
+opening_variation_English Opening: Anglo-Grünfeld Defense,0.0
+opening_family_Danish Gambit Accepted,0.0
+"opening_variation_English Opening: Anglo-Indian Defense, Hedgehog System",0.0
+"opening_variation_English Opening: Anglo-Indian Defense, King's Indian Formation",0.0
+"opening_variation_English Opening: Anglo-Indian Defense, King's Knight Variation",0.0
+"opening_variation_English Opening: Anglo-Indian Defense, Old Indian Formation",0.0
+opening_family_Danish Gambit,0.0
+"opening_variation_English Opening: Anglo-Indian Defense, Scandinavian Defense",0.0
+"opening_variation_English Opening: Anglo-Indian Defense, Scandinavian Defense, Exchange Variation",0.0
+opening_variation_English Opening: Anglo-Scandinavian Defense,0.0
+"opening_variation_English Opening: Anglo-Scandinavian Defense, Malvinas Variation",0.0
+"opening_variation_English Opening: Anglo-Scandinavian Defense, Schulz Gambit",0.0
+opening_variation_English Opening: Carls-Bremen System,0.0
+opening_variation_English Opening: Caro-Kann Defensive System,0.0
+opening_family_Duras Gambit,0.0
+opening_variation_Dutch Defense: Queen's Knight Variation,0.0
+eco_code_D50,0.0
+opening_variation_Dutch Defense: Normal Variation,0.0
+opening_variation_Catalan Opening: Closed,0.0
+opening_variation_Catalan Opening: Open Defense,0.0
+"opening_variation_Catalan Opening: Open Defense, Classical Line",0.0
+opening_variation_Center Game,0.0
+opening_variation_Center Game Accepted,0.0
+opening_family_Four Knights Game,0.0
+opening_family_Englund Gambit Declined,0.0
+opening_variation_Center Game: Hall Variation,0.0
+opening_family_Elephant Gambit,0.0
+opening_variation_Center Game: Paulsen Attack Variation,0.0
+opening_variation_Center Game: von der Lasa Gambit,0.0
+opening_variation_Clemenz Opening,0.0
+opening_variation_Creepy Crawly Formation: Classical Defense,0.0
+opening_variation_Czech Defense,0.0
+opening_variation_Danish Gambit,0.0
+opening_variation_Danish Gambit Accepted,0.0
+opening_variation_Danish Gambit Accepted: Classical Defense,0.0
+opening_family_East Indian Defense,0.0
+opening_variation_Danish Gambit Declined: Sörensen Defense,0.0
+opening_variation_Duras Gambit,0.0
+opening_variation_Dutch Defense,0.0
+opening_variation_Dutch Defense: Classical Variation,0.0
+opening_variation_Dutch Defense: Hopton Attack,0.0
+"opening_variation_English Opening: Four Knights System, Nimzowitsch Variation",0.0
+opening_variation_English Opening: Great Snake Variation,0.0
+opening_variation_English Opening: Jaenisch Gambit,0.0
+opening_family_Czech Defense,0.0
+opening_variation_Englund Gambit Declined: Reversed French,0.0
+opening_variation_Englund Gambit Declined: Reversed Krebs,0.0
+opening_variation_Englund Gambit Declined: Reversed Mokele Mbembe,0.0
+opening_family_Center Game Accepted,0.0
+opening_variation_Englund Gambit: Hartlaub-Charlick Gambit,0.0
+opening_variation_Englund Gambit: Main Line,0.0
+opening_variation_Englund Gambit: Soller Gambit,0.0
+eco_code_A36,0.0
+opening_variation_Englund Gambit: Stockholm Variation,0.0
+opening_variation_Englund Gambit: Zilbermints Gambit,0.0
+opening_variation_Four Knights Game: Glek System,0.0
+opening_variation_Four Knights Game: Halloween Gambit,0.0
+opening_variation_Four Knights Game: Italian Variation,0.0
+"opening_variation_Four Knights Game: Italian Variation, Noa Gambit",0.0
+opening_family_Carr Defense,0.0
+opening_family_Canard Opening,0.0
+opening_variation_Four Knights Game: Spanish Variation,0.0
+"opening_variation_Four Knights Game: Spanish Variation, Classical Variation",0.0
+"opening_variation_Four Knights Game: Spanish Variation, Double Spanish",0.0
+"opening_variation_Four Knights Game: Spanish Variation, Rubinstein Variation",0.0
+eco_code_A35,0.0
+opening_variation_French Defense: Advance Variation,0.0
+eco_code_A33,0.0
+opening_variation_Englund Gambit Declined: Reversed Brooklyn,0.0
+eco_code_A37,0.0
+opening_family_Clemenz Opening,0.0
+opening_variation_English Opening: Symmetrical Variation,0.0
+"opening_variation_English Opening: King's English Variation, Four Knights Variation, Fianchetto Line",0.0
+"opening_variation_English Opening: King's English Variation, Four Knights Variation, Quiet Line",0.0
+"opening_variation_English Opening: King's English Variation, Kramnik-Shirov Counterattack",0.0
+"opening_variation_English Opening: King's English Variation, Nimzowitsch Variation",0.0
+"opening_variation_English Opening: King's English Variation, Reversed Closed Sicilian",0.0
+"opening_variation_English Opening: King's English Variation, Three Knights System",0.0
+"opening_variation_English Opening: King's English Variation, Two Knights Variation, Keres Variation",0.0
+"opening_variation_English Opening: King's English Variation, Two Knights Variation, Reversed Dragon",0.0
+"opening_variation_English Opening: King's English Variation, Two Knights Variation, Smyslov System",0.0
+opening_variation_English Opening: Mikenas-Carls Variation,0.0
+"opening_variation_English Opening: Symmetrical Variation, Anti-Benoni Variation",0.0
+opening_family_Creepy Crawly Formation,0.0
+"opening_variation_English Opening: Symmetrical Variation, Anti-Benoni Variation, Spielmann Defense",0.0
+"opening_variation_English Opening: Symmetrical Variation, Botvinnik System",0.0
+"opening_variation_English Opening: Symmetrical Variation, Fianchetto Variation",0.0
+"opening_variation_English Opening: Symmetrical Variation, Four Knights Variation",0.0
+"opening_variation_English Opening: Symmetrical Variation, Full Symmetry Line",0.0
+"opening_variation_English Opening: Symmetrical Variation, Normal Variation",0.0
+"opening_variation_English Opening: Symmetrical Variation, Three Knights, Fianchetto Variation",0.0
+"opening_variation_English Opening: Symmetrical Variation, Two Knights Variation",0.0
+"opening_variation_English Opening: Symmetrical Variation, Ultra-Symmetrical Variation",0.0
+opening_variation_English Opening: The Whale,0.0
+opening_variation_Catalan Opening,0.0
+opening_variation_Carr Defense,0.0
+opening_variation_Caro-Kann Defense: von Hennig Gambit,0.0
+eco_code_A50,0.0
+opening_variation_Amazon Attack,0.0
+opening_variation_Anderssen's Opening,0.0
+opening_variation_Barnes Defense,0.0
+opening_variation_Benko Gambit,0.0
+opening_variation_Benko Gambit Accepted: Fully Accepted Variation,0.0
+opening_variation_Benoni Defense,0.0
+opening_family_Pseudo Queen's Indian Defense,0.0
+opening_variation_Benoni Defense: Benoni-Indian Defense,0.0
+opening_family_Ponziani Opening,0.0
+opening_variation_Benoni Defense: Hromádka System,0.0
+opening_family_Polish Defense,0.0
+opening_family_Philidor Defense,0.0
+opening_family_Paleface Attack,0.0
+opening_variation_Bird Opening,0.0
+opening_variation_Bird Opening: Dutch Variation,0.0
+"opening_variation_Bird Opening: Dutch Variation, Batavo Gambit",0.0
+opening_variation_Bird Opening: From's Gambit,0.0
+opening_variation_Bird Opening: Schlechter Gambit,0.0
+opening_variation_Bird Opening: Williams Gambit,0.0
+opening_variation_Bishop's Opening: Berlin Defense,0.0
+opening_variation_Bishop's Opening: Boi Variation,0.0
+opening_variation_Bishop's Opening: Calabrese Countergambit,0.0
+opening_variation_Bishop's Opening: Khan Gambit,0.0
+"opening_variation_Alekhine Defense: Two Pawns Attack, Tate Variation",0.0
+"opening_variation_Alekhine Defense: Two Pawns Attack, Lasker Variation",0.0
+opening_family_Queen's Indian Accelerated,0.0
+"opening_family_Rapport-Jobava System, with e6",0.0
+opening_family_Three Knights Opening,0.0
+opening_family_Torre Attack,0.0
+opening_family_Valencia Opening,0.0
+opening_family_Van Geet Opening,0.0
+opening_family_Slav Indian,0.0
+"opening_family_Vienna Gambit, with Max Lange Defense",0.0
+opening_family_Wade Defense,0.0
+opening_family_Rubinstein Opening,0.0
+opening_family_Richter-Veresov Attack,0.0
+eco_code_A46,0.0
+opening_family_infrequent_sklearn,0.0
+opening_variation_Alekhine Defense: Sämisch Attack,0.0
+opening_variation_Alekhine Defense: Brooklyn Variation,0.0
+opening_family_Rapport-Jobava System,0.0
+opening_variation_Alekhine Defense: Four Pawns Attack,0.0
+opening_variation_Alekhine Defense: Krejcik Variation,0.0
+opening_variation_Alekhine Defense: Maróczy Variation,0.0
+"opening_variation_Alekhine Defense: Modern Variation, Schmid Variation",0.0
+opening_variation_Alekhine Defense: Mokele Mbembe,0.0
+eco_code_A47,0.0
+opening_variation_Alekhine Defense: Scandinavian Variation,0.0
+"opening_variation_Alekhine Defense: Scandinavian Variation, Geschev Gambit",0.0
+opening_variation_Bishop's Opening: Lewis Gambit,0.0
+opening_variation_Bishop's Opening: Philidor Variation,0.0
+opening_variation_Caro-Kann Defense: Ulysses Gambit,0.0
+opening_variation_Bishop's Opening: Ponziani Gambit,0.0
+opening_variation_Caro-Kann Defense: Alien Gambit,0.0
+opening_family_Lasker Simul Special,0.0
+opening_variation_Caro-Kann Defense: Bronstein-Larsen Variation,0.0
+opening_variation_Caro-Kann Defense: Campomanes Attack,0.0
+opening_variation_Caro-Kann Defense: Classical Variation,0.0
+"opening_variation_Caro-Kann Defense: Classical Variation, Main Line",0.0
+opening_family_King's Pawn Opening,0.0
+eco_code_A44,0.0
+eco_code_A53,0.0
+opening_family_King's Gambit,0.0
+"opening_variation_Caro-Kann Defense: Exchange Variation, Rubinstein Variation",0.0
+opening_variation_Caro-Kann Defense: Forgacs Variation,0.0
+opening_family_Kangaroo Defense,0.0
+opening_family_Gunderam Defense,0.0
+opening_family_Grünfeld Defense,0.0
+opening_variation_Caro-Kann Defense: Modern Variation,0.0
+opening_variation_Caro-Kann Defense: Panov Attack,0.0
+"opening_variation_Caro-Kann Defense: Panov Attack, Modern Defense",0.0
+"opening_variation_Caro-Kann Defense: Panov Attack, Modern Defense, Mieses Line",0.0
+opening_variation_Caro-Kann Defense: Rasa-Studier Gambit,0.0
+opening_variation_Caro-Kann Defense: Tartakower Variation,0.0
+"opening_variation_Caro-Kann Defense: Two Knights Attack, Mindeno Variation",0.0
+"opening_variation_Caro-Kann Defense: Two Knights Attack, Mindeno Variation, Exchange Line",0.0
+opening_variation_Caro-Kann Defense: Alekhine Gambit,0.0
+"opening_variation_Caro-Kann Defense: Advance Variation, Van der Wiel Attack",0.0
+"opening_variation_Caro-Kann Defense: Advance Variation, Tal Variation",0.0
+opening_variation_Blackmar-Diemer Gambit: Netherlands Variation,0.0
+opening_variation_Bishop's Opening: Vienna Hybrid,0.0
+"opening_variation_Bishop's Opening: Vienna Hybrid, Spielmann Attack",0.0
+opening_variation_Blackmar-Diemer Gambit,0.0
+opening_variation_Blackmar-Diemer Gambit Accepted: Euwe Defense,0.0
+opening_variation_Blackmar-Diemer Gambit Accepted: Ryder Gambit,0.0
+opening_variation_Blackmar-Diemer Gambit Accepted: Teichmann Defense,0.0
+opening_variation_Blackmar-Diemer Gambit Declined: O'Kelly Defense,0.0
+opening_variation_Blackmar-Diemer Gambit Declined: Vienna Defense,0.0
+opening_variation_Blackmar-Diemer Gambit Declined: Weinsbach Defense,0.0
+opening_family_Nimzo-Indian Defense,0.0
+opening_variation_Blackmar-Diemer Gambit: Zeller Defense,0.0
+opening_family_Latvian Gambit Accepted,0.0
+opening_variation_Blackmar-Diemer Gambit: von Popiel Gambit,0.0
+opening_variation_Borg Defense,0.0
+opening_variation_Borg Defense: Borg Gambit,0.0
+opening_variation_Canard Opening,0.0
+opening_family_Neo-Grünfeld Defense,0.0
+eco_code_A51,0.0
+opening_family_Mexican Defense,0.0
+opening_family_Lion Defense,0.0
+"opening_variation_Caro-Kann Defense: Advance Variation, Bayonet Attack",0.0
+"opening_variation_Caro-Kann Defense: Advance Variation, Botvinnik-Carls Defense",0.0
+"opening_variation_French Defense: Advance Variation, Extended Bishop Swap",0.0
+"opening_variation_French Defense: Advance Variation, Main Line",0.0
+"opening_variation_French Defense: Advance Variation, Milner-Barry Gambit",0.0
+"opening_variation_King's Indian Defense: Sämisch Variation, Yates Defense",0.0
+opening_variation_King's Gambit Declined: Classical Variation,0.0
+opening_variation_King's Gambit Declined: Falkbeer Countergambit,0.0
+"opening_variation_King's Gambit Declined: Falkbeer Countergambit, Blackburne Attack",0.0
+"opening_variation_King's Gambit Declined: Falkbeer Countergambit, Modern Transfer",0.0
+eco_code_E05,0.0
+opening_variation_King's Gambit Declined: Norwalde Variation,0.0
+opening_variation_King's Indian Attack: French Variation,0.0
+opening_variation_King's Indian Attack: Keres Variation,0.0
+opening_variation_King's Indian Attack: Sicilian Variation,0.0
+opening_variation_King's Indian Attack: Wahls Defense,0.0
+opening_variation_King's Indian Attack: Yugoslav Variation,0.0
+opening_variation_King's Indian Defense,0.0
+opening_variation_King's Indian Defense: Accelerated Averbakh Variation,0.0
+"opening_variation_King's Indian Defense: Fianchetto Variation, Uhlmann-Szabo System",0.0
+opening_variation_King's Indian Defense: Four Pawns Attack,0.0
+"opening_variation_King's Indian Defense: Four Pawns Attack, Dynamic Attack",0.0
+opening_variation_King's Indian Defense: Makogonov Variation,0.0
+eco_code_A20,0.0
+"opening_variation_King's Indian Defense: Normal Variation, King's Knight Variation",0.0
+"opening_variation_King's Indian Defense: Normal Variation, Rare Defenses",0.0
+opening_variation_King's Indian Defense: Orthodox Variation,0.0
+opening_variation_King's Indian Defense: Semi-Classical Variation,0.0
+opening_variation_King's Indian Defense: Smyslov Variation,0.0
+opening_variation_King's Gambit Accepted: Villemson Gambit,0.0
+opening_variation_King's Gambit Accepted: Schallopp Defense,0.0
+eco_code_E06,0.0
+"opening_variation_Italian Game: Two Knights Defense, Traxler Counterattack, Knight Sacrifice Line",0.0
+"opening_variation_Italian Game: Two Knights Defense, Fritz Variation",0.0
+"opening_variation_Italian Game: Two Knights Defense, Knight Attack",0.0
+"opening_variation_Italian Game: Two Knights Defense, Knight Attack, Normal Variation",0.0
+"opening_variation_Italian Game: Two Knights Defense, Modern Bishop's Opening",0.0
+"opening_variation_Italian Game: Two Knights Defense, Open Variation",0.0
+"opening_variation_Italian Game: Two Knights Defense, Perreux Variation",0.0
+eco_code_E15,0.0
+eco_code_E12,0.0
+"opening_variation_Italian Game: Two Knights Defense, Ponziani-Steinitz Gambit",0.0
+"opening_variation_Italian Game: Two Knights Defense, Traxler Counterattack, Bishop Sacrifice Line",0.0
+"opening_variation_Italian Game: Two Knights Defense, Ulvestad Variation",0.0
+eco_code_E10,0.0
+opening_variation_Kangaroo Defense,0.0
+opening_variation_King's Gambit,0.0
+eco_code_E11,0.0
+opening_variation_King's Gambit Accepted: Becker Defense,0.0
+opening_variation_King's Gambit Accepted: Bishop's Gambit,0.0
+"opening_variation_King's Gambit Accepted: Bishop's Gambit, Maurian Defense",0.0
+opening_variation_King's Gambit Accepted: Blachly Gambit,0.0
+opening_variation_King's Gambit Accepted: Bonsch-Osmolovsky Variation,0.0
+opening_variation_King's Gambit Accepted: Cunningham Defense,0.0
+opening_variation_King's Gambit Accepted: Fischer Defense,0.0
+"opening_variation_King's Indian Defense: Sämisch Variation, Normal Defense",0.0
+opening_variation_King's Indian Defense: Zinnowitz Variation,0.0
+eco_code_E21,0.0
+eco_code_E04,0.0
+opening_variation_London System,0.0
+opening_variation_Mexican Defense,0.0
+opening_family_Tarrasch Defense,0.0
+eco_code_D77,0.0
+opening_variation_Mikenas Defense,0.0
+opening_variation_Mikenas Defense: Lithuanian Variation,0.0
+opening_variation_Modern Defense,0.0
+opening_variation_Modern Defense: Averbakh System,0.0
+opening_variation_Modern Defense: Bishop Attack,0.0
+opening_variation_Modern Defense: Geller's System,0.0
+eco_code_D60,0.0
+"opening_variation_Modern Defense: Mongredien Defense, with Nc3",0.0
+"opening_variation_Modern Defense: Mongredien Defense, with Nf3",0.0
+opening_variation_Modern Defense: Norwegian Defense,0.0
+opening_variation_Modern Defense: Pseudo-Austrian Attack,0.0
+eco_code_A15,0.0
+opening_variation_Modern Defense: Standard Line,0.0
+eco_code_D52,0.0
+opening_variation_Modern Defense: Two Knights Variation,0.0
+"opening_variation_Modern Defense: Two Knights Variation, Suttles Variation",0.0
+"opening_variation_Neo-Grünfeld Defense: Classical Variation, Original Defense",0.0
+opening_variation_Neo-Grünfeld Defense: Ultra-Delayed Exchange Variation,0.0
+opening_variation_Nimzo-Indian Defense,0.0
+opening_variation_Lion Defense: Lion's Jaw,0.0
+opening_variation_Latvian Gambit: Mlotkowski Variation,0.0
+opening_variation_Latvian Gambit: Mason Countergambit,0.0
+opening_variation_King's Pawn Game: MacLeod Attack,0.0
+opening_variation_King's Knight Opening: Konstantinopolsky,0.0
+eco_code_E01,0.0
+eco_code_E00,0.0
+eco_code_D94,0.0
+eco_code_D93,0.0
+"opening_variation_King's Pawn Game: Clam Variation, King's Gambit Reversed",0.0
+opening_variation_King's Pawn Game: Damiano Defense,0.0
+opening_variation_King's Pawn Game: Dresden Opening,0.0
+opening_variation_King's Pawn Game: Gunderam Gambit,0.0
+eco_code_D90,0.0
+eco_code_D85,0.0
+eco_code_D78,0.0
+opening_variation_King's Pawn Game: McConnell Defense,0.0
+opening_variation_King's Pawn Game: Mengarini's Opening,0.0
+opening_variation_King's Pawn Game: Napoleon Attack,0.0
+opening_variation_King's Pawn Game: Tayler Opening,0.0
+opening_variation_King's Pawn Game: Tortoise Opening,0.0
+"opening_variation_King's Pawn Game: Wayward Queen Attack, Kiddie Countergambit",0.0
+opening_variation_King's Pawn Opening,0.0
+eco_code_D80,0.0
+opening_variation_Lasker Simul Special,0.0
+opening_variation_Latvian Gambit,0.0
+eco_code_E20,0.0
+opening_variation_Italian Game: Scotch Invitation Declined,0.0
+opening_family_Borg Defense,0.0
+"opening_variation_Grünfeld Defense: Exchange Variation, Modern Exchange Variation",0.0
+opening_family_Bird Opening,0.0
+opening_variation_French Defense: Rubinstein Variation,0.0
+eco_code_A29,0.0
+opening_variation_French Defense: Réti-Spielmann Attack,0.0
+opening_family_Benko Gambit Accepted,0.0
+opening_variation_French Defense: St. George Defense,0.0
+opening_variation_French Defense: Steiner Variation,0.0
+opening_variation_French Defense: Steinitz Attack,0.0
+opening_variation_French Defense: Steinitz Variation,0.0
+"opening_variation_French Defense: Steinitz Variation, Boleslavsky Variation",0.0
+eco_code_A54,0.0
+"opening_variation_French Defense: Tarrasch Variation, Closed Variation",0.0
+"opening_variation_French Defense: Tarrasch Variation, Open System",0.0
+"opening_variation_French Defense: Tarrasch Variation, Open System, Euwe-Keres Line",0.0
+opening_variation_French Defense: Two Knights Variation,0.0
+opening_variation_French Defense: Winawer Variation,0.0
+"opening_variation_French Defense: Winawer Variation, Delayed Exchange Variation",0.0
+eco_code_A56,0.0
+opening_variation_Goldsmith Defense,0.0
+opening_family_Amazon Attack,0.0
+"opening_variation_Grob Opening: Grob Gambit, Fritz Gambit",0.0
+eco_code_E94,0.0
+eco_code_E91,0.0
+opening_variation_French Defense: Perseus Gambit,0.0
+opening_variation_French Defense: Pelikan Variation,0.0
+eco_code_A30,0.0
+opening_variation_French Defense: Diemer-Duhm Gambit Accepted,0.0
+opening_family_Bogo-Indian Defense,0.0
+"opening_variation_French Defense: Advance Variation, Steinitz Variation",0.0
+opening_variation_French Defense: Alapin Gambit,0.0
+opening_variation_French Defense: Bird Invitation,0.0
+opening_variation_French Defense: Carlson Gambit,0.0
+"opening_variation_French Defense: Classical Variation, Burn Variation",0.0
+"opening_variation_French Defense: Classical Variation, Delayed Exchange Variation",0.0
+"opening_variation_French Defense: Classical Variation, Shirov-Anand Variation",0.0
+"opening_variation_French Defense: Classical Variation, Steinitz Variation",0.0
+"opening_variation_French Defense: Classical Variation, Swiss Variation",0.0
+opening_family_Blackmar-Diemer Gambit Declined,0.0
+opening_variation_French Defense: Mediterranean Defense,0.0
+eco_code_A31,0.0
+"opening_variation_French Defense: Exchange Variation, Svenonius Variation",0.0
+opening_variation_French Defense: Franco-Sicilian Defense,0.0
+opening_variation_French Defense: Hecht-Reefschläger Variation,0.0
+opening_variation_French Defense: Horwitz Attack,0.0
+"opening_variation_French Defense: Horwitz Attack, Papa-Ticulat Gambit",0.0
+opening_variation_French Defense: King's Indian Attack,0.0
+opening_family_Blackmar-Diemer Gambit Accepted,0.0
+opening_family_Blackmar-Diemer Gambit,0.0
+opening_variation_French Defense: Marshall Gambit,0.0
+eco_code_E90,0.0
+opening_variation_Grünfeld Defense: Stockholm Variation,0.0
+"opening_variation_Italian Game: Scotch Gambit, Max Lange Attack, Spielmann Defense",0.0
+opening_variation_Grünfeld Defense: Three Knights Variation,0.0
+opening_variation_Italian Game: Anti-Fried Liver Defense,0.0
+opening_variation_Italian Game: Blackburne-Kostić Gambit,0.0
+opening_variation_Italian Game: Classical Variation,0.0
+"opening_variation_Italian Game: Classical Variation, Albin Gambit",0.0
+"opening_variation_Italian Game: Classical Variation, Center Attack",0.0
+"opening_variation_Italian Game: Classical Variation, Giuoco Pianissimo, with d6",0.0
+"opening_variation_Italian Game: Classical Variation, Giuoco Pianissimo, with h6",0.0
+"opening_variation_Italian Game: Classical Variation, Greco Gambit, Traditional Line",0.0
+"opening_variation_Italian Game: Classical Variation, La Bourdonnais Variation",0.0
+opening_variation_Italian Game: Evans Gambit Declined,0.0
+eco_code_E60,0.0
+opening_variation_Italian Game: Giuoco Pianissimo,0.0
+"opening_variation_Italian Game: Giuoco Pianissimo, Canal Variation",0.0
+eco_code_A27,0.0
+"opening_variation_Italian Game: Giuoco Pianissimo, Lucchini Gambit",0.0
+eco_code_E51,0.0
+eco_code_E30,0.0
+"opening_variation_Italian Game: Giuoco Piano, Greco's Attack",0.0
+eco_code_E24,0.0
+opening_variation_Italian Game: Jerome Gambit,0.0
+opening_variation_Italian Game: Paris Defense,0.0
+opening_variation_Italian Game: Rosentreter Gambit,0.0
+"opening_variation_Italian Game: Scotch Gambit, Max Lange Attack",0.0
+eco_code_E61,0.0
+opening_variation_Indian Defense: West Indian Defense,0.0
+eco_code_E62,0.0
+eco_code_E76,0.0
+"opening_variation_Grünfeld Defense: Three Knights Variation, Burille Variation",0.0
+"opening_variation_Grünfeld Defense: Three Knights Variation, Hungarian Variation",0.0
+"opening_variation_Grünfeld Defense: Three Knights Variation, Petrosian System",0.0
+eco_code_E83,0.0
+opening_variation_Hungarian Opening,0.0
+opening_variation_Hungarian Opening: Catalan Formation,0.0
+opening_variation_Hungarian Opening: Dutch Defense,0.0
+opening_variation_Hungarian Opening: Reversed Alekhine,0.0
+opening_variation_Hungarian Opening: Reversed Modern Defense,0.0
+opening_variation_Hungarian Opening: Sicilian Invitation,0.0
+opening_variation_Indian Defense: Anti-Nimzo-Indian,0.0
+opening_variation_Indian Defense: Tartakower Attack,0.0
+eco_code_E73,0.0
+"opening_variation_Indian Defense: Budapest Defense, Adler Variation",0.0
+eco_code_A28,0.0
+opening_variation_Indian Defense: Czech-Indian,0.0
+eco_code_E71,0.0
+opening_variation_Indian Defense: Normal Variation,0.0
+opening_variation_Indian Defense: Omega Gambit,0.0
+eco_code_A58,0.0
+opening_variation_Indian Defense: Reversed Chigorin Defense,0.0
+opening_variation_Indian Defense: Spielmann-Indian,0.0
+opening_variation_Gunderam Defense,0.0

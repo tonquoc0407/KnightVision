@@ -1,0 +1,21 @@
+name: knightvision
+version: "1.0.0"
+config-version: 2
+
+profile: knightvision
+
+model-paths: ["models"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  knightvision:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    dimensions:
+      +materialized: table
+    marts:
+      +materialized: table

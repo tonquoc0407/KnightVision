@@ -1,0 +1,159 @@
+{
+  "config": {
+    "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+    "output_dir": "models/opening_outcome",
+    "random_state": 42,
+    "test_size": 0.2
+  },
+  "models": {
+    "post_game": {
+      "baselines": {
+        "class_prior_probability": {
+          "accuracy": 0.5001008799838592,
+          "balanced_accuracy": 0.3333333333333333,
+          "log_loss": 0.8216724451012588,
+          "macro_f1": 0.2222521105777189,
+          "weighted_f1": 0.33344542823456164
+        },
+        "elo_favorite": {
+          "accuracy": 0.5360296742352522,
+          "balanced_accuracy": 0.37042183434564807,
+          "log_loss": 16.72318560470034,
+          "macro_f1": 0.3636359245773913,
+          "weighted_f1": 0.5264097049403771
+        },
+        "majority_class": {
+          "accuracy": 0.5001008799838592,
+          "balanced_accuracy": 0.3333333333333333,
+          "log_loss": 18.01819061138645,
+          "macro_f1": 0.2222521105777189,
+          "weighted_f1": 0.33344542823456164
+        }
+      },
+      "class_counts": {
+        "black_win": 149561,
+        "draw": 11488,
+        "white_win": 161115
+      },
+      "classes": [
+        "black_win",
+        "draw",
+        "white_win"
+      ],
+      "config": {
+        "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+        "output_dir": "models/opening_outcome",
+        "random_state": 42,
+        "test_size": 0.2
+      },
+      "features": {
+        "categorical": [
+          "eco_code",
+          "opening_family",
+          "opening_variation",
+          "time_control_type"
+        ],
+        "encoded_count": 1274,
+        "numeric": [
+          "white_elo",
+          "black_elo",
+          "elo_diff",
+          "abs_elo_diff",
+          "base_time_seconds",
+          "increment_seconds",
+          "year",
+          "month",
+          "game_length",
+          "has_clock_data",
+          "has_capture",
+          "capture_count",
+          "white_castled",
+          "black_castled",
+          "legal_prefix_length"
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.7583536386634178,
+        "balanced_accuracy": 0.7388750912965026,
+        "log_loss": 0.7664071092759738,
+        "macro_f1": 0.624537128483481,
+        "weighted_f1": 0.8028387424375014
+      },
+      "model_name": "post_game",
+      "row_count": 322164,
+      "test_rows": 64433,
+      "train_rows": 257731
+    },
+    "pre_game": {
+      "baselines": {
+        "class_prior_probability": {
+          "accuracy": 0.5001008799838592,
+          "balanced_accuracy": 0.3333333333333333,
+          "log_loss": 0.8216724451012588,
+          "macro_f1": 0.2222521105777189,
+          "weighted_f1": 0.33344542823456164
+        },
+        "elo_favorite": {
+          "accuracy": 0.5360296742352522,
+          "balanced_accuracy": 0.37042183434564807,
+          "log_loss": 16.72318560470034,
+          "macro_f1": 0.3636359245773913,
+          "weighted_f1": 0.5264097049403771
+        },
+        "majority_class": {
+          "accuracy": 0.5001008799838592,
+          "balanced_accuracy": 0.3333333333333333,
+          "log_loss": 18.01819061138645,
+          "macro_f1": 0.2222521105777189,
+          "weighted_f1": 0.33344542823456164
+        }
+      },
+      "class_counts": {
+        "black_win": 149561,
+        "draw": 11488,
+        "white_win": 161115
+      },
+      "classes": [
+        "black_win",
+        "draw",
+        "white_win"
+      ],
+      "config": {
+        "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+        "output_dir": "models/opening_outcome",
+        "random_state": 42,
+        "test_size": 0.2
+      },
+      "features": {
+        "categorical": [
+          "eco_code",
+          "opening_family",
+          "opening_variation",
+          "time_control_type"
+        ],
+        "encoded_count": 1267,
+        "numeric": [
+          "white_elo",
+          "black_elo",
+          "elo_diff",
+          "abs_elo_diff",
+          "base_time_seconds",
+          "increment_seconds",
+          "year",
+          "month"
+        ]
+      },
+      "metrics": {
+        "accuracy": 0.36079338227305885,
+        "balanced_accuracy": 0.3981076062156996,
+        "log_loss": 1.0689264762199961,
+        "macro_f1": 0.3155661532047416,
+        "weighted_f1": 0.4194689312146135
+      },
+      "model_name": "pre_game",
+      "row_count": 322164,
+      "test_rows": 64433,
+      "train_rows": 257731
+    }
+  }
+}
