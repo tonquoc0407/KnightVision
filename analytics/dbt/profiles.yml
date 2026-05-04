@@ -4,4 +4,4 @@ knightvision:
     dev:
       type: duckdb
       path: "{{ env_var('KNIGHTVISION_DUCKDB_PATH', '../../warehouse/knightvision.duckdb') }}"
-      threads: 4
+      threads: "{{ env_var('KNIGHTVISION_DBT_THREADS', '4') | int }}"

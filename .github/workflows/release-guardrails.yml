@@ -41,16 +41,19 @@ jobs:
         working-directory: analytics/dbt
         env:
           KNIGHTVISION_DUCKDB_PATH: ../../warehouse/knightvision_sample.duckdb
+          KNIGHTVISION_DBT_THREADS: "1"
         run: uv run --python 3.11 dbt parse --profiles-dir .
 
       - name: dbt run
         working-directory: analytics/dbt
         env:
           KNIGHTVISION_DUCKDB_PATH: ../../warehouse/knightvision_sample.duckdb
+          KNIGHTVISION_DBT_THREADS: "1"
         run: uv run --python 3.11 dbt run --profiles-dir .
 
       - name: dbt test
         working-directory: analytics/dbt
         env:
           KNIGHTVISION_DUCKDB_PATH: ../../warehouse/knightvision_sample.duckdb
+          KNIGHTVISION_DBT_THREADS: "1"
         run: uv run --python 3.11 dbt test --profiles-dir .
