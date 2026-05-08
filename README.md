@@ -1,6 +1,6 @@
 # KnightVision
 
-KnightVision is a chess analytics data platform over the Lichess public database. It is organized as a portfolio-grade data engineering project: monthly dump ingestion, PySpark medallion processing, DuckDB/dbt analytics, Airflow orchestration, and Streamlit dashboards.
+KnightVision is a chess analytics data platform over the Lichess public database. It is organized as a portfolio-grade data engineering project: monthly dump ingestion, PySpark medallion processing, DuckDB/dbt analytics, Airflow orchestration, custom dashboarding, and ML case studies.
 
 The original web-app direction is intentionally out of scope. This repository is focused on backend, data engineering, and analytics work.
 
@@ -18,7 +18,7 @@ flowchart LR
     G --> W[DuckDB warehouse]
     S --> W
     W --> D[dbt marts and tests]
-    D --> U[Streamlit dashboard]
+    D --> U[Custom React dashboard]
     W --> M[ML case studies]
     G --> M
     D --> O[Airflow release gates]
@@ -55,7 +55,9 @@ pipeline/               # PySpark Bronze/Silver/Gold jobs and quality checks
 warehouse/              # DuckDB initialization, schema, dashboard queries
 analytics/dbt/          # dbt-duckdb project
 orchestration/          # Airflow DAGs, sensor plugin, Airflow compose file
-dashboard/              # Streamlit app and visual components
+dashboard_api/          # FastAPI backend for the custom local dashboard
+dashboard_web/          # React/Vite dashboard frontend
+dashboard/              # Legacy Streamlit dashboard fallback
 notebooks/              # EDA, feature engineering, ML exploration
 models/                 # Saved model artifacts
 data/                   # Local raw/lake/warehouse artifacts, ignored by git
@@ -65,22 +67,27 @@ tests/                  # Unit and integration tests
 
 ## Feature Overview
 
-See [docs/FEATURES.md](docs/FEATURES.md) for the full list of implemented platform, analytics, dashboard, Stockfish, orchestration, and ML features.
+See [docs/FEATURES.md](docs/FEATURES.md) for the full list of implemented platform, analytics, dashboard, Stockfish, orchestration, and ML features. See [docs/MODEL_CARDS.md](docs/MODEL_CARDS.md) for model-card summaries of the three ML case studies.
 
 ## Local Setup
 
 Prerequisites:
 
 - Python 3.10 or 3.11
+- `uv`
+- Node.js and npm for the custom React dashboard
 - Java 11+ for Spark
 - Docker with Docker Compose for Airflow
-- Enough disk space for selected Lichess monthly dumps
+- Enough disk space for selected Lichess monthly dumps (about 30-100GB for the full rated dump, smaller for bounded benchmarks)
+- Optional: a UCI-compatible Stockfish binary for blunder analytics
 
 Install dependencies:
 
 ```bash
 make setup
 ```
+
+Optional local overrides live in [.env.example](.env.example). Copy it to `.env` only if you want to centralize values like `KNIGHTVISION_DUCKDB_PATH`, `STOCKFISH_PATH`, or Telegram settings; the normal `make` targets work without it.
 
 Run the local demo pipeline and dbt checks:
 
@@ -90,7 +97,7 @@ make demo
 
 This parses `fixtures/sample_lichess.pgn`, builds the Bronze/Silver/Gold lake under `data/sample`, initializes `warehouse/knightvision_sample.duckdb`, and runs dbt against that sample warehouse.
 
-Run a real monthly flow:
+Run a real monthly flow (! CAUTION WITH LARGE MONTHLY DUMPS !):
 
 ```bash
 make pipeline MONTH=2024-01
@@ -122,18 +129,22 @@ Run the dashboard on the main warehouse:
 make dashboard
 ```
 
+The custom dashboard opens at `http://localhost:3636`. It starts a React/Vite frontend on port `3636` and a FastAPI dashboard API on port `3637`.
+
+The dashboard includes Overview, Evidence, Openings, Players, Blunders, Time Pressure, ML Lab, and Quality tabs. Use the warehouse selector in the sidebar to switch between the main, sample, real sample, and benchmark DuckDB files when they exist locally.
+
 Run the dashboard on the deterministic sample warehouse:
 
 ```bash
 make dashboard-sample
 ```
 
-The Makefile wraps the longer `uv`, Python 3.11, Spark environment cleanup, `PYTHONPATH`, and DuckDB path commands. If you need to override them, use variables such as `PYTHON=python`, `DUCKDB_PATH=warehouse/knightvision_benchmark.duckdb`, or `MONTH=2026-04`.
+The Makefile wraps the longer `uv`, Python 3.11, Spark environment cleanup, `PYTHONPATH`, dashboard ports, and DuckDB path commands. If you need to override them, use variables such as `PYTHON=python`, `DUCKDB_PATH=warehouse/knightvision_benchmark.duckdb`, `DASHBOARD_PORT=3636`, or `MONTH=2026-04`.
 
-If you run Streamlit directly instead of `make dashboard`, keep the repository root on `PYTHONPATH`:
+The old Streamlit dashboard is still available as a fallback:
 
 ```bash
-KNIGHTVISION_DUCKDB_PATH=warehouse/knightvision_sample.duckdb PYTHONPATH=. streamlit run dashboard/app.py
+make dashboard-streamlit
 ```
 
 ## Airflow
@@ -156,12 +167,39 @@ Useful commands:
 ```bash
 make airflow-logs
 make airflow-down
+make airflow-smoke
+make airflow-notify-test
 ```
 
 The monthly DAG is `knightvision_monthly_pipeline`. It runs on the 5th of each month at 12:00 UTC and defaults to processing the previous month. For manual runs, pass a `month` value such as:
 
 ```json
 {"month": "2024-01"}
+```
+
+For a tiny Airflow runtime smoke test without downloading a full monthly archive, compress the fixture to the filename the DAG expects, then run task tests with execution date `2024-02-05` so the DAG resolves the batch month as `2024-01`:
+
+```bash
+mkdir -p data/raw
+zstd -f fixtures/sample_lichess.pgn -o data/raw/lichess_db_standard_rated_2024-01.pgn.zst
+make airflow-up
+docker compose --env-file .env -f orchestration/docker-compose.airflow.yml exec airflow-scheduler airflow tasks test knightvision_monthly_pipeline parse_to_bronze_parquet 2024-02-05
+```
+
+Then run the downstream task IDs in order: `spark_bronze_ingest`, `spark_silver_transform`, `silver_quality_gate`, `spark_gold_player_stats`, `spark_gold_opening_perf`, `spark_gold_time_pressure`, `init_warehouse`, `dbt_run`, and `dbt_test`.
+
+The same proof is wrapped by:
+
+```bash
+make airflow-smoke
+```
+
+The DAG notification task is disabled by default because the DAG param `notify` defaults to `false`. To test Telegram delivery explicitly after setting `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env`, run:
+
+```bash
+make airflow-up
+make airflow-notify-test
+make airflow-down
 ```
 
 The backfill DAG is `knightvision_backfill_pipeline`. It accepts:

@@ -1,6 +1,6 @@
 # Machine Learning
 
-KnightVision includes three reproducible ML case studies over the benchmark DuckDB warehouse. Each pipeline writes metrics, plots, saved preprocessing/model artifacts, and a `model_card.md` with interpretation and limitations.
+KnightVision includes three reproducible ML case studies over the benchmark DuckDB warehouse. Each pipeline writes metrics, plots, saved preprocessing/model artifacts, and a `model_card.md` with interpretation and limitations. A consolidated project-level summary is available in [MODEL_CARDS.md](MODEL_CARDS.md).
 
 Default source:
 
@@ -144,6 +144,6 @@ These labels are unsupervised statistical personas from available behavior featu
 
 - No scheduled retraining DAG yet.
 - No model registry or artifact versioning.
-- No dashboard integration for ML outputs yet.
+- Custom dashboard integration reads saved metrics, reports, plots, feature importance, cluster profiles, and sample assignments from `models/`.
 - No online inference API.
 - No drift monitoring.

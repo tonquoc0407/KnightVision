@@ -5,11 +5,21 @@ UV_CACHE_DIR ?= /tmp/uv-cache
 UV_PYTHON_INSTALL_DIR ?= /tmp/uv-python
 UV_LINK_MODE ?= copy
 UV_RUN := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11
+UV_RUN_DEV := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11 --extra dev
 PYTHON ?= env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN) python
 DBT ?= $(UV_RUN) dbt
 STREAMLIT ?= $(UV_RUN) streamlit
+NPM ?= npm
+DASHBOARD_HOST ?= 127.0.0.1
+DASHBOARD_PORT ?= 3636
+API_PORT ?= 3637
 DBT_DIR ?= analytics/dbt
 AIRFLOW_COMPOSE ?= orchestration/docker-compose.airflow.yml
+AIRFLOW_ENV_FILE := $(if $(wildcard .env),--env-file .env,)
+AIRFLOW_EXEC := docker compose $(AIRFLOW_ENV_FILE) -f $(AIRFLOW_COMPOSE) exec -T airflow-scheduler
+AIRFLOW_SMOKE_MONTH ?= 2024-01
+AIRFLOW_SMOKE_DATE ?= 2024-02-05
+AIRFLOW_SMOKE_RAW ?= data/raw/lichess_db_standard_rated_$(AIRFLOW_SMOKE_MONTH).pgn.zst
 RAW_DUMP ?= data/raw/lichess_db_standard_rated_$(MONTH).pgn.zst
 LANDING_GAMES ?= data/landing/games/$(MONTH)
 QUALITY_DIR ?= data/quality/$(MONTH)
@@ -37,13 +47,14 @@ PLAYER_STYLE_OUTPUT_DIR ?= models/player_style_clusters
 PLAYER_STYLE_MIN_GAMES ?= 10
 PLAYER_STYLE_CLUSTERS ?= 5
 
-.PHONY: help setup install format lint test demo download parse bronze silver quality gold blunders sample-blunders train-blunder-model train-opening-outcome cluster-player-styles warehouse dbt-run dbt-test dbt-docs sample-dbt pipeline sample-pipeline dashboard dashboard-sample airflow-up airflow-down airflow-logs clean
+.PHONY: help setup install dashboard-install format lint test demo download parse bronze silver quality gold blunders sample-blunders train-blunder-model train-opening-outcome cluster-player-styles warehouse dbt-run dbt-test dbt-docs sample-dbt pipeline sample-pipeline dashboard dashboard-api dashboard-web dashboard-streamlit dashboard-sample airflow-up airflow-down airflow-logs airflow-smoke airflow-notify-test clean
 
 help:
 	@printf "KnightVision targets:\n"
 	@printf "  make setup                Install Python 3.11 dependencies with uv\n"
 	@printf "  make demo                 Run sample pipeline and sample dbt checks\n"
-	@printf "  make dashboard-sample     Open dashboard on the sample warehouse\n"
+	@printf "  make dashboard            Open custom dashboard on localhost:3636\n"
+	@printf "  make dashboard-sample     Open custom dashboard on the sample warehouse\n"
 	@printf "  make test                 Run tests with Spark env isolation\n"
 	@printf "  make download MONTH=YYYY-MM\n"
 	@printf "  make parse MONTH=YYYY-MM\n"
@@ -58,6 +69,8 @@ help:
 	@printf "  make dbt-run && make dbt-test\n"
 	@printf "  make dbt-docs              Generate dbt lineage docs\n"
 	@printf "  make airflow-up           Start local Airflow on localhost:8080\n"
+	@printf "  make airflow-smoke        Run tiny .pgn.zst Airflow runtime proof\n"
+	@printf "  make airflow-notify-test  Send a Telegram smoke notification\n"
 
 setup:
 	UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) sync --python 3.11 --extra dev
@@ -65,14 +78,17 @@ setup:
 install:
 	$(MAKE) setup
 
+dashboard-install:
+	$(NPM) --prefix dashboard_web install
+
 format:
-	$(UV_RUN) ruff format .
+	$(UV_RUN_DEV) ruff format .
 
 lint:
-	$(UV_RUN) ruff check .
+	$(UV_RUN_DEV) ruff check .
 
 test:
-	env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN) python -m pytest -q
+	env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN_DEV) python -m pytest -q
 
 demo: sample-pipeline sample-dbt
 
@@ -145,19 +161,54 @@ warehouse:
 	$(PYTHON) warehouse/init_db.py
 
 dashboard:
-	KNIGHTVISION_DUCKDB_PATH=$(DUCKDB_PATH) PYTHONPATH=. $(STREAMLIT) run dashboard/app.py
+	@test -d dashboard_web/node_modules || (printf "Installing dashboard frontend dependencies...\n" && $(MAKE) dashboard-install)
+	KNIGHTVISION_DUCKDB_PATH=$(DUCKDB_PATH) DASHBOARD_HOST=$(DASHBOARD_HOST) DASHBOARD_PORT=$(DASHBOARD_PORT) API_PORT=$(API_PORT) PYTHONPATH=. $(PYTHON) -m dashboard_api.dev
 
 dashboard-sample:
 	$(MAKE) dashboard DUCKDB_PATH=$(SAMPLE_DB)
 
+dashboard-api:
+	KNIGHTVISION_DUCKDB_PATH=$(DUCKDB_PATH) PYTHONPATH=. $(UV_RUN) uvicorn dashboard_api.app:app --host $(DASHBOARD_HOST) --port $(API_PORT) --reload
+
+dashboard-web:
+	$(NPM) --prefix dashboard_web run dev -- --host $(DASHBOARD_HOST) --port $(DASHBOARD_PORT)
+
+dashboard-streamlit:
+	KNIGHTVISION_DUCKDB_PATH=$(DUCKDB_PATH) PYTHONPATH=. $(STREAMLIT) run dashboard/app.py
+
 airflow-up:
-	docker compose -f $(AIRFLOW_COMPOSE) up -d
+	docker compose $(AIRFLOW_ENV_FILE) -f $(AIRFLOW_COMPOSE) up -d
 
 airflow-down:
-	docker compose -f $(AIRFLOW_COMPOSE) down
+	docker compose $(AIRFLOW_ENV_FILE) -f $(AIRFLOW_COMPOSE) down
 
 airflow-logs:
-	docker compose -f $(AIRFLOW_COMPOSE) logs -f airflow-scheduler airflow-webserver
+	docker compose $(AIRFLOW_ENV_FILE) -f $(AIRFLOW_COMPOSE) logs -f airflow-scheduler airflow-webserver
+
+airflow-smoke:
+	@set -e; \
+	trap '$(MAKE) airflow-down' EXIT; \
+	mkdir -p data/raw; \
+	zstd -f $(SAMPLE_PGN) -o $(AIRFLOW_SMOKE_RAW); \
+	$(MAKE) airflow-up; \
+	for task in \
+		parse_to_bronze_parquet \
+		spark_bronze_ingest \
+		spark_silver_transform \
+		silver_quality_gate \
+		spark_gold_player_stats \
+		spark_gold_opening_perf \
+		spark_gold_time_pressure \
+		init_warehouse \
+		dbt_run \
+		dbt_test \
+		notify_telegram; do \
+		printf "\n==> Airflow smoke task: %s\n" "$$task"; \
+		$(AIRFLOW_EXEC) airflow tasks test knightvision_monthly_pipeline "$$task" $(AIRFLOW_SMOKE_DATE); \
+	done
+
+airflow-notify-test:
+	$(AIRFLOW_EXEC) python -m orchestration.notify --month smoke --status success --details "Airflow Telegram notification test"
 
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

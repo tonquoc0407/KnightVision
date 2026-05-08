@@ -24,6 +24,8 @@ BATCH_MONTH = "{{ params.month or dag_run.conf.get('month') or macros.ds_format(
 BATCH_RAW_DUMP = f"data/raw/lichess_db_standard_rated_{BATCH_MONTH}.pgn.zst"
 BATCH_LANDING_DIR = f"data/landing/games/{BATCH_MONTH}"
 BATCH_QUALITY_DIR = f"data/quality/{BATCH_MONTH}"
+PROJECT_ROOT = "/opt/airflow/project"
+PROJECT_PREFIX = f"cd {PROJECT_ROOT} && PYTHONPATH={PROJECT_ROOT} "
 
 with DAG(
     dag_id="knightvision_monthly_pipeline",
@@ -53,7 +55,7 @@ with DAG(
     download_dump = BashOperator(
         task_id="download_dump",
         bash_command=(
-            "python -m ingestion.downloader "
+            f"{PROJECT_PREFIX}python -m ingestion.downloader "
             f"--month {BATCH_MONTH} "
             "--output-dir data/raw"
         ),
@@ -62,7 +64,7 @@ with DAG(
     parse_to_bronze_parquet = BashOperator(
         task_id="parse_to_bronze_parquet",
         bash_command=(
-            "python -m ingestion.pgn_parser "
+            f"{PROJECT_PREFIX}python -m ingestion.pgn_parser "
             f"--input {BATCH_RAW_DUMP} "
             f"--output {BATCH_LANDING_DIR} "
             f"--batch-id {BATCH_MONTH} "
@@ -75,7 +77,7 @@ with DAG(
     spark_bronze_ingest = BashOperator(
         task_id="spark_bronze_ingest",
         bash_command=(
-            "python -m pipeline.bronze.ingest "
+            f"{PROJECT_PREFIX}python -m pipeline.bronze.ingest "
             f"--input {BATCH_LANDING_DIR} "
             "--output data/bronze/games "
             f"--metrics-output {BATCH_QUALITY_DIR}/bronze_metrics.json"
@@ -86,7 +88,7 @@ with DAG(
     spark_silver_transform = BashOperator(
         task_id="spark_silver_transform",
         bash_command=(
-            "python -m pipeline.silver.transform "
+            f"{PROJECT_PREFIX}python -m pipeline.silver.transform "
             "--input data/bronze/games "
             "--output data/silver/games"
         ),
@@ -96,7 +98,7 @@ with DAG(
     silver_quality_gate = BashOperator(
         task_id="silver_quality_gate",
         bash_command=(
-            "python -m pipeline.silver.quality_checks "
+            f"{PROJECT_PREFIX}python -m pipeline.silver.quality_checks "
             f"--bronze-batch-id {BATCH_MONTH} "
             f"--silver-month {BATCH_MONTH} "
             "--bronze data/bronze/games "
@@ -108,7 +110,7 @@ with DAG(
     spark_gold_player_stats = BashOperator(
         task_id="spark_gold_player_stats",
         bash_command=(
-            "python -m pipeline.gold.player_stats "
+            f"{PROJECT_PREFIX}python -m pipeline.gold.player_stats "
             "--input data/silver/games "
             "--output data/gold/player_monthly_stats"
         ),
@@ -118,7 +120,7 @@ with DAG(
     spark_gold_opening_perf = BashOperator(
         task_id="spark_gold_opening_perf",
         bash_command=(
-            "python -m pipeline.gold.opening_perf "
+            f"{PROJECT_PREFIX}python -m pipeline.gold.opening_perf "
             "--input data/silver/games "
             "--output data/gold/opening_performance"
         ),
@@ -128,7 +130,7 @@ with DAG(
     spark_gold_time_pressure = BashOperator(
         task_id="spark_gold_time_pressure",
         bash_command=(
-            "python -m pipeline.gold.time_pressure "
+            f"{PROJECT_PREFIX}python -m pipeline.gold.time_pressure "
             "--input data/silver/games "
             "--output data/gold/time_pressure_analysis"
         ),
@@ -137,24 +139,24 @@ with DAG(
 
     init_warehouse = BashOperator(
         task_id="init_warehouse",
-        bash_command="python warehouse/init_db.py",
+        bash_command=f"{PROJECT_PREFIX}python warehouse/init_db.py",
     )
 
     dbt_run = BashOperator(
         task_id="dbt_run",
-        bash_command="cd analytics/dbt && dbt run --profiles-dir .",
+        bash_command=f"cd {PROJECT_ROOT}/analytics/dbt && PYTHONPATH={PROJECT_ROOT} dbt run --profiles-dir .",
     )
 
     dbt_test = BashOperator(
         task_id="dbt_test",
-        bash_command="cd analytics/dbt && dbt test --profiles-dir .",
+        bash_command=f"cd {PROJECT_ROOT}/analytics/dbt && PYTHONPATH={PROJECT_ROOT} dbt test --profiles-dir .",
     )
 
     notify_telegram = BashOperator(
         task_id="notify_telegram",
         bash_command=(
             "if [ '{{ params.notify }}' = 'True' ]; then "
-            "python -m orchestration.notify "
+            f"{PROJECT_PREFIX}python -m orchestration.notify "
             f"--month {BATCH_MONTH} "
             "--status success; "
             "else echo 'Telegram notification disabled'; fi"

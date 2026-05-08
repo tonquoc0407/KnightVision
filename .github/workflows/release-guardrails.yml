@@ -28,11 +28,21 @@ jobs:
       - name: Sync dependencies
         run: uv sync --python 3.11 --extra dev
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard_web/package-lock.json
+
       - name: Lint
-        run: uv run --python 3.11 ruff check .
+        run: uv run --python 3.11 --extra dev ruff check .
+
+      - name: Dashboard build
+        run: npm --prefix dashboard_web ci && npm --prefix dashboard_web run build
 
       - name: Test
-        run: uv run --python 3.11 python -m pytest -q
+        run: uv run --python 3.11 --extra dev python -m pytest -q
 
       - name: Fixture pipeline proof
         run: uv run --python 3.11 make sample-pipeline PYTHON='uv run --python 3.11 python'

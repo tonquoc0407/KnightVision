@@ -43,6 +43,7 @@ analytics/dbt/.user.yml
 **/.ipynb_checkpoints/
 .env
 .env.*
+!.env.example
 .codex
 .codex/
 .agents/
@@ -63,6 +64,10 @@ analytics/dbt/.user.yml
 *.log
 spark-warehouse/
 metastore_db/
+
+# Dashboard frontend
+dashboard_web/node_modules/
+dashboard_web/dist/
 
 # Generated ML rows with public player identifiers
 models/player_style_clusters/cluster_assignments.csv

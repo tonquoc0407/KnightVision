@@ -13,7 +13,7 @@ flowchart TB
     end
 
     subgraph Consumers[Consumers]
-        D --> Dash[Streamlit Dashboard]
+        D --> Dash[Dashboard]
         W --> ML[ML Case Studies]
         G --> ML
     end
@@ -101,17 +101,21 @@ See [DATA_QUALITY.md](DATA_QUALITY.md) for the full data quality reference.
 
 ## Dashboard
 
-The Streamlit dashboard includes:
+The primary dashboard is a custom local React + FastAPI app:
 
 - Overview page.
+- Evidence page for production-readiness proof points, warehouse coverage, quality status, and ML artifact availability.
 - Opening Explorer.
-- Player Deep Dive.
+- Player Profiles.
 - Blunder Map.
 - Time Pressure Analysis.
-- Shared chess-themed styling using board-square colors, wood/gold accents, and dark analysis panels.
+- ML Lab for saved model artifacts.
+- Data Quality / Pipeline Status page.
+- In-dashboard warehouse selector for main, sample, real sample, and benchmark DuckDB files.
+- Custom chess-themed styling using board-square colors, green/cream/gold accents, dark analysis panels, responsive cards, animated transitions, and a CSS chessboard heatmap.
 - Sample and main warehouse launch targets through `make dashboard-sample` and `make dashboard`.
 
-The dashboard reads from DuckDB and can run against sample, real sample, or benchmark warehouses.
+The dashboard reads from DuckDB through a FastAPI backend and can run against sample, real sample, or benchmark warehouses. The legacy Streamlit app is still available with `make dashboard-streamlit`.
 
 ## Stockfish Blunder Analytics
 
@@ -131,6 +135,7 @@ See [STOCKFISH_BLUNDER_ANALYTICS.md](STOCKFISH_BLUNDER_ANALYTICS.md) for runtime
 - Binary XGBoost classifier.
 - Predicts whether a Stockfish-evaluated move is a 200cp blunder.
 - Includes baselines, threshold analysis, ROC/PR curves, feature importance, and model card.
+- Dashboard ML Lab integration shows metrics, plots, threshold artifacts, and feature importance from `models/blunder_predictor`.
 
 ### Opening Outcome Prediction
 
@@ -138,6 +143,7 @@ See [STOCKFISH_BLUNDER_ANALYTICS.md](STOCKFISH_BLUNDER_ANALYTICS.md) for runtime
 - Pre-game model predicts white win, black win, or draw from Elo, opening, time control, and date.
 - Post-game model is diagnostic and uses parsed move metadata.
 - Includes baselines, confusion matrices, per-class F1, feature importance, and model cards.
+- Dashboard ML Lab integration compares pre-game and post-game artifacts.
 
 ### Player Style Clustering
 
@@ -145,6 +151,7 @@ See [STOCKFISH_BLUNDER_ANALYTICS.md](STOCKFISH_BLUNDER_ANALYTICS.md) for runtime
 - Builds player behavior profiles from Silver games.
 - Produces statistical personas such as Blitz Specialists, Opening Explorers, and Long-Game Grinders.
 - Includes cluster sweep, silhouette/elbow plots, PCA scatter, cluster profiles, and model card.
+- Dashboard ML Lab integration shows cluster profiles, player assignment samples, and cluster plots.
 
 ## Orchestration
 
