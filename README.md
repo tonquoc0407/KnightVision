@@ -1,3 +1,5 @@
+> On a whim, I pushed this project to GitHub
+
 # KnightVision
 
 KnightVision is a chess analytics data platform over the Lichess public database. It is organized as a portfolio-grade data engineering project: monthly dump ingestion, PySpark medallion processing, DuckDB/dbt analytics, Airflow orchestration, custom dashboarding, and ML case studies.
