@@ -71,3 +71,4 @@ dashboard_web/dist/
 
 # Generated ML rows with public player identifiers
 models/player_style_clusters/cluster_assignments.csv
+claude.md
