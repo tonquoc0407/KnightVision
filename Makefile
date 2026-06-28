@@ -29,6 +29,8 @@ SAMPLE_PGN ?= fixtures/sample_lichess.pgn
 SAMPLE_ECO ?= fixtures/eco_sample.csv
 SAMPLE_DB ?= warehouse/knightvision_sample.duckdb
 SAMPLE_QUALITY_DIR ?= $(SAMPLE_ROOT)/quality
+QUARANTINE_DIR ?= data/quarantine/$(MONTH)
+SAMPLE_QUARANTINE_DIR ?= $(SAMPLE_ROOT)/quarantine
 DUCKDB_PATH ?= warehouse/knightvision.duckdb
 STOCKFISH_PATH ?=
 BLUNDER_FRACTION ?= 0.01
@@ -99,10 +101,10 @@ parse:
 	$(PYTHON) -m ingestion.pgn_parser --input $(RAW_DUMP) --output $(LANDING_GAMES) --batch-id $(MONTH) --metrics-output $(QUALITY_DIR)/parser_metrics.json
 
 bronze:
-	$(PYTHON) -m pipeline.bronze.ingest --input $(LANDING_GAMES) --output data/bronze/games --metrics-output $(QUALITY_DIR)/bronze_metrics.json
+	$(PYTHON) -m pipeline.bronze.ingest --input $(LANDING_GAMES) --output data/bronze/games --metrics-output $(QUALITY_DIR)/bronze_metrics.json --quarantine-output $(QUARANTINE_DIR)/bronze
 
 silver:
-	$(PYTHON) -m pipeline.silver.transform --input data/bronze/games --output data/silver/games
+	$(PYTHON) -m pipeline.silver.transform --input data/bronze/games --output data/silver/games --quarantine-output $(QUARANTINE_DIR)/silver
 
 quality:
 	$(PYTHON) -m pipeline.silver.quality_checks --bronze-batch-id $(MONTH) --silver-month $(MONTH) --bronze data/bronze/games --silver data/silver/games --metrics-output $(QUALITY_DIR)/silver_metrics.json
@@ -134,8 +136,8 @@ pipeline: download parse bronze silver quality gold warehouse dbt-run dbt-test
 
 sample-pipeline:
 	$(PYTHON) -m ingestion.pgn_parser --input $(SAMPLE_PGN) --output $(SAMPLE_ROOT)/landing/games --batch-id $(SAMPLE_MONTH) --metrics-output $(SAMPLE_QUALITY_DIR)/parser_metrics.json
-	$(PYTHON) -m pipeline.bronze.ingest --input $(SAMPLE_ROOT)/landing/games --output $(SAMPLE_ROOT)/bronze/games --metrics-output $(SAMPLE_QUALITY_DIR)/bronze_metrics.json
-	$(PYTHON) -m pipeline.silver.transform --input $(SAMPLE_ROOT)/bronze/games --output $(SAMPLE_ROOT)/silver/games --eco-reference $(SAMPLE_ECO) --drop-corrupt-pgn
+	$(PYTHON) -m pipeline.bronze.ingest --input $(SAMPLE_ROOT)/landing/games --output $(SAMPLE_ROOT)/bronze/games --metrics-output $(SAMPLE_QUALITY_DIR)/bronze_metrics.json --quarantine-output $(SAMPLE_QUARANTINE_DIR)/bronze
+	$(PYTHON) -m pipeline.silver.transform --input $(SAMPLE_ROOT)/bronze/games --output $(SAMPLE_ROOT)/silver/games --eco-reference $(SAMPLE_ECO) --drop-corrupt-pgn --quarantine-output $(SAMPLE_QUARANTINE_DIR)/silver
 	$(PYTHON) -m pipeline.silver.quality_checks --bronze-batch-id $(SAMPLE_MONTH) --silver-month $(SAMPLE_MONTH) --bronze $(SAMPLE_ROOT)/bronze/games --silver $(SAMPLE_ROOT)/silver/games --metrics-output $(SAMPLE_QUALITY_DIR)/silver_quality.json
 	$(PYTHON) -m pipeline.gold.player_stats --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/player_monthly_stats
 	$(PYTHON) -m pipeline.gold.opening_perf --input $(SAMPLE_ROOT)/silver/games --output $(SAMPLE_ROOT)/gold/opening_performance

@@ -13,6 +13,7 @@ select
 from analytics.opening_stats
 where (? is null or eco_code = ?)
   and (? is null or lower(opening_family) like '%' || lower(?) || '%')
+  and (? is null or year = ?)
 group by 1, 2, 3, 4, 5
 order by games_count desc, eco_code
 limit ?;

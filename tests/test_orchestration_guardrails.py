@@ -28,6 +28,24 @@ def test_monthly_dag_imports_with_expected_release_gates():
     assert dag.get_task("dbt_run") in dag.get_task("init_warehouse").downstream_list
     assert dag.get_task("dbt_test") in dag.get_task("dbt_run").downstream_list
     assert dag.get_task("notify_telegram") in dag.get_task("dbt_test").downstream_list
+    assert dag.get_task("trigger_ml_retrain") in dag.get_task("dbt_test").downstream_list
+
+def test_ml_retrain_dag_imports_with_expected_tasks():
+    from orchestration.dags.ml_retrain_pipeline import dag
+
+    task_ids = {task.task_id for task in dag.tasks}
+
+    assert dag.dag_id == "knightvision_ml_retrain_pipeline"
+    assert dag.schedule_interval is None
+    assert "train_blunder_model" in task_ids
+    assert "train_opening_model" in task_ids
+    assert "train_player_clusters" in task_ids
+    assert "publish_metrics" in task_ids
+    assert "notify_telegram" in task_ids
+    assert dag.get_task("train_opening_model") in dag.get_task("train_blunder_model").downstream_list
+    assert dag.get_task("train_player_clusters") in dag.get_task("train_opening_model").downstream_list
+    assert dag.get_task("publish_metrics") in dag.get_task("train_player_clusters").downstream_list
+    assert dag.get_task("notify_telegram") in dag.get_task("publish_metrics").downstream_list
 
 def test_backfill_dag_imports():
     from orchestration.dags.backfill_pipeline import dag

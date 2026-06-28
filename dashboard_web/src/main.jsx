@@ -6,6 +6,7 @@ import {
   Brain,
   Clock3,
   Database,
+  Download,
   FileCheck2,
   GitBranch,
   LayoutDashboard,
@@ -49,6 +50,31 @@ const fmt = (value, digits = 0) => {
 
 const percent = (value) => (value === null || value === undefined ? "n/a" : `${(value * 100).toFixed(1)}%`);
 
+function downloadCSV(rows, columns, filename) {
+  const header = columns.map((col) => col.label).join(",");
+  const body = rows
+    .map((row) =>
+      columns
+        .map((col) => {
+          const value = row[col.key];
+          if (value === null || value === undefined) return "";
+          const str = String(value);
+          return str.includes(",") || str.includes('"') || str.includes("\n")
+            ? `"${str.replace(/"/g, '""')}"`
+            : str;
+        })
+        .join(",")
+    )
+    .join("\n");
+  const blob = new Blob([`${header}\n${body}`], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function useApi(path, fallback) {
   const [state, setState] = useState({ loading: true, data: fallback, error: null });
   useEffect(() => {
@@ -75,7 +101,7 @@ const PAGE_COPY = {
   quality: "Parser, Bronze, and Silver quality metrics translated from JSON into reviewable cards."
 };
 
-function Shell({ active, setActive, health, source, setSource, children }) {
+function Shell({ active, setActive, health, source, setSource, year, setYear, years, children }) {
   return (
     <div className="shell">
       <aside className="sidebar">
@@ -101,6 +127,15 @@ function Shell({ active, setActive, health, source, setSource, children }) {
               <option key={item.key} value={item.key} disabled={!item.exists}>
                 {item.label}{item.exists ? ` (${item.size_mb} MB)` : " missing"}
               </option>
+            ))}
+          </select>
+        </div>
+        <div className="source-panel">
+          <label htmlFor="year-filter">Year</label>
+          <select id="year-filter" value={year} onChange={(event) => setYear(event.target.value)}>
+            <option value="">All years</option>
+            {(years || []).map((value) => (
+              <option key={value} value={value}>{value}</option>
             ))}
           </select>
         </div>
@@ -148,10 +183,18 @@ function EmptyState({ title, children }) {
   );
 }
 
-function DataTable({ rows, columns, maxRows = 15 }) {
+function DataTable({ rows, columns, maxRows = 15, downloadName }) {
   if (!rows?.length) return <EmptyState title="No rows available">Run the pipeline or switch to a populated warehouse.</EmptyState>;
   return (
     <div className="table-wrap">
+      {downloadName && (
+        <div className="export-row">
+          <button className="btn-export" onClick={() => downloadCSV(rows, columns, downloadName)}>
+            <Download size={14} />
+            Export CSV
+          </button>
+        </div>
+      )}
       <table>
         <thead>
           <tr>{columns.map((col) => <th key={col.key}>{col.label}</th>)}</tr>
@@ -208,26 +251,30 @@ function LineChart({ rows, xKey, yKey }) {
   const range = max - min || 1;
   const width = 640;
   const height = 220;
+  const topPad = 14;
+  const bottomPad = 14;
+  const yPos = (value) => height - ((value - min) / range) * (height - topPad - bottomPad) - bottomPad;
+  const xPos = (index) => points.length === 1 ? width / 2 : (index / (points.length - 1)) * width;
   const path = points
-    .map((point, index) => {
-      const x = points.length === 1 ? width / 2 : (index / (points.length - 1)) * width;
-      const y = height - ((point.y - min) / range) * (height - 28) - 14;
-      return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
-    })
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${xPos(index).toFixed(1)} ${yPos(point.y).toFixed(1)}`)
     .join(" ");
+  const yTicks = [min, min + range * 0.25, min + range * 0.5, min + range * 0.75, max];
   return (
     <div className="line-chart">
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Player Elo trend">
+      <svg viewBox={`-48 0 ${width + 48} ${height}`} role="img" aria-label="Player Elo trend">
+        {yTicks.map((tick) => (
+          <text key={tick} x="-6" y={yPos(tick) + 4} fill="#9aa58f" fontSize="11" textAnchor="end">
+            {Math.round(tick)}
+          </text>
+        ))}
         <path d={path} />
-        {points.map((point, index) => {
-          const x = points.length === 1 ? width / 2 : (index / (points.length - 1)) * width;
-          const y = height - ((point.y - min) / range) * (height - 28) - 14;
-          return <circle key={`${point.x}-${index}`} cx={x} cy={y} r="5" />;
-        })}
+        {points.map((point, index) => (
+          <circle key={`${point.x}-${index}`} cx={xPos(index)} cy={yPos(point.y)} r="5" />
+        ))}
       </svg>
       <div className="chart-caption">
         <span>{points[0]?.x}</span>
-        <strong>{fmt(min)}-{fmt(max)} Elo</strong>
+        <strong>{fmt(min)} – {fmt(max)} Elo</strong>
         <span>{points.at(-1)?.x}</span>
       </div>
     </div>
@@ -319,9 +366,10 @@ function Evidence() {
   );
 }
 
-function Openings({ source }) {
+function Openings({ source, year }) {
   const [term, setTerm] = useState("");
-  const path = `/api/openings?opening=${encodeURIComponent(term)}&limit=80&source=${source}`;
+  const yearParam = year ? `&year=${year}` : "";
+  const path = `/api/openings?opening=${encodeURIComponent(term)}&limit=80&source=${source}${yearParam}`;
   const state = useApi(path, { rows: [] });
   const { data } = state;
   const chartRows = (data.rows || []).slice(0, 12).reverse();
@@ -344,19 +392,22 @@ function Openings({ source }) {
             { key: "eco_code", label: "ECO" },
             { key: "opening_family", label: "Opening" },
             { key: "games_count", label: "Games" },
-            { key: "white_win_rate", label: "White", render: percent },
-            { key: "black_win_rate", label: "Black", render: percent },
-            { key: "draw_rate", label: "Draw", render: percent },
-            { key: "most_common_response", label: "Common response" }
+            { key: "white_win_rate", label: "White Win Rate" },
+            { key: "black_win_rate", label: "Black Win Rate" },
+            { key: "draw_rate", label: "Draw Rate" },
+            { key: "most_common_response", label: "Common Response" }
           ]}
+          downloadName="openings.csv"
         />
       </section>
     </div>
   );
 }
 
-function Players({ source }) {
-  const state = useApi(`/api/players?limit=80&source=${source}`, { rows: [] });
+function Players({ source, year }) {
+  const [term, setTerm] = useState("");
+  const yearParam = year ? `&year=${year}` : "";
+  const state = useApi(`/api/players?limit=80&source=${source}&search=${encodeURIComponent(term)}${yearParam}`, { rows: [] });
   const { data } = state;
   const [selected, setSelected] = useState(null);
   const player = selected || data.rows?.[0]?.player || "";
@@ -366,16 +417,21 @@ function Players({ source }) {
     <div className="page-grid two">
       <LoadingOrError state={state} />
       <section className="panel">
+        <div className="toolbar inset">
+          <Search size={18} />
+          <input value={term} onChange={(event) => setTerm(event.target.value)} placeholder="Filter players, e.g. alice" />
+        </div>
         <h2>Most active players</h2>
         <DataTable
           rows={data.rows}
           columns={[
             { key: "player", label: "Player", render: (value) => <button className="link-button" onClick={() => setSelected(value)}>{value}</button> },
             { key: "games_played", label: "Games" },
-            { key: "avg_win_rate", label: "Win rate", render: percent },
+            { key: "avg_win_rate", label: "Win Rate" },
             { key: "avg_elo", label: "Avg Elo" }
           ]}
           maxRows={16}
+          downloadName="players.csv"
         />
       </section>
       <section className="panel">
@@ -389,14 +445,15 @@ function Players({ source }) {
           { key: "wins", label: "Wins" },
           { key: "losses", label: "Losses" },
           { key: "draws", label: "Draws" }
-        ]} maxRows={8} />
+        ]} maxRows={8} downloadName={player ? `${player}-profile.csv` : undefined} />
       </section>
     </div>
   );
 }
 
-function Blunders({ source }) {
-  const state = useApi(`/api/blunders/heatmap?source=${source}`, { rows: [], totals: {} });
+function Blunders({ source, year }) {
+  const yearParam = year ? `&year=${year}` : "";
+  const state = useApi(`/api/blunders/heatmap?source=${source}${yearParam}`, { rows: [], totals: {} });
   const { data } = state;
   const squares = useMemo(() => {
     const map = new Map((data.rows || []).map((row) => [row.square, row]));
@@ -435,14 +492,15 @@ function Blunders({ source }) {
           { key: "blunders", label: "Blunders" },
           { key: "avg_cp_loss", label: "Avg cp loss" },
           { key: "max_cp_loss", label: "Max cp loss" }
-        ]} />
+        ]} downloadName="blunders-heatmap.csv" />
       </section>
     </div>
   );
 }
 
-function TimePressure({ source }) {
-  const state = useApi(`/api/time-pressure?source=${source}`, { rows: [] });
+function TimePressure({ source, year }) {
+  const yearParam = year ? `&year=${year}` : "";
+  const state = useApi(`/api/time-pressure?source=${source}${yearParam}`, { rows: [] });
   const { data } = state;
   const rows = data.rows || [];
   return (
@@ -460,10 +518,130 @@ function TimePressure({ source }) {
           { key: "time_control_type", label: "Control" },
           { key: "games_count", label: "Games" },
           { key: "evaluated_positions", label: "Evaluated" },
-          { key: "blunder_rate", label: "Blunder rate", render: percent }
-        ]} />
+          { key: "blunder_rate", label: "Blunder Rate" }
+        ]} downloadName="time-pressure.csv" />
       </section>
     </div>
+  );
+}
+
+function BlunderPredictor() {
+  const [form, setForm] = useState({
+    game_phase: "middlegame",
+    time_control_type: "blitz",
+    time_remaining_seconds: 15,
+    player_elo: 1500,
+    ply_number: 40,
+    material_balance: 0,
+    is_in_check: false,
+    square: "",
+    year: 2024,
+  });
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  function set(key, value) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const body = {
+        ...form,
+        time_remaining_seconds: form.time_remaining_seconds !== "" ? Number(form.time_remaining_seconds) : null,
+        player_elo: Number(form.player_elo),
+        ply_number: Number(form.ply_number),
+        material_balance: Number(form.material_balance),
+        is_in_check: form.is_in_check ? 1 : 0,
+        year: Number(form.year),
+        square: form.square || null,
+      };
+      const resp = await fetch("/api/ml/predict/blunder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.detail || "Prediction failed");
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const prob = result?.blunder_probability;
+  return (
+    <section className="panel predictor">
+      <h2>Live Blunder Prediction</h2>
+      <p className="model-note">Submit a position to get a blunder probability from the trained XGBoost model. Requires <code>make train-blunder-model</code> to have been run.</p>
+      <form className="predict-form" onSubmit={handleSubmit}>
+        <div className="predict-fields">
+          <label>
+            <small>Game phase</small>
+            <select value={form.game_phase} onChange={(e) => set("game_phase", e.target.value)}>
+              <option value="opening">Opening</option>
+              <option value="middlegame">Middlegame</option>
+              <option value="endgame">Endgame</option>
+            </select>
+          </label>
+          <label>
+            <small>Time control</small>
+            <select value={form.time_control_type} onChange={(e) => set("time_control_type", e.target.value)}>
+              <option value="bullet">Bullet</option>
+              <option value="blitz">Blitz</option>
+              <option value="rapid">Rapid</option>
+              <option value="classical">Classical</option>
+            </select>
+          </label>
+          <label>
+            <small>Time remaining (s)</small>
+            <input type="number" min="0" max="600" value={form.time_remaining_seconds} onChange={(e) => set("time_remaining_seconds", e.target.value)} />
+          </label>
+          <label>
+            <small>Player Elo</small>
+            <input type="number" min="400" max="3500" value={form.player_elo} onChange={(e) => set("player_elo", e.target.value)} />
+          </label>
+          <label>
+            <small>Ply number</small>
+            <input type="number" min="1" max="300" value={form.ply_number} onChange={(e) => set("ply_number", e.target.value)} />
+          </label>
+          <label>
+            <small>Material balance (cp)</small>
+            <input type="number" min="-2000" max="2000" value={form.material_balance} onChange={(e) => set("material_balance", e.target.value)} />
+          </label>
+          <label>
+            <small>Square (opt.)</small>
+            <input type="text" maxLength={2} placeholder="e4" value={form.square} onChange={(e) => set("square", e.target.value)} />
+          </label>
+          <label className="check-label">
+            <input type="checkbox" checked={form.is_in_check} onChange={(e) => set("is_in_check", e.target.checked)} />
+            <small>In check</small>
+          </label>
+        </div>
+        <button type="submit" className="btn-predict" disabled={loading}>
+          {loading ? "Predicting…" : "Predict blunder probability"}
+        </button>
+      </form>
+      {error && <p className="predict-error">{error}</p>}
+      {result?.error && <p className="predict-error">{result.error}</p>}
+      {result && !result.error && (
+        <div className="predict-result">
+          <span className="predict-prob" style={{ color: prob > 0.5 ? "#e07070" : prob > 0.25 ? "#e0b870" : "#7ec87e" }}>
+            {(prob * 100).toFixed(1)}%
+          </span>
+          <span className={`model-verdict ${result.is_blunder ? "diagnostic" : "useful"}`}>
+            {result.is_blunder ? "Likely blunder" : "Likely not a blunder"}
+          </span>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -473,6 +651,7 @@ function MLLab() {
   const style = useApi("/api/ml/player-style", {});
   return (
     <div className="page-grid">
+      <BlunderPredictor />
       <ModelPanel data={blunder.data} accent="gold" />
       <ModelPanel data={opening.data} accent="green" />
       <ModelPanel data={style.data} accent="blue" />
@@ -574,16 +753,17 @@ function Quality() {
         <DataTable
           rows={data.cards}
           columns={[
-            { key: "path", label: "Metric file" },
-            { key: "status", label: "Status", render: (value) => <StatusBadge status={value} /> },
+            { key: "path", label: "Metric File" },
+            { key: "status", label: "Status" },
             { key: "primary_count", label: "Rows" },
-            { key: "retention", label: "Retention", render: percent },
-            { key: "clock_coverage", label: "Clock coverage", render: percent },
+            { key: "retention", label: "Retention" },
+            { key: "clock_coverage", label: "Clock Coverage" },
             { key: "suspicious_rows", label: "Suspicious" },
             { key: "duplicate_game_ids", label: "Duplicate IDs" },
-            { key: "rows_removed", label: "Rows removed" }
+            { key: "rows_removed", label: "Rows Removed" }
           ]}
           maxRows={20}
+          downloadName="quality-metrics.csv"
         />
       </section>
     </div>
@@ -663,7 +843,9 @@ function qualityHighlights(card) {
 function App() {
   const [active, setActive] = useState(activeTabFromHash());
   const [source, setSource] = useState("sample");
+  const [year, setYear] = useState("");
   const health = useApi(`/api/health?source=${source}`, { status: "loading", counts: {}, sources: [] });
+  const yearsState = useApi(`/api/years?source=${source}`, { years: [] });
   useEffect(() => {
     const handleHashChange = () => setActive(activeTabFromHash());
     window.addEventListener("hashchange", handleHashChange);
@@ -672,14 +854,27 @@ function App() {
   const page = {
     overview: <Overview health={health.data} source={source} />,
     evidence: <Evidence />,
-    openings: <Openings source={source} />,
-    players: <Players source={source} />,
-    blunders: <Blunders source={source} />,
-    time: <TimePressure source={source} />,
+    openings: <Openings source={source} year={year} />,
+    players: <Players source={source} year={year} />,
+    blunders: <Blunders source={source} year={year} />,
+    time: <TimePressure source={source} year={year} />,
     ml: <MLLab />,
     quality: <Quality />
   }[active];
-  return <Shell active={active} setActive={setActive} health={health.data} source={source} setSource={setSource}>{page}</Shell>;
+  return (
+    <Shell
+      active={active}
+      setActive={setActive}
+      health={health.data}
+      source={source}
+      setSource={setSource}
+      year={year}
+      setYear={setYear}
+      years={yearsState.data.years}
+    >
+      {page}
+    </Shell>
+  );
 }
 
 createRoot(document.getElementById("root")).render(<App />);

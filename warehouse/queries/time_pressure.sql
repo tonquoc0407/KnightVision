@@ -16,5 +16,6 @@ select
         4
     ) as blunder_rate
 from analytics.time_pressure
+where (? is null or year = ?)
 group by 1, 2, 3
 order by time_control_type, game_phase, time_remaining_bucket;

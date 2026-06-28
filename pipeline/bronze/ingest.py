@@ -33,18 +33,35 @@ def bronze_metrics(df, bronze) -> dict[str, object]:
         "partitions": by_partition,
     }
 
+def build_bronze_rejected(df):
+    """Return rows rejected by bronze ingestion: those with a null game_id."""
+    return df.filter(F.col("game_id").isNull()).withColumn("reject_reason", F.lit("null_game_id"))
+
 def ingest_bronze(spark, input_path: str, output_path: str):
     df = spark.read.schema(spark_raw_schema()).parquet(input_path)
     bronze = df.dropna(subset=["game_id"]).dropDuplicates(["game_id"])
     bronze.write.mode("overwrite").partitionBy("batch_id", "source").parquet(output_path)
     return bronze
 
-def run(input_path: str, output_path: str, *, metrics_output: Path | None = None) -> dict[str, object]:
+def run(
+    input_path: str,
+    output_path: str,
+    *,
+    metrics_output: Path | None = None,
+    quarantine_output: str | None = None,
+) -> dict[str, object]:
     spark = build_spark("KnightVision Bronze Ingest", master="local[*]")
     try:
         df = spark.read.schema(spark_raw_schema()).parquet(input_path)
         bronze = df.dropna(subset=["game_id"]).dropDuplicates(["game_id"])
         metrics = bronze_metrics(df, bronze)
+
+        quarantine_count = metrics["missing_game_id"]
+        if quarantine_output and quarantine_count > 0:
+            build_bronze_rejected(df).write.mode("overwrite").parquet(quarantine_output)
+        metrics["quarantine_count"] = quarantine_count
+        metrics["quarantine_path"] = quarantine_output
+
         bronze.write.mode("overwrite").partitionBy("batch_id", "source").parquet(output_path)
         if metrics_output:
             metrics_output.parent.mkdir(parents=True, exist_ok=True)
@@ -58,15 +75,17 @@ def main() -> None:
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--metrics-output", type=Path, help="Optional JSON path for Bronze diagnostics.")
+    parser.add_argument("--quarantine-output", help="Optional Parquet path for quarantined rows (null game_id).")
     args = parser.parse_args()
 
-    metrics = run(args.input, args.output, metrics_output=args.metrics_output)
+    metrics = run(args.input, args.output, metrics_output=args.metrics_output, quarantine_output=args.quarantine_output)
     print(
         "Bronze ingest complete: "
         f"input_count={metrics['input_count']}, "
         f"output_count={metrics['output_count']}, "
         f"missing_game_id={metrics['missing_game_id']}, "
-        f"duplicate_rows_removed={metrics['duplicate_rows_removed']}"
+        f"duplicate_rows_removed={metrics['duplicate_rows_removed']}, "
+        f"quarantine_count={metrics['quarantine_count']}"
     )
 
 if __name__ == "__main__":

@@ -12,7 +12,9 @@ from dashboard_api.app import (
     overview_payload,
     player_profile_payload,
     players_payload,
+    predict_blunder_payload,
     time_pressure_payload,
+    years_payload,
 )
 
 
@@ -74,6 +76,7 @@ def create_dashboard_db(path: Path) -> None:
                 time_remaining_bucket varchar,
                 game_phase varchar,
                 time_control_type varchar,
+                year integer,
                 games_count integer,
                 evaluated_positions integer,
                 blunder_count integer,
@@ -82,18 +85,19 @@ def create_dashboard_db(path: Path) -> None:
             )
             """
         )
-        connection.execute("insert into analytics.time_pressure values ('0-5s', 'middlegame', 'blitz', 5, 3, 1, 212.0, 0.3333)")
+        connection.execute("insert into analytics.time_pressure values ('0-5s', 'middlegame', 'blitz', 2024, 5, 3, 1, 212.0, 0.3333)")
         connection.execute(
             """
             create table analytics.blunder_positions (
                 square varchar,
                 evaluated_positions integer,
+                year integer,
                 cp_loss integer,
                 is_blunder boolean
             )
             """
         )
-        connection.execute("insert into analytics.blunder_positions values ('f3', 1, 250, true), ('e4', 1, 40, false)")
+        connection.execute("insert into analytics.blunder_positions values ('f3', 1, 2024, 250, true), ('e4', 1, 2024, 40, false)")
 
 
 def test_health_and_overview_use_active_warehouse(monkeypatch, tmp_path: Path):
@@ -123,11 +127,38 @@ def test_query_endpoints_return_stable_shapes(monkeypatch, tmp_path: Path):
     assert blunder_heatmap_payload()["totals"]["blunders"] == 1
 
 
+def test_player_search_and_year_filters(monkeypatch, tmp_path: Path):
+    db_path = tmp_path / "dashboard.duckdb"
+    create_dashboard_db(db_path)
+    monkeypatch.setenv("KNIGHTVISION_DUCKDB_PATH", str(db_path))
+
+    search_rows = players_payload(search="ali")["rows"]
+    assert [row["player"] for row in search_rows] == ["alice"]
+
+    assert players_payload(year=2024)["count"] == 2
+    assert players_payload(year=2025)["count"] == 0
+    assert openings_payload(year=2024)["count"] == 2
+    assert openings_payload(year=2025)["count"] == 0
+    assert time_pressure_payload(year=2024)["count"] == 1
+    assert time_pressure_payload(year=2025)["count"] == 0
+    assert blunder_heatmap_payload(year=2025)["totals"]["blunders"] == 0
+    assert years_payload()["years"] == [2024]
+
+
 def test_missing_warehouse_returns_empty_state(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("KNIGHTVISION_DUCKDB_PATH", str(tmp_path / "missing.duckdb"))
 
     assert health_payload()["status"] == "missing_warehouse"
     assert openings_payload() == {"rows": [], "count": 0}
+
+
+def test_predict_blunder_returns_valid_response_shape():
+    result = predict_blunder_payload()
+    if "error" in result:
+        assert isinstance(result["error"], str)
+    else:
+        assert 0.0 <= result["blunder_probability"] <= 1.0
+        assert isinstance(result["is_blunder"], bool)
 
 
 def test_evidence_payload_contains_sources_and_proof_points():

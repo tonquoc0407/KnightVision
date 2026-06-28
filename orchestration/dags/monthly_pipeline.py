@@ -7,6 +7,7 @@ from airflow import DAG
 from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 try:
     from lichess_sensor import LichessDumpSensor
@@ -152,6 +153,13 @@ with DAG(
         bash_command=f"cd {PROJECT_ROOT}/analytics/dbt && PYTHONPATH={PROJECT_ROOT} dbt test --profiles-dir .",
     )
 
+    trigger_ml_retrain = TriggerDagRunOperator(
+        task_id="trigger_ml_retrain",
+        trigger_dag_id="knightvision_ml_retrain_pipeline",
+        wait_for_completion=False,
+        trigger_rule="all_success",
+    )
+
     notify_telegram = BashOperator(
         task_id="notify_telegram",
         bash_command=(
@@ -170,4 +178,5 @@ with DAG(
     parse_to_bronze_parquet >> spark_bronze_ingest >> spark_silver_transform >> silver_quality_gate
     silver_quality_gate >> [spark_gold_player_stats, spark_gold_opening_perf, spark_gold_time_pressure]
     [spark_gold_player_stats, spark_gold_opening_perf, spark_gold_time_pressure] >> init_warehouse >> dbt_run >> dbt_test
-    dbt_test >> notify_telegram >> finish
+    dbt_test >> [trigger_ml_retrain, notify_telegram]
+    notify_telegram >> finish

@@ -118,4 +118,3 @@ def summary() -> dict[str, Any]:
             for section in sections
         ],
     }
-

@@ -4,6 +4,7 @@ pytest.importorskip("pyspark")
 
 from pyspark.sql import functions as F  # noqa: E402
 
+from pipeline.bronze.ingest import build_bronze_rejected  # noqa: E402
 from pipeline.silver.quality_checks import filter_partitions, validate_silver_quality  # noqa: E402
 
 
@@ -62,6 +63,17 @@ def test_validate_silver_quality_rejects_duplicate_game_ids(spark_session):
 
     with pytest.raises(ValueError, match="duplicated game_id"):
         validate_silver_quality(bronze, silver, min_retention=1.0)
+
+def test_build_bronze_rejected_captures_null_game_id_rows(spark_session):
+    df = spark_session.createDataFrame(
+        [("g1", "alice", "bob"), (None, "carol", "dave"), ("g2", "erin", "frank")],
+        "game_id string, white string, black string",
+    )
+    rejected = build_bronze_rejected(df)
+    rows = rejected.collect()
+    assert len(rows) == 1
+    assert rows[0]["game_id"] is None
+    assert rows[0]["reject_reason"] == "null_game_id"
 
 def test_filter_partitions_uses_explicit_bronze_and_silver_selectors(spark_session):
     bronze = spark_session.createDataFrame(

@@ -43,6 +43,8 @@ def prepare_eco_reference(eco_df):
         ),
     )
 
+_SILVER_REQUIRED = ["game_id", "white", "black", "result", "year", "month"]
+
 def transform_silver(
     df,
     *,
@@ -50,6 +52,7 @@ def transform_silver(
     exclude_bots: bool = False,
     exclude_unrated: bool = False,
     drop_corrupt_pgn: bool = False,
+    return_quarantine: bool = False,
 ):
     parse_time_control_udf = F.udf(
         parse_time_control,
@@ -150,7 +153,19 @@ def transform_silver(
             .drop("eco_ref_code", "eco_ref_name", "eco_ref_family", "eco_ref_variation")
         )
 
-    return selected.dropna(subset=["game_id", "white", "black", "result", "year", "month"])
+    reject_mask = (
+        F.col("game_id").isNull()
+        | F.col("white").isNull()
+        | F.col("black").isNull()
+        | F.col("result").isNull()
+        | F.col("year").isNull()
+        | F.col("month").isNull()
+    )
+    silver = selected.filter(~reject_mask)
+    if return_quarantine:
+        quarantine = selected.filter(reject_mask).withColumn("reject_reason", F.lit("null_required_column"))
+        return silver, quarantine
+    return silver
 
 def run(
     input_path: str,
@@ -160,18 +175,28 @@ def run(
     exclude_bots: bool = False,
     exclude_unrated: bool = False,
     drop_corrupt_pgn: bool = False,
-) -> None:
+    quarantine_output: str | None = None,
+) -> dict[str, object]:
     spark = build_spark("KnightVision Silver Transform", master="local[*]")
     try:
         eco_reference_df = load_eco_reference(spark, eco_reference_path) if eco_reference_path else None
-        silver = transform_silver(
+        silver, quarantine = transform_silver(
             spark.read.parquet(input_path),
             eco_reference_df=eco_reference_df,
             exclude_bots=exclude_bots,
             exclude_unrated=exclude_unrated,
             drop_corrupt_pgn=drop_corrupt_pgn,
+            return_quarantine=True,
         )
         silver.write.mode("overwrite").partitionBy("year", "month").parquet(output_path)
+
+        quarantine_count = 0
+        if quarantine_output:
+            quarantine_count = quarantine.count()
+            if quarantine_count > 0:
+                quarantine.write.mode("overwrite").parquet(quarantine_output)
+
+        return {"quarantine_count": quarantine_count, "quarantine_path": quarantine_output}
     finally:
         spark.stop()
 
@@ -183,15 +208,18 @@ def main() -> None:
     parser.add_argument("--exclude-bots", action="store_true")
     parser.add_argument("--exclude-unrated", action="store_true")
     parser.add_argument("--drop-corrupt-pgn", action="store_true")
+    parser.add_argument("--quarantine-output", help="Optional Parquet path for quarantined rows (null required columns).")
     args = parser.parse_args()
-    run(
+    metrics = run(
         args.input,
         args.output,
         eco_reference_path=args.eco_reference,
         exclude_bots=args.exclude_bots,
         exclude_unrated=args.exclude_unrated,
         drop_corrupt_pgn=args.drop_corrupt_pgn,
+        quarantine_output=args.quarantine_output,
     )
+    print(f"Silver transform complete: quarantine_count={metrics['quarantine_count']}")
 
 if __name__ == "__main__":
     main()

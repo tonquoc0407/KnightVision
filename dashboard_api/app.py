@@ -9,6 +9,7 @@ from typing import Any
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 from dashboard_api import artifacts
 from dashboard_api.artifacts import MODELS_DIR
@@ -157,12 +158,19 @@ def openings_payload(
     opening: str | None = None,
     limit: int = 50,
     source: str | None = None,
+    year: int | None = None,
 ) -> dict[str, Any]:
-    records = _warehouse(source).named_records("opening_stats.sql", [eco, eco, opening, opening, limit])
+    records = _warehouse(source).named_records("opening_stats.sql", [eco, eco, opening, opening, year, year, limit])
     return {"rows": records, "count": len(records)}
 
 
-def players_payload(limit: int = 50, source: str | None = None) -> dict[str, Any]:
+def players_payload(
+    limit: int = 50,
+    source: str | None = None,
+    search: str | None = None,
+    year: int | None = None,
+) -> dict[str, Any]:
+    search = search or None
     rows = _warehouse(source).records(
         """
         select
@@ -173,26 +181,43 @@ def players_payload(limit: int = 50, source: str | None = None) -> dict[str, Any
             any_value(most_played_opening_white) as white_opening,
             any_value(most_played_opening_black) as black_opening
         from analytics.player_profiles
+        where (? is null or player ilike '%' || ? || '%')
+          and (? is null or year = ?)
         group by 1
         order by games_played desc, player
         limit ?
         """,
-        [limit],
+        [search, search, year, year, limit],
     )
     return {"rows": rows, "count": len(rows)}
+
+
+def years_payload(source: str | None = None) -> dict[str, Any]:
+    rows = _warehouse(source).records(
+        """
+        select distinct year from (
+            select year from analytics.opening_stats
+            union
+            select year from analytics.player_profiles
+        )
+        where year is not null
+        order by year desc
+        """
+    )
+    return {"years": [int(row["year"]) for row in rows]}
 
 
 def player_profile_payload(player: str, source: str | None = None) -> dict[str, Any]:
     return {"player": player, "rows": _warehouse(source).named_records("player_profile.sql", [player])}
 
 
-def time_pressure_payload(source: str | None = None) -> dict[str, Any]:
-    rows = _warehouse(source).named_records("time_pressure.sql")
+def time_pressure_payload(source: str | None = None, year: int | None = None) -> dict[str, Any]:
+    rows = _warehouse(source).named_records("time_pressure.sql", [year, year])
     return {"rows": rows, "count": len(rows)}
 
 
-def blunder_heatmap_payload(source: str | None = None) -> dict[str, Any]:
-    rows = _warehouse(source).named_records("blunder_heatmap.sql")
+def blunder_heatmap_payload(source: str | None = None, year: int | None = None) -> dict[str, Any]:
+    rows = _warehouse(source).named_records("blunder_heatmap.sql", [year, year])
     totals = {
         "evaluated_positions": sum(row.get("evaluated_positions") or 0 for row in rows),
         "blunders": sum(row.get("blunders") or 0 for row in rows),
@@ -245,6 +270,81 @@ def evidence_payload() -> dict[str, Any]:
     }
 
 
+class BlunderInput(BaseModel):
+    game_phase: str = "middlegame"
+    time_remaining_seconds: float | None = None
+    material_balance: float = 0.0
+    player_elo: float = 1500.0
+    ply_number: float = 40.0
+    time_control_type: str = "blitz"
+    square: str | None = None
+    is_in_check: int = 0
+    year: float = 2024.0
+
+
+_blunder_model_cache: tuple | None = None
+
+
+def _load_blunder_model() -> tuple | None:
+    global _blunder_model_cache
+    if _blunder_model_cache is not None:
+        return _blunder_model_cache
+    model_dir = MODELS_DIR / "blunder_predictor"
+    if not (model_dir / "model.json").exists() or not (model_dir / "preprocessing.joblib").exists():
+        return None
+    try:
+        import joblib
+        from xgboost import XGBClassifier
+
+        clf = XGBClassifier()
+        clf.load_model(str(model_dir / "model.json"))
+        prep = joblib.load(model_dir / "preprocessing.joblib")
+        _blunder_model_cache = (clf, prep)
+        return _blunder_model_cache
+    except Exception:
+        return None
+
+
+def predict_blunder_payload(
+    game_phase: str = "middlegame",
+    time_remaining_seconds: float | None = None,
+    material_balance: float = 0.0,
+    player_elo: float = 1500.0,
+    ply_number: float = 40.0,
+    time_control_type: str = "blitz",
+    square: str | None = None,
+    is_in_check: int = 0,
+    year: float = 2024.0,
+) -> dict[str, Any]:
+    import pandas as pd
+
+    model_tuple = _load_blunder_model()
+    if model_tuple is None:
+        return {"error": "Blunder predictor model not available. Train it first with `make train-blunder-model`."}
+    clf, prep = model_tuple
+    row = pd.DataFrame(
+        [
+            {
+                "player_elo": player_elo,
+                "time_remaining_seconds": time_remaining_seconds,
+                "ply_number": ply_number,
+                "material_balance": material_balance,
+                "is_in_check": is_in_check,
+                "year": year,
+                "game_phase": game_phase,
+                "time_control_type": time_control_type,
+                "square": square,
+            }
+        ]
+    )
+    X = prep.transform(row)
+    proba = float(clf.predict_proba(X)[0, 1])
+    return {
+        "blunder_probability": round(proba, 4),
+        "is_blunder": bool(proba >= 0.5),
+    }
+
+
 def create_app() -> FastAPI:
     app = FastAPI(title="KnightVision Dashboard API")
     app.add_middleware(
@@ -270,30 +370,54 @@ def create_app() -> FastAPI:
     def overview(source: str | None = None) -> dict[str, Any]:
         return overview_payload(source)
 
+    @app.get("/api/years")
+    def years(source: str | None = None) -> dict[str, Any]:
+        return years_payload(source)
+
     @app.get("/api/openings")
     def openings(
         eco: str | None = None,
         opening: str | None = None,
         limit: int = Query(default=50, ge=1, le=500),
         source: str | None = None,
+        year: int | None = None,
     ) -> dict[str, Any]:
-        return openings_payload(eco=eco, opening=opening, limit=limit, source=source)
+        return openings_payload(eco=eco, opening=opening, limit=limit, source=source, year=year)
 
     @app.get("/api/players")
-    def players(limit: int = Query(default=50, ge=1, le=500), source: str | None = None) -> dict[str, Any]:
-        return players_payload(limit=limit, source=source)
+    def players(
+        limit: int = Query(default=50, ge=1, le=500),
+        source: str | None = None,
+        search: str | None = None,
+        year: int | None = None,
+    ) -> dict[str, Any]:
+        return players_payload(limit=limit, source=source, search=search, year=year)
 
     @app.get("/api/players/{player}")
     def player_profile(player: str, source: str | None = None) -> dict[str, Any]:
         return player_profile_payload(player, source=source)
 
     @app.get("/api/time-pressure")
-    def time_pressure(source: str | None = None) -> dict[str, Any]:
-        return time_pressure_payload(source)
+    def time_pressure(source: str | None = None, year: int | None = None) -> dict[str, Any]:
+        return time_pressure_payload(source, year=year)
 
     @app.get("/api/blunders/heatmap")
-    def blunder_heatmap(source: str | None = None) -> dict[str, Any]:
-        return blunder_heatmap_payload(source)
+    def blunder_heatmap(source: str | None = None, year: int | None = None) -> dict[str, Any]:
+        return blunder_heatmap_payload(source, year=year)
+
+    @app.post("/api/ml/predict/blunder")
+    def predict_blunder(body: BlunderInput) -> dict[str, Any]:
+        return predict_blunder_payload(
+            game_phase=body.game_phase,
+            time_remaining_seconds=body.time_remaining_seconds,
+            material_balance=body.material_balance,
+            player_elo=body.player_elo,
+            ply_number=body.ply_number,
+            time_control_type=body.time_control_type,
+            square=body.square,
+            is_in_check=body.is_in_check,
+            year=body.year,
+        )
 
     @app.get("/api/ml/summary")
     def ml_summary() -> dict[str, Any]:

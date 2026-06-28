@@ -283,6 +283,12 @@ h2 {
   outline: none;
 }
 
+.toolbar.inset {
+  margin-bottom: 14px;
+  box-shadow: none;
+  background: rgba(255, 255, 255, .03);
+}
+
 .table-wrap {
   overflow: auto;
 }
@@ -671,6 +677,47 @@ figcaption {
   font-size: 12px;
   text-transform: capitalize;
 }
+
+.export-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(231, 223, 207, .15);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #b9c5aa;
+  background: rgba(255, 255, 255, .04);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background .18s, color .18s;
+}
+
+.btn-export:hover {
+  background: rgba(255, 255, 255, .09);
+  color: #fff8e6;
+}
+
+.predict-form { display: flex; flex-direction: column; gap: 16px; }
+.predict-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 14px; }
+.predict-fields label { display: flex; flex-direction: column; gap: 4px; }
+.predict-fields label small { color: #8a9b7a; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.predict-fields input[type="number"],
+.predict-fields input[type="text"],
+.predict-fields select { background: rgba(255,255,255,.06); border: 1px solid rgba(231,223,207,.12); border-radius: 6px; color: #e7dfcf; font-size: 13px; padding: 5px 8px; width: 100%; }
+.predict-fields select option { background: #1a2010; }
+.check-label { flex-direction: row !important; align-items: center; gap: 8px !important; }
+.btn-predict { align-self: flex-start; background: rgba(163,196,120,.15); border: 1px solid rgba(163,196,120,.3); border-radius: 8px; color: #a3c478; cursor: pointer; font-size: 13px; padding: 7px 18px; transition: background .18s, color .18s; }
+.btn-predict:hover:not(:disabled) { background: rgba(163,196,120,.28); color: #c8e09a; }
+.btn-predict:disabled { opacity: .5; cursor: not-allowed; }
+.predict-result { display: flex; align-items: center; gap: 16px; margin-top: 12px; padding: 14px 18px; background: rgba(255,255,255,.04); border-radius: 10px; border: 1px solid rgba(231,223,207,.1); }
+.predict-prob { font-size: 2.4rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.predict-error { color: #e07070; font-size: 13px; margin-top: 10px; }
 
 @keyframes rise {
   from {

@@ -59,6 +59,23 @@ def test_transform_silver_enriches_and_joins_eco_reference(spark_session):
     assert rows["g2"]["has_bot_player"] is True
     assert rows["g2"]["result_reason"] == "timeout"
 
+def test_transform_silver_quarantines_rows_with_null_required_columns(spark_session):
+    raw = spark_session.createDataFrame(
+        [
+            ("g1", "alice", "bob", "1500", "1450", "1-0", "B20", "Opening", "300+0", "Normal", "2024.01.01", "1. e4 c5 1-0", None, "2024-01"),
+            ("g2", "alice", "bob", "1500", "1450", None, "B20", "Opening", "300+0", "Normal", "2024.01.01", "1. e4 c5 1-0", None, "2024-01"),
+        ],
+        "game_id string, white string, black string, white_elo string, black_elo string, result string, eco string, opening string, time_control string, termination string, utc_date string, moves string, clock_annotations string, batch_id string",
+    )
+    silver, quarantine = transform_silver(raw, return_quarantine=True)
+    silver_ids = {row["game_id"] for row in silver.collect()}
+    quarantine_rows = quarantine.collect()
+    quarantine_ids = {row["game_id"] for row in quarantine_rows}
+    assert "g1" in silver_ids
+    assert "g2" in quarantine_ids
+    assert "g2" not in silver_ids
+    assert all(row["reject_reason"] == "null_required_column" for row in quarantine_rows)
+
 def test_transform_silver_filters_bots_unrated_and_corrupt_games(spark_session):
     raw = spark_session.createDataFrame(
         [
