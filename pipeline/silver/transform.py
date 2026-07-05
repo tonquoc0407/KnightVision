@@ -192,9 +192,11 @@ def run(
 
         quarantine_count = 0
         if quarantine_output:
+            quarantine.cache()
             quarantine_count = quarantine.count()
             if quarantine_count > 0:
                 quarantine.write.mode("overwrite").parquet(quarantine_output)
+            quarantine.unpersist()
 
         return {"quarantine_count": quarantine_count, "quarantine_path": quarantine_output}
     finally:

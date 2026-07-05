@@ -8,7 +8,7 @@ models:
       - name: result
         data_tests:
           - accepted_values:
-              values: ['white_win', 'black_win', 'draw']
+              values: ["white_win", "black_win", "draw"]
       - name: white_elo
         description: Nullable rating. Range is enforced by tests/assert_elo_range.sql.
       - name: black_elo

@@ -41,8 +41,27 @@ jobs:
       - name: Dashboard build
         run: npm --prefix dashboard_web ci && npm --prefix dashboard_web run build
 
-      - name: Test
-        run: uv run --python 3.11 --extra dev python -m pytest -q
+      - name: Test with coverage
+        run: uv run --python 3.11 --extra dev python -m pytest -q --cov --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 14
+
+      - name: Security audit
+        run: uv run --python 3.11 --extra dev pip-audit --output json --output-file pip-audit.json || true
+
+      - name: Upload security audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-audit-report
+          path: pip-audit.json
+          retention-days: 14
 
       - name: Fixture pipeline proof
         run: uv run --python 3.11 make sample-pipeline PYTHON='uv run --python 3.11 python'

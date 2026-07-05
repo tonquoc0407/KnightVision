@@ -76,10 +76,10 @@ with DAG(
         task_id="publish_metrics",
         bash_command=(
             PROJECT_PREFIX
-            + r"""python - <<'PYEOF'
-import json, pathlib, datetime
+            + r"""MODELS_OUTPUT_DIR="{{ params.output_dir }}" python - <<'PYEOF'
+import json, os, pathlib, datetime
 
-models_dir = pathlib.Path("models")
+models_dir = pathlib.Path(os.environ["MODELS_OUTPUT_DIR"])
 names = ["blunder_predictor", "opening_outcome", "player_style_clustering"]
 summary = {
     "retrained_at": datetime.datetime.utcnow().isoformat(),

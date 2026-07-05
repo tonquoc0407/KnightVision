@@ -19,5 +19,15 @@ def build_spark(app_name: str = "KnightVision", *, master: str | None = None):
         .config("spark.driver.bindAddress", "127.0.0.1")
         .config("spark.sql.shuffle.partitions", "32")
         .config("spark.sql.parquet.compression.codec", "snappy")
+        .config(
+            "spark.driver.extraJavaOptions",
+            (
+                "--add-opens java.base/javax.security.auth=ALL-UNNAMED"
+                " --add-opens java.base/java.lang=ALL-UNNAMED"
+                " --add-opens java.base/java.lang.invoke=ALL-UNNAMED"
+                " --add-opens java.base/java.util=ALL-UNNAMED"
+                " --enable-native-access=ALL-UNNAMED"
+            ),
+        )
         .getOrCreate()
     )

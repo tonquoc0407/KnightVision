@@ -5,7 +5,58 @@ pytest.importorskip("pyspark")
 from pyspark.sql import functions as F  # noqa: E402
 
 from pipeline.bronze.ingest import build_bronze_rejected  # noqa: E402
-from pipeline.silver.quality_checks import filter_partitions, validate_silver_quality  # noqa: E402
+from pipeline.silver.quality_checks import (  # noqa: E402
+    _prev_month_str,
+    detect_anomalies,
+    filter_partitions,
+    validate_silver_quality,
+)
+
+
+def test_prev_month_str_handles_year_boundary():
+    assert _prev_month_str("2024-01") == "2023-12"
+    assert _prev_month_str("2024-06") == "2024-05"
+    assert _prev_month_str("2025-12") == "2025-11"
+
+
+def test_detect_anomalies_clean_months_returns_empty():
+    base = {
+        "silver_count": 1000,
+        "result_counts": {"white_win": 450, "black_win": 420, "draw": 130},
+        "elo_mean": 1500.0,
+        "elo_stddev": 200.0,
+    }
+    assert detect_anomalies(base, base) == []
+
+
+def test_detect_anomalies_volume_spike():
+    current = {"silver_count": 2000, "result_counts": {}, "elo_mean": None}
+    prev = {"silver_count": 1000, "result_counts": {}, "elo_mean": None}
+    anomalies = detect_anomalies(current, prev)
+    assert any(a["check"] == "volume" for a in anomalies)
+
+
+def test_detect_anomalies_result_distribution_drift():
+    current = {"silver_count": 1000, "result_counts": {"white_win": 700, "black_win": 200, "draw": 100}, "elo_mean": None}
+    prev = {"silver_count": 1000, "result_counts": {"white_win": 450, "black_win": 420, "draw": 130}, "elo_mean": None}
+    anomalies = detect_anomalies(current, prev)
+    checks = {a["check"] for a in anomalies}
+    assert "result_distribution" in checks
+
+
+def test_detect_anomalies_elo_shift():
+    # z = |1900 - 1450| / 150 = 3.0 > 2.0 threshold
+    current = {"silver_count": 1000, "result_counts": {}, "elo_mean": 1900.0, "elo_stddev": 150.0}
+    prev = {"silver_count": 1000, "result_counts": {}, "elo_mean": 1450.0, "elo_stddev": 150.0}
+    anomalies = detect_anomalies(current, prev)
+    assert any(a["check"] == "elo_distribution" for a in anomalies)
+
+
+def test_detect_anomalies_no_prev_data_skips_elo():
+    current = {"silver_count": 1000, "result_counts": {}, "elo_mean": 1500.0}
+    prev = {"silver_count": 1000, "result_counts": {}, "elo_mean": None, "elo_stddev": None}
+    anomalies = detect_anomalies(current, prev)
+    assert not any(a["check"] == "elo_distribution" for a in anomalies)
 
 
 def test_validate_silver_quality_passes(spark_session):

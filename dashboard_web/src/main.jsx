@@ -366,6 +366,78 @@ function Evidence() {
   );
 }
 
+function OpeningRecommender({ source }) {
+  const [elo, setElo] = useState(1500);
+  const [timeControl, setTimeControl] = useState("blitz");
+  const [goal, setGoal] = useState("win");
+  const [submitted, setSubmitted] = useState(false);
+
+  const path = submitted
+    ? `/api/recommendations/openings?player_elo=${elo}&time_control=${timeControl}&goal=${goal}&source=${source}&limit=8`
+    : null;
+  const state = useApi(path, { rows: [], count: 0, elo_bucket: null });
+  const { data } = state;
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitted(true);
+  }
+
+  return (
+    <section className="panel recommender">
+      <h2>Opening Recommendations</h2>
+      <p className="model-note">Get opening suggestions ranked by {goal === "draw" ? "draw rate" : "win rate"} for your Elo range and time control.</p>
+      <form className="predict-form" onSubmit={handleSubmit}>
+        <div className="predict-fields">
+          <label>
+            <small>Your Elo</small>
+            <input type="number" min="400" max="3500" value={elo} onChange={(e) => { setElo(Number(e.target.value)); setSubmitted(false); }} />
+          </label>
+          <label>
+            <small>Time control</small>
+            <select value={timeControl} onChange={(e) => { setTimeControl(e.target.value); setSubmitted(false); }}>
+              <option value="bullet">Bullet</option>
+              <option value="blitz">Blitz</option>
+              <option value="rapid">Rapid</option>
+              <option value="classical">Classical</option>
+            </select>
+          </label>
+          <label>
+            <small>Goal</small>
+            <select value={goal} onChange={(e) => { setGoal(e.target.value); setSubmitted(false); }}>
+              <option value="win">Maximise wins</option>
+              <option value="draw">Maximise draws</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" className="btn-predict">Find openings</button>
+      </form>
+      {submitted && data.elo_bucket && (
+        <p className="model-note" style={{ marginTop: 10 }}>
+          Elo bucket: <strong>{data.elo_bucket}</strong> — {data.count} opening{data.count !== 1 ? "s" : ""} found
+        </p>
+      )}
+      {submitted && data.rows?.length > 0 && (
+        <DataTable
+          rows={data.rows}
+          columns={[
+            { key: "eco_code", label: "ECO" },
+            { key: "opening_family", label: "Opening" },
+            { key: "games_count", label: "Games" },
+            { key: goal === "draw" ? "draw_rate" : "white_win_rate", label: goal === "draw" ? "Draw Rate" : "Win Rate" },
+            { key: "most_common_response", label: "Response" },
+          ]}
+          maxRows={8}
+          downloadName="recommendations.csv"
+        />
+      )}
+      {submitted && data.rows?.length === 0 && !state.loading && (
+        <p className="model-note" style={{ marginTop: 10, color: "#8a9b7a" }}>No data for this Elo range and time control in the current warehouse.</p>
+      )}
+    </section>
+  );
+}
+
 function Openings({ source, year }) {
   const [term, setTerm] = useState("");
   const yearParam = year ? `&year=${year}` : "";
@@ -376,6 +448,7 @@ function Openings({ source, year }) {
   return (
     <div className="page-grid">
       <LoadingOrError state={state} />
+      <OpeningRecommender source={source} />
       <div className="toolbar">
         <Search size={18} />
         <input value={term} onChange={(event) => setTerm(event.target.value)} placeholder="Filter opening family, e.g. Sicilian" />
@@ -729,7 +802,7 @@ function modelVerdict(data) {
 }
 
 function Quality() {
-  const state = useApi("/api/data-quality", { cards: [], pass_count: 0, warn_count: 0 });
+  const state = useApi("/api/data-quality", { cards: [], pass_count: 0, warn_count: 0, anomaly_count: 0 });
   const { data } = state;
   return (
     <div className="page-grid">
@@ -738,7 +811,7 @@ function Quality() {
         <MetricCard icon={ShieldCheck} label="Passing files" value={fmt(data.pass_count)} />
         <MetricCard icon={Target} label="Warnings" value={fmt(data.warn_count)} />
         <MetricCard icon={Database} label="Quality files" value={fmt(data.cards?.length || 0)} />
-        <MetricCard icon={Clock3} label="Latest status" value={data.warn_count ? "Review" : "Clean"} />
+        <MetricCard icon={Activity} label="Anomalies" value={fmt(data.anomaly_count ?? 0)} />
       </div>
       <section className="panel">
         <h2>Quality gates</h2>
@@ -799,6 +872,17 @@ function QualityCard({ card }) {
         <div className="mini-list">
           {payload.partitions.slice(0, 3).map((partition, index) => (
             <span key={index}>{partition.year ? `${partition.year}-${String(partition.month).padStart(2, "0")}` : partition.batch_id}: {fmt(partition.count)}</span>
+          ))}
+        </div>
+      )}
+      {payload.anomalies?.length > 0 && (
+        <div className="anomaly-list">
+          <small className="anomaly-label">Anomalies vs previous month</small>
+          {payload.anomalies.map((a, i) => (
+            <div key={i} className="anomaly-row">
+              <span className="anomaly-check">{a.check.replace(/_/g, " ")}</span>
+              <span className="anomaly-msg">{a.message}</span>
+            </div>
           ))}
         </div>
       )}

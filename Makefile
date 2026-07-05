@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 MONTH ?= 2024-01
 UV ?= uv
-UV_CACHE_DIR ?= /tmp/uv-cache
-UV_PYTHON_INSTALL_DIR ?= /tmp/uv-python
+UV_CACHE_DIR ?= $(HOME)/.cache/uv
+UV_PYTHON_INSTALL_DIR ?= $(HOME)/.local/share/uv/python
 UV_LINK_MODE ?= copy
 UV_RUN := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11
 UV_RUN_DEV := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11 --extra dev

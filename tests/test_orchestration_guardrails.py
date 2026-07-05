@@ -50,8 +50,15 @@ def test_ml_retrain_dag_imports_with_expected_tasks():
 def test_backfill_dag_imports():
     from orchestration.dags.backfill_pipeline import dag
 
+    task_ids = {task.task_id for task in dag.tasks}
+    param_keys = set(dag.params.keys())
+
     assert dag.dag_id == "knightvision_backfill_pipeline"
-    assert {task.task_id for task in dag.tasks} == {"run_backfill_months"}
+    assert dag.schedule_interval is None
+    assert "run_backfill_months" in task_ids
+    assert "start_month" in param_keys
+    assert "end_month" in param_keys
+    assert "max_parallel_months" in param_keys
 
 def test_bronze_metrics_report_dedupe_and_partition_counts(spark_session):
     rows = [

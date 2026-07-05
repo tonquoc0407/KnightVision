@@ -5,6 +5,7 @@ from pathlib import Path
 import duckdb
 
 from dashboard_api.app import (
+    _elo_to_bucket,
     blunder_heatmap_payload,
     evidence_payload,
     health_payload,
@@ -13,6 +14,7 @@ from dashboard_api.app import (
     player_profile_payload,
     players_payload,
     predict_blunder_payload,
+    recommendations_payload,
     time_pressure_payload,
     years_payload,
 )
@@ -67,7 +69,9 @@ def create_dashboard_db(path: Path) -> None:
             """
             insert into analytics.opening_stats values
             ('B20', 'Sicilian Defense', '1600-1999', 'blitz', 2024, 20, 0.45, 0.50, 0.05, 42.1, 'c5'),
-            ('D06', 'Queen''s Gambit', '1600-1999', 'rapid', 2024, 10, 0.55, 0.35, 0.10, 51.3, 'd5')
+            ('D06', 'Queen''s Gambit', '1600-1999', 'rapid', 2024, 10, 0.55, 0.35, 0.10, 51.3, 'd5'),
+            ('E60', 'King''s Indian', '1600-1800', 'blitz', 2024, 15, 0.52, 0.38, 0.10, 45.0, 'Nf6'),
+            ('C50', 'Italian Game', '1600-1800', 'rapid', 2024, 8, 0.48, 0.42, 0.10, 38.0, 'e5')
             """
         )
         connection.execute(
@@ -111,7 +115,7 @@ def test_health_and_overview_use_active_warehouse(monkeypatch, tmp_path: Path):
     assert health["status"] == "ready"
     assert "sources" in health
     assert health["counts"]["analytics.player_profiles"] == 2
-    assert overview["summary"]["opening_rows"] == 2
+    assert overview["summary"]["opening_rows"] == 4
     assert overview["summary"]["blunders"] == 1
 
 
@@ -137,7 +141,7 @@ def test_player_search_and_year_filters(monkeypatch, tmp_path: Path):
 
     assert players_payload(year=2024)["count"] == 2
     assert players_payload(year=2025)["count"] == 0
-    assert openings_payload(year=2024)["count"] == 2
+    assert openings_payload(year=2024)["count"] == 4
     assert openings_payload(year=2025)["count"] == 0
     assert time_pressure_payload(year=2024)["count"] == 1
     assert time_pressure_payload(year=2025)["count"] == 0
@@ -159,6 +163,47 @@ def test_predict_blunder_returns_valid_response_shape():
     else:
         assert 0.0 <= result["blunder_probability"] <= 1.0
         assert isinstance(result["is_blunder"], bool)
+
+
+def test_elo_to_bucket_conversion():
+    assert _elo_to_bucket(1500) == "1400-1600"
+    assert _elo_to_bucket(1700) == "1600-1800"
+    assert _elo_to_bucket(1600) == "1600-1800"
+    assert _elo_to_bucket(2200) == "2200+"
+    assert _elo_to_bucket(2800) == "2200+"
+    assert _elo_to_bucket(400) == "400-600"
+
+
+def test_recommendations_payload_returns_rows_for_matching_bucket(monkeypatch, tmp_path: Path):
+    db_path = tmp_path / "dashboard.duckdb"
+    create_dashboard_db(db_path)
+    monkeypatch.setenv("KNIGHTVISION_DUCKDB_PATH", str(db_path))
+
+    result = recommendations_payload(player_elo=1700, time_control="blitz", goal="win")
+    assert result["elo_bucket"] == "1600-1800"
+    assert result["count"] == 1
+    assert result["rows"][0]["eco_code"] == "E60"
+    assert result["goal"] == "win"
+
+
+def test_recommendations_payload_draw_goal_sorts_by_draw_rate(monkeypatch, tmp_path: Path):
+    db_path = tmp_path / "dashboard.duckdb"
+    create_dashboard_db(db_path)
+    monkeypatch.setenv("KNIGHTVISION_DUCKDB_PATH", str(db_path))
+
+    result = recommendations_payload(player_elo=1700, goal="draw")
+    assert result["goal"] == "draw"
+    assert result["count"] >= 1
+
+
+def test_recommendations_payload_no_elo_returns_all(monkeypatch, tmp_path: Path):
+    db_path = tmp_path / "dashboard.duckdb"
+    create_dashboard_db(db_path)
+    monkeypatch.setenv("KNIGHTVISION_DUCKDB_PATH", str(db_path))
+
+    result = recommendations_payload()
+    assert result["elo_bucket"] is None
+    assert result["count"] == 4
 
 
 def test_evidence_payload_contains_sources_and_proof_points():

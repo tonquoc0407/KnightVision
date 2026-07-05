@@ -10,6 +10,70 @@ from pyspark.sql import functions as F
 
 from pipeline.spark_session import build_spark
 
+
+def _prev_month_str(month: str) -> str:
+    """Return the YYYY-MM string for the month before the given one."""
+    year, m = month.split("-")
+    year, m = int(year), int(m)
+    if m == 1:
+        return f"{year - 1}-12"
+    return f"{year}-{m - 1:02d}"
+
+
+def detect_anomalies(current: dict, prev: dict) -> list[dict]:
+    """Compare current month metrics against the previous month and return a list of anomaly dicts.
+
+    Each anomaly has: check, message, current, previous.
+    Returns an empty list when no anomalies are found or when comparison is not possible.
+    """
+    anomalies: list[dict] = []
+
+    # Volume: silver_count within ±20% of previous month
+    c_count = current.get("silver_count", 0)
+    p_count = prev.get("silver_count", 0)
+    if p_count > 0:
+        pct_change = abs(c_count - p_count) / p_count
+        if pct_change > 0.20:
+            anomalies.append({
+                "check": "volume",
+                "message": f"Silver row count changed by {pct_change:.1%} (threshold ±20%)",
+                "current": c_count,
+                "previous": p_count,
+            })
+
+    # Result distribution: each result type within ±5 percentage points
+    c_results = current.get("result_counts") or {}
+    p_results = prev.get("result_counts") or {}
+    c_total = sum(c_results.values()) or 1
+    p_total = sum(p_results.values()) or 1
+    for result_type in ("white_win", "black_win", "draw"):
+        c_rate = c_results.get(result_type, 0) / c_total
+        p_rate = p_results.get(result_type, 0) / p_total
+        drift = abs(c_rate - p_rate)
+        if drift > 0.05:
+            anomalies.append({
+                "check": "result_distribution",
+                "message": f"{result_type} rate shifted by {drift:.1%} (threshold ±5pp)",
+                "current": round(c_rate, 4),
+                "previous": round(p_rate, 4),
+            })
+
+    # Elo distribution: mean within ±2σ of previous month's stddev
+    c_elo_mean = current.get("elo_mean")
+    p_elo_mean = prev.get("elo_mean")
+    p_elo_std = prev.get("elo_stddev")
+    if c_elo_mean is not None and p_elo_mean is not None and p_elo_std and p_elo_std > 0:
+        z = abs(c_elo_mean - p_elo_mean) / p_elo_std
+        if z > 2.0:
+            anomalies.append({
+                "check": "elo_distribution",
+                "message": f"Elo mean shifted by {z:.2f}σ (threshold 2σ)",
+                "current": round(c_elo_mean, 1),
+                "previous": round(p_elo_mean, 1),
+            })
+
+    return anomalies
+
 ACCEPTED_RESULTS = {"white_win", "black_win", "draw"}
 NON_NULL_COLUMNS = ["game_id", "white", "black", "result"]
 REQUIRED_COLUMNS = {
@@ -95,6 +159,13 @@ def validate_silver_quality(
         for row in silver_df.groupBy("year", "month").count().orderBy("year", "month").collect()
     ]
 
+    elo_stats_row = silver_df.select(
+        F.mean((F.col("white_elo").cast("double") + F.col("black_elo").cast("double")) / 2).alias("elo_mean"),
+        F.stddev((F.col("white_elo").cast("double") + F.col("black_elo").cast("double")) / 2).alias("elo_stddev"),
+    ).collect()[0]
+    elo_mean = float(elo_stats_row["elo_mean"]) if elo_stats_row["elo_mean"] is not None else None
+    elo_stddev = float(elo_stats_row["elo_stddev"]) if elo_stats_row["elo_stddev"] is not None else None
+
     metrics = {
         "bronze_count": bronze_count,
         "silver_count": silver_count,
@@ -109,6 +180,8 @@ def validate_silver_quality(
         "clock_coverage": clock_coverage,
         "result_counts": result_counts,
         "partitions": partition_counts,
+        "elo_mean": elo_mean,
+        "elo_stddev": elo_stddev,
     }
     return metrics
 
@@ -126,6 +199,18 @@ def filter_partitions(
         silver_df = silver_df.filter((F.col("year") == int(year)) & (F.col("month") == int(month_num)))
     return bronze_df, silver_df
 
+def _load_prev_metrics(metrics_output: Path, silver_month: str) -> dict | None:
+    """Try to load the previous month's silver metrics JSON for anomaly comparison."""
+    prev_month = _prev_month_str(silver_month)
+    prev_path = metrics_output.parent.parent / prev_month / metrics_output.name
+    if prev_path.exists():
+        try:
+            return json.loads(prev_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            return None
+    return None
+
+
 def run(
     bronze_path: str,
     silver_path: str,
@@ -134,6 +219,7 @@ def run(
     silver_month: str | None = None,
     month: str | None = None,
     allow_empty: bool = False,
+    metrics_output: Path | None = None,
 ) -> dict[str, float]:
     spark = build_spark("KnightVision Silver Quality Gate", master="local[*]")
     try:
@@ -149,7 +235,15 @@ def run(
             bronze_batch_id=bronze_batch_id,
             silver_month=silver_month,
         )
-        return validate_silver_quality(bronze_df, silver_df, allow_empty=allow_empty)
+        metrics = validate_silver_quality(bronze_df, silver_df, allow_empty=allow_empty)
+
+        if metrics_output and silver_month:
+            prev = _load_prev_metrics(metrics_output, silver_month)
+            metrics["anomalies"] = detect_anomalies(metrics, prev) if prev else []
+        else:
+            metrics["anomalies"] = []
+
+        return metrics
     finally:
         spark.stop()
 
@@ -171,15 +265,18 @@ def main() -> None:
         silver_month=args.silver_month,
         month=args.month,
         allow_empty=args.allow_empty,
+        metrics_output=args.metrics_output,
     )
     if args.metrics_output:
         args.metrics_output.parent.mkdir(parents=True, exist_ok=True)
         args.metrics_output.write_text(json.dumps(metrics, indent=2, sort_keys=True), encoding="utf-8")
+    anomaly_count = len(metrics.get("anomalies") or [])
     print(
         "Silver quality gate passed: "
         f"bronze_count={metrics['bronze_count']}, "
         f"silver_count={metrics['silver_count']}, "
-        f"retention={metrics['retention']:.2%}"
+        f"retention={metrics['retention']:.2%}, "
+        f"anomalies={anomaly_count}"
     )
 
 if __name__ == "__main__":

@@ -703,6 +703,12 @@ figcaption {
   color: #fff8e6;
 }
 
+.anomaly-list { margin-top: 10px; border-top: 1px solid rgba(224,176,112,.2); padding-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+.anomaly-label { color: #e0b870; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.anomaly-row { display: flex; flex-direction: column; gap: 1px; }
+.anomaly-check { font-size: 11px; font-weight: 600; color: #e0b870; text-transform: capitalize; }
+.anomaly-msg { font-size: 11px; color: #b9c5aa; }
+
 .predict-form { display: flex; flex-direction: column; gap: 16px; }
 .predict-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 14px; }
 .predict-fields label { display: flex; flex-direction: column; gap: 4px; }

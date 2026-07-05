@@ -56,6 +56,8 @@ def _quality_status(payload: dict[str, Any]) -> str:
         return "warn"
     if payload.get("retention") is not None and payload["retention"] < 0.95:
         return "warn"
+    if payload.get("anomalies"):
+        return "warn"
     return "pass"
 
 
@@ -97,6 +99,7 @@ def quality_summary_payload() -> dict[str, Any]:
         "cards": cards,
         "pass_count": sum(1 for card in cards if card["status"] == "pass"),
         "warn_count": sum(1 for card in cards if card["status"] == "warn"),
+        "anomaly_count": sum(len(card.get("payload", {}).get("anomalies") or []) for card in cards),
     }
 
 
@@ -214,6 +217,29 @@ def player_profile_payload(player: str, source: str | None = None) -> dict[str, 
 def time_pressure_payload(source: str | None = None, year: int | None = None) -> dict[str, Any]:
     rows = _warehouse(source).named_records("time_pressure.sql", [year, year])
     return {"rows": rows, "count": len(rows)}
+
+
+def _elo_to_bucket(player_elo: int, size: int = 200) -> str:
+    """Convert a player Elo to the bucket string used in analytics.opening_stats."""
+    low = (player_elo // size) * size
+    high = low + size
+    return f"{low}-{high}" if high < 2200 else "2200+"
+
+
+def recommendations_payload(
+    player_elo: int | None = None,
+    time_control: str | None = None,
+    goal: str = "win",
+    limit: int = 10,
+    source: str | None = None,
+) -> dict[str, Any]:
+    bucket = _elo_to_bucket(player_elo) if player_elo is not None else None
+    safe_goal = goal if goal in ("win", "draw") else "win"
+    rows = _warehouse(source).named_records(
+        "opening_recommendations.sql",
+        [bucket, bucket, time_control, time_control, safe_goal, limit],
+    )
+    return {"rows": rows, "count": len(rows), "elo_bucket": bucket, "goal": safe_goal}
 
 
 def blunder_heatmap_payload(source: str | None = None, year: int | None = None) -> dict[str, Any]:
@@ -400,6 +426,16 @@ def create_app() -> FastAPI:
     @app.get("/api/time-pressure")
     def time_pressure(source: str | None = None, year: int | None = None) -> dict[str, Any]:
         return time_pressure_payload(source, year=year)
+
+    @app.get("/api/recommendations/openings")
+    def recommend_openings(
+        player_elo: int | None = None,
+        time_control: str | None = None,
+        goal: str = "win",
+        limit: int = Query(default=10, ge=1, le=50),
+        source: str | None = None,
+    ) -> dict[str, Any]:
+        return recommendations_payload(player_elo=player_elo, time_control=time_control, goal=goal, limit=limit, source=source)
 
     @app.get("/api/blunders/heatmap")
     def blunder_heatmap(source: str | None = None, year: int | None = None) -> dict[str, Any]:

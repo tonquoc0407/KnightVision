@@ -2,6 +2,13 @@ import os
 
 import pytest
 
+# PySpark 3.x (Hadoop 3.3.x) is incompatible with Java 21+: Subject.getSubject was
+# removed in Java 21. Force Java 17 (Temurin) when available so PySpark starts its
+# JVM subprocess with a compatible runtime.
+_JAVA17 = "/usr/lib/jvm/java-17-temurin-jdk"
+if os.path.isdir(_JAVA17):
+    os.environ["JAVA_HOME"] = _JAVA17
+
 
 @pytest.fixture(scope="session")
 def spark_session():
