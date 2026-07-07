@@ -6,7 +6,10 @@ UV_PYTHON_INSTALL_DIR ?= $(HOME)/.local/share/uv/python
 UV_LINK_MODE ?= copy
 UV_RUN := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11
 UV_RUN_DEV := UV_CACHE_DIR=$(UV_CACHE_DIR) UV_PYTHON_INSTALL_DIR=$(UV_PYTHON_INSTALL_DIR) UV_LINK_MODE=$(UV_LINK_MODE) $(UV) run --python 3.11 --extra dev
-PYTHON ?= env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(UV_RUN) python
+# PySpark 3.x is incompatible with Java 21+ (Subject.getSubject removed). Use Temurin 17 when present.
+JAVA17 := /usr/lib/jvm/java-17-temurin-jdk
+JAVA_HOME_OVERRIDE := $(if $(wildcard $(JAVA17)),JAVA_HOME=$(JAVA17),)
+PYTHON ?= env -u SPARK_HOME -u PYSPARK_PYTHON -u PYSPARK_DRIVER_PYTHON $(JAVA_HOME_OVERRIDE) $(UV_RUN) python
 DBT ?= $(UV_RUN) dbt
 STREAMLIT ?= $(UV_RUN) streamlit
 NPM ?= npm

@@ -1,36 +1,36 @@
 {
   "baselines": {
     "class_prior_probability": {
-      "accuracy": 0.9683383991894631,
+      "accuracy": 0.927266633148986,
       "f1": 0.0,
-      "pr_auc": 0.03166160081053698,
+      "pr_auc": 0.0727333668510139,
       "precision": 0.0,
       "recall": 0.0,
       "roc_auc": 0.5
     },
     "low_time_or_material_rule": {
-      "accuracy": 0.9250253292806484,
-      "f1": 0.06329113924050633,
-      "pr_auc": 0.033317154421086695,
-      "precision": 0.05235602094240838,
-      "recall": 0.08,
-      "roc_auc": 0.516327491498823
+      "accuracy": 0.77593430534607,
+      "f1": 0.10926049300466356,
+      "pr_auc": 0.0735113498273967,
+      "precision": 0.07685098406747891,
+      "recall": 0.1889400921658986,
+      "roc_auc": 0.5054586598548633
     },
     "majority_class": {
-      "accuracy": 0.9683383991894631,
+      "accuracy": 0.927266633148986,
       "f1": 0.0,
-      "pr_auc": 0.03166160081053698,
+      "pr_auc": 0.0727333668510139,
       "precision": 0.0,
       "recall": 0.0,
       "roc_auc": 0.5
     }
   },
   "class_counts": {
-    "0": 19116,
-    "1": 623
+    "0": 55325,
+    "1": 4342
   },
   "config": {
-    "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+    "duckdb_path": "warehouse/knightvision.duckdb",
     "output_dir": "models/blunder_predictor",
     "random_state": 42,
     "test_size": 0.2
@@ -41,7 +41,7 @@
       "time_control_type",
       "square"
     ],
-    "encoded_count": 76,
+    "encoded_count": 77,
     "numeric": [
       "player_elo",
       "time_remaining_seconds",
@@ -52,15 +52,15 @@
     ]
   },
   "metrics": {
-    "accuracy": 0.7717831813576495,
-    "f1": 0.1361457334611697,
-    "pr_auc": 0.1009112693074617,
-    "precision": 0.07734204793028322,
-    "recall": 0.568,
-    "roc_auc": 0.7558242218153284
+    "accuracy": 0.5720630132394838,
+    "f1": 0.19000793021411577,
+    "pr_auc": 0.13720450784138666,
+    "precision": 0.1101710502115137,
+    "recall": 0.6900921658986175,
+    "roc_auc": 0.6883755593793751
   },
   "recommended_threshold": 0.5,
-  "row_count": 19739,
-  "test_rows": 3948,
-  "train_rows": 15791
+  "row_count": 59667,
+  "test_rows": 11934,
+  "train_rows": 47733
 }

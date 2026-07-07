@@ -4,8 +4,8 @@ Player style clusters are unsupervised statistical segments built from per-playe
 
 ## Dataset
 
-- DuckDB warehouse: `warehouse/knightvision_benchmark.duckdb`
-- Eligible players: 15,566
+- DuckDB warehouse: `warehouse/knightvision.duckdb`
+- Eligible players: 130,863
 - Minimum games per player: 10
 - Clusters: 5
 
@@ -13,18 +13,18 @@ Player style clusters are unsupervised statistical segments built from per-playe
 
 | Metric | Value |
 |---|---:|
-| eligible_players | 15566 |
+| eligible_players | 130863 |
 | clusters | 5 |
-| inertia | 178156.4354 |
-| silhouette_score | 0.1372 |
-| pca_explained_variance_ratio | 0.3015 |
+| inertia | 1247851.6156 |
+| silhouette_score | 0.1827 |
+| pca_explained_variance_ratio | 0.3897 |
 
 ## Cluster Profiles
 
 | Cluster | Style Label | Players | Win Rate | Draw Rate | Avg Elo | Avg Length | Top Opening Share | Blitz Share |
 |---:|---|---:|---:|---:|---:|---:|---:|---:|
-| 0 | Blitz Specialists | 3,250 | 0.4449 | 0.0208 | 1510.4 | 60.6 | 0.2573 | 0.9756 |
-| 1 | Opening Loyalists | 3,145 | 0.4650 | 0.0134 | 1505.1 | 55.8 | 0.2824 | 0.0393 |
-| 2 | Opening Explorers | 4,313 | 0.5230 | 0.0363 | 2008.7 | 71.9 | 0.2382 | 0.0220 |
-| 3 | Long-Game Grinders | 1,218 | 0.4879 | 0.0431 | 1521.0 | 63.9 | 0.2488 | 0.0278 |
-| 4 | Sharp Tactical Players | 3,640 | 0.5303 | 0.0601 | 1841.3 | 77.9 | 0.2322 | 0.9710 |
+| 0 | Opening Explorers | 47,239 | 0.5014 | 0.0443 | 1694.2 | 68.8 | 0.1655 | 0.8877 |
+| 1 | Long-Game Grinders | 39,230 | 0.5034 | 0.0460 | 1622.2 | 65.8 | 0.1906 | 0.0788 |
+| 2 | Opening Loyalists | 24,418 | 0.2858 | 0.0268 | 1321.1 | 51.4 | 0.2169 | 0.3418 |
+| 3 | Balanced Generalists | 4,578 | 0.4793 | 0.0493 | 1508.1 | 59.0 | 0.2029 | 0.0273 |
+| 4 | Bullet Specialists | 15,398 | 0.5116 | 0.0356 | 1767.2 | 68.7 | 0.1828 | 0.1457 |

@@ -2,34 +2,34 @@
 
 ## Dataset
 
-- DuckDB warehouse: `warehouse/knightvision_benchmark.duckdb`
-- Rows: 322,164
-- white_win: 161,115
-- black_win: 149,561
-- draw: 11,488
+- DuckDB warehouse: `warehouse/knightvision.duckdb`
+- Rows: 9,431,205
+- white_win: 4,673,397
+- black_win: 4,378,076
+- draw: 379,732
 
 ## Metrics
 
 | Metric | Value |
 |---|---:|
-| accuracy | 0.7584 |
-| balanced_accuracy | 0.7389 |
-| macro_f1 | 0.6245 |
-| weighted_f1 | 0.8028 |
-| log_loss | 0.7664 |
+| accuracy | 0.7115 |
+| balanced_accuracy | 0.7106 |
+| macro_f1 | 0.5970 |
+| weighted_f1 | 0.7515 |
+| log_loss | 0.7568 |
 
 ## Classification Report
 
 ```text
               precision    recall  f1-score   support
 
-   black_win     0.9130    0.7420    0.8187     29912
-        draw     0.1346    0.6967    0.2256      2298
-   white_win     0.8880    0.7779    0.8293     32223
+   black_win     0.8429    0.7083    0.7698    875615
+        draw     0.1485    0.7088    0.2456     75947
+   white_win     0.8477    0.7147    0.7756    934679
 
-    accuracy                         0.7584     64433
-   macro avg     0.6452    0.7389    0.6245     64433
-weighted avg     0.8727    0.7584    0.8028     64433
+    accuracy                         0.7115   1886241
+   macro avg     0.6130    0.7106    0.5970   1886241
+weighted avg     0.8173    0.7115    0.7515   1886241
 
 ```
 
@@ -37,18 +37,18 @@ weighted avg     0.8727    0.7584    0.8028     64433
 
 | Feature | Importance |
 |---|---:|
-| `legal_prefix_length` | 0.099273 |
-| `game_length` | 0.067230 |
-| `capture_count` | 0.030144 |
-| `has_capture` | 0.013608 |
-| `elo_diff` | 0.012007 |
-| `opening_family_Petrov's Defense` | 0.009993 |
-| `abs_elo_diff` | 0.009039 |
-| `opening_variation_Rapport-Jobava System, with e6` | 0.008583 |
-| `time_control_type_bullet` | 0.008452 |
-| `opening_variation_Indian Defense: Wade-Tartakower Defense` | 0.008310 |
-| `eco_code_D03` | 0.007966 |
-| `opening_variation_Caro-Kann Defense: Panov Attack, Modern Defense` | 0.007497 |
-| `eco_code_D12` | 0.007283 |
-| `eco_code_C29` | 0.007160 |
-| `opening_variation_Danish Gambit Accepted: Copenhagen Defense` | 0.006841 |
+| `game_length` | 0.223296 |
+| `legal_prefix_length` | 0.163514 |
+| `capture_count` | 0.111952 |
+| `elo_diff` | 0.080746 |
+| `abs_elo_diff` | 0.076060 |
+| `has_capture` | 0.038906 |
+| `opening_variation_King's Pawn` | 0.029465 |
+| `opening_family_King's Pawn` | 0.027303 |
+| `black_castled` | 0.026890 |
+| `opening_family_Queen's Pawn` | 0.024426 |
+| `opening_variation_Queen's Pawn` | 0.023907 |
+| `time_control_type_classical` | 0.018837 |
+| `white_castled` | 0.018798 |
+| `time_control_type_bullet` | 0.017370 |
+| `base_time_seconds` | 0.015940 |

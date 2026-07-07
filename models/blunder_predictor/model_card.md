@@ -6,21 +6,21 @@ Binary XGBoost classifier that ranks Stockfish-evaluated moves by likelihood of 
 
 ## Dataset
 
-- DuckDB warehouse: `warehouse/knightvision_benchmark.duckdb`
-- Rows: 19,739
-- 200cp blunders: 623
-- Train/test split: 15,791/3,948
+- DuckDB warehouse: `warehouse/knightvision.duckdb`
+- Rows: 59,667
+- 200cp blunders: 4,342
+- Train/test split: 47,733/11,934
 
 ## Metrics
 
 | Metric | Value |
 |---|---:|
-| accuracy | 0.7718 |
-| precision | 0.0773 |
-| recall | 0.5680 |
-| f1 | 0.1361 |
-| roc_auc | 0.7558 |
-| pr_auc | 0.1009 |
+| accuracy | 0.5721 |
+| precision | 0.1102 |
+| recall | 0.6901 |
+| f1 | 0.1900 |
+| roc_auc | 0.6884 |
+| pr_auc | 0.1372 |
 
 ## Artifacts
 
@@ -39,9 +39,9 @@ Binary XGBoost classifier that ranks Stockfish-evaluated moves by likelihood of 
 
 | Baseline | ROC-AUC | PR-AUC | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|---:|
-| majority_class | 0.5000 | 0.0317 | 0.0000 | 0.0000 | 0.0000 |
-| class_prior_probability | 0.5000 | 0.0317 | 0.0000 | 0.0000 | 0.0000 |
-| low_time_or_material_rule | 0.5163 | 0.0333 | 0.0524 | 0.0800 | 0.0633 |
+| majority_class | 0.5000 | 0.0727 | 0.0000 | 0.0000 | 0.0000 |
+| class_prior_probability | 0.5000 | 0.0727 | 0.0000 | 0.0000 | 0.0000 |
+| low_time_or_material_rule | 0.5055 | 0.0735 | 0.0769 | 0.1889 | 0.1093 |
 
 ## Limitations
 

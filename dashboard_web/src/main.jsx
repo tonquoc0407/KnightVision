@@ -12,7 +12,6 @@ import {
   LayoutDashboard,
   Search,
   ShieldCheck,
-  Sparkles,
   Target,
   UserRound
 } from "lucide-react";
@@ -48,6 +47,14 @@ const fmt = (value, digits = 0) => {
   return value;
 };
 
+const fmtCompact = (value) => {
+  if (value === null || value === undefined || Number.isNaN(value)) return "n/a";
+  if (typeof value !== "number") return value;
+  if (Math.abs(value) >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (Math.abs(value) >= 100_000) return `${(value / 1_000).toFixed(0)}K`;
+  return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
+};
+
 const percent = (value) => (value === null || value === undefined ? "n/a" : `${(value * 100).toFixed(1)}%`);
 
 function downloadCSV(rows, columns, filename) {
@@ -76,8 +83,12 @@ function downloadCSV(rows, columns, filename) {
 }
 
 function useApi(path, fallback) {
-  const [state, setState] = useState({ loading: true, data: fallback, error: null });
+  const [state, setState] = useState({ loading: !!path, data: fallback, error: null });
   useEffect(() => {
+    if (!path) {
+      setState({ loading: false, data: fallback, error: null });
+      return;
+    }
     let active = true;
     setState({ loading: true, data: fallback, error: null });
     api(path)
@@ -176,11 +187,18 @@ function MetricCard({ icon: Icon, label, value, hint }) {
 function EmptyState({ title, children }) {
   return (
     <div className="empty">
-      <Sparkles size={20} />
+      <span className="empty-mark">—</span>
       <strong>{title}</strong>
-      <p>{children}</p>
+      {children && <p>{children}</p>}
     </div>
   );
+}
+
+function Badge({ status, label }) {
+  const variantMap = { pass: "pass", warn: "warn", fail: "fail", missing: "fail" };
+  const variant = variantMap[status] || "info";
+  const text = label || (status === "pass" ? "Pass" : status === "fail" ? "Fail" : "Review");
+  return <span className={`badge badge--${variant}`}>{text}</span>;
 }
 
 function DataTable({ rows, columns, maxRows = 15, downloadName }) {
@@ -189,7 +207,7 @@ function DataTable({ rows, columns, maxRows = 15, downloadName }) {
     <div className="table-wrap">
       {downloadName && (
         <div className="export-row">
-          <button className="btn-export" onClick={() => downloadCSV(rows, columns, downloadName)}>
+          <button className="btn--outline" onClick={() => downloadCSV(rows, columns, downloadName)}>
             <Download size={14} />
             Export CSV
           </button>
@@ -219,7 +237,7 @@ function LoadingOrError({ state }) {
   return null;
 }
 
-function BarChart({ rows, labelKey, valueKey, color = "#d6a94f" }) {
+function BarChart({ rows, labelKey, valueKey, color = "#c8a24a" }) {
   const visible = rows.filter((row) => row?.[labelKey] !== undefined).slice(0, 12);
   const max = Math.max(...visible.map((row) => Number(row[valueKey]) || 0), 1);
   if (!visible.length) return <EmptyState title="No chart rows">This warehouse does not have enough rows for this chart.</EmptyState>;
@@ -263,7 +281,7 @@ function LineChart({ rows, xKey, yKey }) {
     <div className="line-chart">
       <svg viewBox={`-48 0 ${width + 48} ${height}`} role="img" aria-label="Player Elo trend">
         {yTicks.map((tick) => (
-          <text key={tick} x="-6" y={yPos(tick) + 4} fill="#9aa58f" fontSize="11" textAnchor="end">
+          <text key={tick} x="-6" y={yPos(tick) + 4} fill="#7a8270" fontSize="10" textAnchor="end">
             {Math.round(tick)}
           </text>
         ))}
@@ -281,26 +299,50 @@ function LineChart({ rows, xKey, yKey }) {
   );
 }
 
+function ResultDistBar({ quality }) {
+  const card = (quality || []).find(c => c.kind === "silver" && c.payload?.result_counts?.white_win);
+  if (!card) return null;
+  const { white_win = 0, draw = 0, black_win = 0 } = card.payload.result_counts;
+  const total = white_win + draw + black_win || 1;
+  const wPct = (white_win / total * 100).toFixed(1);
+  const dPct = (draw / total * 100).toFixed(1);
+  const bPct = (black_win / total * 100).toFixed(1);
+  return (
+    <div className="result-dist">
+      <div className="result-dist-bar">
+        <div style={{ width: `${wPct}%` }} className="rd-white" />
+        <div style={{ width: `${dPct}%` }} className="rd-draw" />
+        <div style={{ width: `${bPct}%` }} className="rd-black" />
+      </div>
+      <div className="result-dist-labels">
+        <span>White {wPct}%</span>
+        <span>Draw {dPct}%</span>
+        <span>Black {bPct}%</span>
+      </div>
+    </div>
+  );
+}
+
 function Overview({ health, source }) {
   const { data } = useApi(`/api/overview?source=${source}`, { summary: {}, quality: [] });
   const summary = data.summary || {};
+  const silverCard = (data.quality || []).find(c => c.kind === "silver" && c.primary_count > 10);
+  const totalGames = silverCard?.primary_count;
   return (
     <div className="page-grid">
       <div className="metrics">
-        <MetricCard icon={UserRound} label="Player profile rows" value={fmt(summary.player_profile_rows)} />
-        <MetricCard icon={GitBranch} label="Opening rows" value={fmt(summary.opening_rows)} />
-        <MetricCard icon={Clock3} label="Time buckets" value={fmt(summary.time_pressure_rows)} />
-        <MetricCard icon={Target} label="Evaluated positions" value={fmt(summary.evaluated_positions)} hint={`${fmt(summary.blunders)} 200cp blunders`} />
+        <MetricCard icon={UserRound} label="Players" value={fmtCompact(summary.player_profile_rows)} />
+        <MetricCard icon={GitBranch} label="Openings" value={fmtCompact(summary.opening_rows)} />
+        <MetricCard icon={Clock3} label="Time buckets" value={fmtCompact(summary.time_pressure_rows)} />
+        <MetricCard icon={Target} label="Positions" value={fmtCompact(summary.evaluated_positions)} hint={`${fmtCompact(summary.blunders)} blunders ≥200cp`} />
       </div>
       <section className="panel hero-panel">
-        <div>
-          <p className="eyebrow">Active warehouse</p>
-          <h2>{health?.duckdb_path || "warehouse not configured"}</h2>
-          <p>Use this page to check whether the analytics warehouse, Stockfish rows, quality metrics, and ML artifacts are available before opening deeper tabs.</p>
-        </div>
-        <div className="board-orbit" aria-hidden="true">
-          {Array.from({ length: 16 }).map((_, i) => <span key={i} />)}
-        </div>
+        <p className="eyebrow">Active warehouse</p>
+        <h2>{health?.duckdb_path || "—"}</h2>
+        {totalGames && (
+          <p className="hero-total">{fmtCompact(totalGames)} games processed</p>
+        )}
+        <ResultDistBar quality={data.quality} />
       </section>
       <section className="panel">
         <h2>Pipeline quality files</h2>
@@ -308,8 +350,8 @@ function Overview({ health, source }) {
           rows={data.quality || []}
           columns={[
             { key: "path", label: "File" },
-            { key: "status", label: "Status", render: (value) => <StatusBadge status={value} /> },
-            { key: "primary_count", label: "Rows" },
+            { key: "status", label: "Status", render: (value) => <Badge status={value} /> },
+            { key: "primary_count", label: "Rows", render: (v) => fmtCompact(v) },
             { key: "retention", label: "Retention", render: percent },
             { key: "suspicious_rows", label: "Suspicious" }
           ]}
@@ -330,8 +372,8 @@ function Evidence() {
         <h2>Production-readiness evidence</h2>
         <div className="proof-grid">
           {(data.proof_points || []).map((point) => (
-            <article className={`proof-card ${point.status}`} key={point.label}>
-              <StatusBadge status={point.status} />
+            <article className={`card card--${point.status}`} key={point.label}>
+              <Badge status={point.status} />
               <h3>{point.label}</h3>
               <p>{point.evidence}</p>
             </article>
@@ -344,7 +386,7 @@ function Evidence() {
           rows={data.sources}
           columns={[
             { key: "label", label: "Warehouse" },
-            { key: "status", label: "Status", render: (value) => <StatusBadge status={value === "ready" ? "pass" : "warn"} /> },
+            { key: "status", label: "Status", render: (value) => <Badge status={value === "ready" ? "pass" : "warn"} /> },
             { key: "size_mb", label: "Size MB" },
             { key: "opening_rows", label: "Openings" },
             { key: "player_rows", label: "Players" },
@@ -384,7 +426,7 @@ function OpeningRecommender({ source }) {
   }
 
   return (
-    <section className="panel recommender">
+    <section className="panel">
       <h2>Opening Recommendations</h2>
       <p className="model-note">Get opening suggestions ranked by {goal === "draw" ? "draw rate" : "win rate"} for your Elo range and time control.</p>
       <form className="predict-form" onSubmit={handleSubmit}>
@@ -410,7 +452,7 @@ function OpeningRecommender({ source }) {
             </select>
           </label>
         </div>
-        <button type="submit" className="btn-predict">Find openings</button>
+        <button type="submit" className="btn">Find openings</button>
       </form>
       {submitted && data.elo_bucket && (
         <p className="model-note" style={{ marginTop: 10 }}>
@@ -423,8 +465,8 @@ function OpeningRecommender({ source }) {
           columns={[
             { key: "eco_code", label: "ECO" },
             { key: "opening_family", label: "Opening" },
-            { key: "games_count", label: "Games" },
-            { key: goal === "draw" ? "draw_rate" : "white_win_rate", label: goal === "draw" ? "Draw Rate" : "Win Rate" },
+            { key: "games_count", label: "Games", render: (v) => fmtCompact(v) },
+            { key: goal === "draw" ? "draw_rate" : "white_win_rate", label: goal === "draw" ? "Draw %" : "Win %", render: percent },
             { key: "most_common_response", label: "Response" },
           ]}
           maxRows={8}
@@ -432,7 +474,7 @@ function OpeningRecommender({ source }) {
         />
       )}
       {submitted && data.rows?.length === 0 && !state.loading && (
-        <p className="model-note" style={{ marginTop: 10, color: "#8a9b7a" }}>No data for this Elo range and time control in the current warehouse.</p>
+        <p className="model-note" style={{ marginTop: 10 }}>No data for this Elo range and time control in the current warehouse.</p>
       )}
     </section>
   );
@@ -464,11 +506,11 @@ function Openings({ source, year }) {
           columns={[
             { key: "eco_code", label: "ECO" },
             { key: "opening_family", label: "Opening" },
-            { key: "games_count", label: "Games" },
-            { key: "white_win_rate", label: "White Win Rate" },
-            { key: "black_win_rate", label: "Black Win Rate" },
-            { key: "draw_rate", label: "Draw Rate" },
-            { key: "most_common_response", label: "Common Response" }
+            { key: "games_count", label: "Games", render: (v) => fmtCompact(v) },
+            { key: "white_win_rate", label: "White Win", render: percent },
+            { key: "black_win_rate", label: "Black Win", render: percent },
+            { key: "draw_rate", label: "Draw %", render: percent },
+            { key: "most_common_response", label: "Response" }
           ]}
           downloadName="openings.csv"
         />
@@ -498,17 +540,17 @@ function Players({ source, year }) {
         <DataTable
           rows={data.rows}
           columns={[
-            { key: "player", label: "Player", render: (value) => <button className="link-button" onClick={() => setSelected(value)}>{value}</button> },
-            { key: "games_played", label: "Games" },
-            { key: "avg_win_rate", label: "Win Rate" },
-            { key: "avg_elo", label: "Avg Elo" }
+            { key: "player", label: "Player", render: (value) => <button className="btn--ghost" onClick={() => setSelected(value)}>{value}</button> },
+            { key: "games_played", label: "Games", render: (v) => fmt(v, 0) },
+            { key: "avg_win_rate", label: "Win %", render: percent },
+            { key: "avg_elo", label: "Avg Elo", render: (v) => fmt(v, 0) }
           ]}
           maxRows={16}
           downloadName="players.csv"
         />
       </section>
       <section className="panel">
-        <h2>{player || "Player profile"}</h2>
+        <h2 className="entity-title">{player || "Player profile"}</h2>
         <LoadingOrError state={detail} />
         <LineChart rows={trendRows} xKey="period" yKey="avg_elo" />
         <DataTable rows={detail.data.rows} columns={[
@@ -555,9 +597,9 @@ function Blunders({ source, year }) {
       </section>
       <section className="panel">
         <div className="metrics compact">
-          <MetricCard icon={Activity} label="Evaluated" value={fmt(data.totals?.evaluated_positions)} />
-          <MetricCard icon={Target} label="Blunders" value={fmt(data.totals?.blunders)} />
-          <MetricCard icon={BarChart3} label="Max cp loss" value={fmt(data.totals?.max_cp_loss)} />
+          <MetricCard icon={Activity} label="Evaluated" value={fmtCompact(data.totals?.evaluated_positions)} />
+          <MetricCard icon={Target} label="Blunders" value={fmtCompact(data.totals?.blunders)} />
+          <MetricCard icon={BarChart3} label="Max cp loss" value={fmtCompact(data.totals?.max_cp_loss)} />
         </div>
         <DataTable rows={data.rows} columns={[
           { key: "square", label: "Square" },
@@ -581,7 +623,7 @@ function TimePressure({ source, year }) {
       <LoadingOrError state={state} />
       <section className="panel">
         <h2>Games by clock bucket</h2>
-        <BarChart rows={rows} labelKey="time_remaining_bucket" valueKey="games_count" color="#8dbf67" />
+        <BarChart rows={rows} labelKey="time_remaining_bucket" valueKey="games_count" color="#4e8038" />
       </section>
       <section className="panel">
         <h2>Time-pressure metrics</h2>
@@ -650,8 +692,10 @@ function BlunderPredictor() {
   }
 
   const prob = result?.blunder_probability;
+  const probClass = prob > 0.5 ? "high" : prob > 0.25 ? "mid" : "low";
+
   return (
-    <section className="panel predictor">
+    <section className="panel">
       <h2>Live Blunder Prediction</h2>
       <p className="model-note">Submit a position to get a blunder probability from the trained XGBoost model. Requires <code>make train-blunder-model</code> to have been run.</p>
       <form className="predict-form" onSubmit={handleSubmit}>
@@ -698,7 +742,7 @@ function BlunderPredictor() {
             <small>In check</small>
           </label>
         </div>
-        <button type="submit" className="btn-predict" disabled={loading}>
+        <button type="submit" className="btn" disabled={loading}>
           {loading ? "Predicting…" : "Predict blunder probability"}
         </button>
       </form>
@@ -706,15 +750,97 @@ function BlunderPredictor() {
       {result?.error && <p className="predict-error">{result.error}</p>}
       {result && !result.error && (
         <div className="predict-result">
-          <span className="predict-prob" style={{ color: prob > 0.5 ? "#e07070" : prob > 0.25 ? "#e0b870" : "#7ec87e" }}>
+          <span className={`predict-prob ${probClass}`}>
             {(prob * 100).toFixed(1)}%
           </span>
-          <span className={`model-verdict ${result.is_blunder ? "diagnostic" : "useful"}`}>
-            {result.is_blunder ? "Likely blunder" : "Likely not a blunder"}
-          </span>
+          <Badge status={result.is_blunder ? "warn" : "pass"} label={result.is_blunder ? "Likely blunder" : "Likely not a blunder"} />
         </div>
       )}
     </section>
+  );
+}
+
+/* ---- ML visualisation components ---------------------------------------- */
+
+const ACCENT_COLOR = { gold: "var(--amber)", green: "var(--green)", blue: "var(--info-t)" };
+
+function FeatureImportanceChart({ rows, accent, label = "Feature importance" }) {
+  if (!rows?.length) return null;
+  const max = Math.max(...rows.map((r) => Number(r.importance) || 0), 1);
+  const color = ACCENT_COLOR[accent] || "var(--amber)";
+  return (
+    <div style={{ marginBottom: "var(--s4)" }}>
+      <h2>{label}</h2>
+      <div className="feat-chart">
+        {rows.slice(0, 10).map((row) => {
+          const val = Number(row.importance) || 0;
+          return (
+            <div className="feat-row" key={row.feature}>
+              <span className="feat-label">{String(row.feature).replace(/_/g, " ")}</span>
+              <div className="feat-track">
+                <div className="feat-fill" style={{ width: `${(val / max) * 100}%`, background: color }} />
+              </div>
+              <span className="feat-val">{val.toFixed(3)}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PerClassF1Chart({ rows, accent }) {
+  if (!rows?.length) return null;
+  const color = ACCENT_COLOR[accent] || "var(--green)";
+  const max = Math.max(...rows.map((r) => Number(r.f1_score ?? r.f1 ?? 0)), 1);
+  return (
+    <div style={{ marginBottom: "var(--s4)" }}>
+      <h2>Per-class F1</h2>
+      <div className="f1-chart">
+        {rows.map((row) => {
+          const label = row.class ?? row.outcome ?? row.label ?? "";
+          const val = Number(row.f1_score ?? row.f1 ?? 0);
+          const h = Math.max((val / max) * 80, 2);
+          return (
+            <div className="f1-bar" key={label}>
+              <div className="f1-bar-track">
+                <div className="f1-bar-fill" style={{ height: `${h}px`, background: color }} />
+              </div>
+              <span className="f1-bar-val">{val.toFixed(2)}</span>
+              <span className="f1-bar-label">{label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ClusterProfiles({ rows }) {
+  if (!rows?.length) return null;
+  const keys = Object.keys(rows[0]).filter((k) => k !== "cluster" && k !== "cluster_id");
+  const CLUSTER_COLORS = ["var(--amber)", "var(--green)", "var(--info-t)", "var(--warn-t)", "var(--pass-t)"];
+  return (
+    <div style={{ marginBottom: "var(--s4)" }}>
+      <h2>Cluster profiles</h2>
+      <div className="cluster-grid">
+        {rows.map((row, i) => (
+          <div className="cluster-row" key={i}>
+            <div className="cluster-id" style={{ background: CLUSTER_COLORS[i % CLUSTER_COLORS.length] }}>
+              {row.cluster ?? row.cluster_id ?? i}
+            </div>
+            <div className="cluster-stats">
+              {keys.slice(0, 6).map((k) => (
+                <div className="cluster-stat" key={k}>
+                  <small>{k.replace(/_/g, " ")}</small>
+                  <strong>{fmt(row[k], 2)}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -732,16 +858,32 @@ function MLLab() {
   );
 }
 
+const VERDICT_BADGE = { useful: "pass", diagnostic: "warn", exploratory: "info" };
+
 function ModelPanel({ data, accent }) {
-  if (!data?.available) return <EmptyState title={`${data?.title || "Model"} unavailable`}>Train the matching ML pipeline to populate this section.</EmptyState>;
+  if (!data?.available) return (
+    <div className="panel">
+      <EmptyState title={`${data?.title || "Model"} not trained`}>
+        Run <code>make train-{accent === "gold" ? "blunder" : accent === "green" ? "opening" : "player-style"}-model</code> to populate this section.
+      </EmptyState>
+    </div>
+  );
   const metrics = modelMetrics(data);
-  const assets = data.assets || data.models?.pre_game?.assets || {};
   const verdict = modelVerdict(data);
+
+  /* feature importance: direct field or from pre_game sub-model */
+  const featRows = data.feature_importance?.length > 0
+    ? data.feature_importance
+    : data.models?.pre_game?.feature_importance || [];
+
+  /* per-class F1 for opening outcome */
+  const f1Rows = data.models?.pre_game?.per_class_f1 || [];
+
   return (
     <section className={`panel model ${accent}`}>
       <div className="model-head">
         <h2>{data.title}</h2>
-        <span className={`model-verdict ${verdict.kind}`}>{verdict.label}</span>
+        <span className={`badge badge--${VERDICT_BADGE[verdict.kind] || "info"}`}>{verdict.label}</span>
       </div>
       <p className="model-note">{verdict.note}</p>
       <div className="metric-strip">
@@ -749,17 +891,23 @@ function ModelPanel({ data, accent }) {
           <span key={key}><small>{key.replaceAll("_", " ")}</small><strong>{fmt(value, 3)}</strong></span>
         ))}
       </div>
-      <div className="asset-grid">
-        {Object.entries(assets).filter(([, src]) => src).slice(0, 3).map(([key, src]) => (
-          <figure key={key}>
-            <img src={src} alt={key} />
-            <figcaption>{key.replaceAll("_", " ")}</figcaption>
-          </figure>
-        ))}
-      </div>
-      {data.comparison?.length > 0 && <DataTable rows={data.comparison} columns={Object.keys(data.comparison[0]).map((key) => ({ key, label: key.replaceAll("_", " ") }))} maxRows={6} />}
-      {data.cluster_profiles?.length > 0 && <DataTable rows={data.cluster_profiles} columns={Object.keys(data.cluster_profiles[0]).slice(0, 7).map((key) => ({ key, label: key.replaceAll("_", " ") }))} maxRows={8} />}
-      {data.feature_importance?.length > 0 && <DataTable rows={data.feature_importance} columns={Object.keys(data.feature_importance[0]).slice(0, 3).map((key) => ({ key, label: key.replaceAll("_", " ") }))} maxRows={8} />}
+
+      {featRows.length > 0 && <FeatureImportanceChart rows={featRows} accent={accent} />}
+      {f1Rows.length > 0 && <PerClassF1Chart rows={f1Rows} accent={accent} />}
+      {data.cluster_profiles?.length > 0 && <ClusterProfiles rows={data.cluster_profiles} />}
+
+      {data.comparison?.length > 0 && (
+        <>
+          <h2>Model comparison</h2>
+          <DataTable rows={data.comparison} columns={Object.keys(data.comparison[0]).map((key) => ({ key, label: key.replaceAll("_", " ") }))} maxRows={6} />
+        </>
+      )}
+      {data.threshold_metrics?.length > 0 && (
+        <>
+          <h2>Threshold sweep</h2>
+          <DataTable rows={data.threshold_metrics} columns={Object.keys(data.threshold_metrics[0]).slice(0, 5).map((key) => ({ key, label: key.replaceAll("_", " ") }))} maxRows={8} />
+        </>
+      )}
     </section>
   );
 }
@@ -847,10 +995,10 @@ function QualityCard({ card }) {
   const payload = card.payload || {};
   const important = qualityHighlights(card);
   return (
-    <article className={`quality-card ${card.status}`}>
-      <div className="quality-card-head">
-        <span>{card.kind}</span>
-        <StatusBadge status={card.status} />
+    <article className={`card card--${card.status}`}>
+      <div className="card-head">
+        <span className="card-kind">{card.kind}</span>
+        <Badge status={card.status} />
       </div>
       <h3>{card.path}</h3>
       <div className="quality-facts">
@@ -890,38 +1038,33 @@ function QualityCard({ card }) {
   );
 }
 
-function StatusBadge({ status }) {
-  const label = status === "pass" ? "Pass" : "Review";
-  return <strong className={`status-badge ${status}`}>{label}</strong>;
-}
-
 function qualityHighlights(card) {
   const payload = card.payload || {};
   if (card.kind === "parser") {
     return [
-      ["games seen", fmt(payload.games_seen)],
-      ["rows written", fmt(payload.rows_written)],
+      ["games seen", fmtCompact(payload.games_seen)],
+      ["rows written", fmtCompact(payload.rows_written)],
       ["suspicious", fmt(payload.suspicious_rows)],
       ["parse errors", fmt(payload.parse_errors)]
     ];
   }
   if (card.kind === "bronze") {
     return [
-      ["input", fmt(payload.input_count)],
-      ["output", fmt(payload.output_count)],
+      ["input", fmtCompact(payload.input_count)],
+      ["output", fmtCompact(payload.output_count)],
       ["removed", fmt(payload.rows_removed)],
       ["missing id", fmt(payload.missing_game_id)]
     ];
   }
   if (card.kind === "silver") {
     return [
-      ["bronze", fmt(payload.bronze_count)],
-      ["silver", fmt(payload.silver_count)],
+      ["bronze", fmtCompact(payload.bronze_count)],
+      ["silver", fmtCompact(payload.silver_count)],
       ["retention", percent(payload.retention)],
       ["clock", percent(payload.clock_coverage)]
     ];
   }
-  return [["rows", fmt(card.primary_count)]];
+  return [["rows", fmtCompact(card.primary_count)]];
 }
 
 function App() {

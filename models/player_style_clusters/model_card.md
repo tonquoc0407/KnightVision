@@ -6,8 +6,8 @@ Unsupervised KMeans segmentation of players from behavior aggregates in `silver_
 
 ## Dataset
 
-- DuckDB warehouse: `warehouse/knightvision_benchmark.duckdb`
-- Eligible players: 15,566
+- DuckDB warehouse: `warehouse/knightvision.duckdb`
+- Eligible players: 130,863
 - Minimum games per player: 10
 - Default clusters: 5
 
@@ -15,11 +15,11 @@ Unsupervised KMeans segmentation of players from behavior aggregates in `silver_
 
 | Metric | Value |
 |---|---:|
-| eligible_players | 15566 |
+| eligible_players | 130863 |
 | clusters | 5 |
-| inertia | 178156.4354 |
-| silhouette_score | 0.1372 |
-| pca_explained_variance_ratio | 0.3015 |
+| inertia | 1247851.6156 |
+| silhouette_score | 0.1827 |
+| pca_explained_variance_ratio | 0.3897 |
 
 ## Artifacts
 
@@ -40,12 +40,12 @@ Unsupervised KMeans segmentation of players from behavior aggregates in `silver_
 
 | Clusters | Inertia | Silhouette Score |
 |---:|---:|---:|
-| 3 | 200769.9710 | 0.1490 |
-| 4 | 186535.3958 | 0.1688 |
-| 5 | 178156.4354 | 0.1372 |
-| 6 | 165641.5295 | 0.1396 |
-| 7 | 156230.4607 | 0.1389 |
-| 8 | 150374.5187 | 0.1348 |
+| 3 | 1473032.7042 | 0.1499 |
+| 4 | 1345728.4991 | 0.1709 |
+| 5 | 1247851.6156 | 0.1827 |
+| 6 | 1225090.8933 | 0.1312 |
+| 7 | 1129561.2836 | 0.1489 |
+| 8 | 1084049.5176 | 0.1463 |
 
 ## Limitations
 

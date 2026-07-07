@@ -241,7 +241,7 @@ def run(
     movetime_ms: int | None = None,
     blunder_threshold_cp: int = DEFAULT_BLUNDER_THRESHOLD_CP,
 ) -> None:
-    spark = build_spark("KnightVision Gold Blunder Positions", master="local[*]")
+    spark = build_spark("KnightVision Gold Blunder Positions", master="local[5]")
     try:
         build_blunder_positions(
             spark.read.parquet(input_path),

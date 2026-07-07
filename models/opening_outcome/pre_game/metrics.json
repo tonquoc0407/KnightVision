@@ -1,31 +1,31 @@
 {
   "baselines": {
     "class_prior_probability": {
-      "accuracy": 0.5001008799838592,
+      "accuracy": 0.4955246970031931,
       "balanced_accuracy": 0.3333333333333333,
-      "log_loss": 0.8216724451012588,
-      "macro_f1": 0.2222521105777189,
-      "weighted_f1": 0.33344542823456164
+      "log_loss": 0.8335088400988708,
+      "macro_f1": 0.22089223846593783,
+      "weighted_f1": 0.3283726786085728
     },
     "elo_favorite": {
-      "accuracy": 0.5360296742352522,
-      "balanced_accuracy": 0.37042183434564807,
-      "log_loss": 16.72318560470034,
-      "macro_f1": 0.3636359245773913,
-      "weighted_f1": 0.5264097049403771
+      "accuracy": 0.6142714531176027,
+      "balanced_accuracy": 0.4266880698151943,
+      "log_loss": 13.903066046116955,
+      "macro_f1": 0.4178199535959612,
+      "weighted_f1": 0.6017431397312366
     },
     "majority_class": {
-      "accuracy": 0.5001008799838592,
+      "accuracy": 0.4955246970031931,
       "balanced_accuracy": 0.3333333333333333,
-      "log_loss": 18.01819061138645,
-      "macro_f1": 0.2222521105777189,
-      "weighted_f1": 0.33344542823456164
+      "log_loss": 18.18313296458677,
+      "macro_f1": 0.22089223846593783,
+      "weighted_f1": 0.3283726786085728
     }
   },
   "class_counts": {
-    "black_win": 149561,
-    "draw": 11488,
-    "white_win": 161115
+    "black_win": 4378076,
+    "draw": 379732,
+    "white_win": 4673397
   },
   "classes": [
     "black_win",
@@ -33,7 +33,7 @@
     "white_win"
   ],
   "config": {
-    "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+    "duckdb_path": "warehouse/knightvision.duckdb",
     "output_dir": "models/opening_outcome",
     "random_state": 42,
     "test_size": 0.2
@@ -45,7 +45,7 @@
       "opening_variation",
       "time_control_type"
     ],
-    "encoded_count": 1267,
+    "encoded_count": 3129,
     "numeric": [
       "white_elo",
       "black_elo",
@@ -58,14 +58,14 @@
     ]
   },
   "metrics": {
-    "accuracy": 0.36079338227305885,
-    "balanced_accuracy": 0.3981076062156996,
-    "log_loss": 1.0689264762199961,
-    "macro_f1": 0.3155661532047416,
-    "weighted_f1": 0.4194689312146135
+    "accuracy": 0.4768786173134822,
+    "balanced_accuracy": 0.4523357876330453,
+    "log_loss": 1.0194900742963515,
+    "macro_f1": 0.4012466242563589,
+    "weighted_f1": 0.5364038147059494
   },
   "model_name": "pre_game",
-  "row_count": 322164,
-  "test_rows": 64433,
-  "train_rows": 257731
+  "row_count": 9431205,
+  "test_rows": 1886241,
+  "train_rows": 7544964
 }

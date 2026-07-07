@@ -103,7 +103,7 @@ def build_time_pressure_analysis(silver_df, blunder_df=None):
     )
 
 def run(input_path: str, output_path: str, *, blunder_input: str | None = None) -> None:
-    spark = build_spark("KnightVision Gold Time Pressure", master="local[*]")
+    spark = build_spark("KnightVision Gold Time Pressure", master="local[5]")
     try:
         blunder_df = spark.read.parquet(blunder_input) if _has_parquet(blunder_input) else None
         build_time_pressure_analysis(spark.read.parquet(input_path), blunder_df=blunder_df).write.mode("overwrite").partitionBy(

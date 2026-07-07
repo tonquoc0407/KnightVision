@@ -177,7 +177,7 @@ def run(
     drop_corrupt_pgn: bool = False,
     quarantine_output: str | None = None,
 ) -> dict[str, object]:
-    spark = build_spark("KnightVision Silver Transform", master="local[*]")
+    spark = build_spark("KnightVision Silver Transform", master="local[5]")
     try:
         eco_reference_df = load_eco_reference(spark, eco_reference_path) if eco_reference_path else None
         silver, quarantine = transform_silver(

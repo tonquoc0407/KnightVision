@@ -74,3 +74,4 @@ models/player_style_clusters/cluster_assignments.csv
 CLAUDE.md
 claude.md
 skills-lock.json
+data/.spark_tmp/

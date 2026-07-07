@@ -45,7 +45,7 @@ def build_player_monthly_stats(silver_df):
     )
 
 def run(input_path: str, output_path: str) -> None:
-    spark = build_spark("KnightVision Gold Player Stats", master="local[*]")
+    spark = build_spark("KnightVision Gold Player Stats", master="local[5]")
     try:
         build_player_monthly_stats(spark.read.parquet(input_path)).write.mode("overwrite").partitionBy(
             "year", "month"

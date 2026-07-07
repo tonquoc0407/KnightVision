@@ -50,7 +50,7 @@ def run(
     metrics_output: Path | None = None,
     quarantine_output: str | None = None,
 ) -> dict[str, object]:
-    spark = build_spark("KnightVision Bronze Ingest", master="local[*]")
+    spark = build_spark("KnightVision Bronze Ingest", master="local[5]")
     try:
         df = spark.read.schema(spark_raw_schema()).parquet(input_path)
         bronze = df.dropna(subset=["game_id"]).dropDuplicates(["game_id"])

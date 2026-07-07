@@ -1,46 +1,46 @@
 {
   "cluster_labels": {
-    "0": "Blitz Specialists",
-    "1": "Opening Loyalists",
-    "2": "Opening Explorers",
-    "3": "Long-Game Grinders",
-    "4": "Sharp Tactical Players"
+    "0": "Opening Explorers",
+    "1": "Long-Game Grinders",
+    "2": "Opening Loyalists",
+    "3": "Balanced Generalists",
+    "4": "Bullet Specialists"
   },
   "cluster_sweep": [
     {
       "clusters": 3,
-      "inertia": 200769.97101471195,
-      "silhouette_score": 0.1489641537811485
+      "inertia": 1473032.7041674415,
+      "silhouette_score": 0.14994642769909378
     },
     {
       "clusters": 4,
-      "inertia": 186535.39575106243,
-      "silhouette_score": 0.16882458292197974
+      "inertia": 1345728.4991149143,
+      "silhouette_score": 0.17094667300344504
     },
     {
       "clusters": 5,
-      "inertia": 178156.43538375435,
-      "silhouette_score": 0.13723902012171152
+      "inertia": 1247851.6156353292,
+      "silhouette_score": 0.1827472685118949
     },
     {
       "clusters": 6,
-      "inertia": 165641.52948461726,
-      "silhouette_score": 0.13964015929232132
+      "inertia": 1225090.8932517085,
+      "silhouette_score": 0.13115298674029555
     },
     {
       "clusters": 7,
-      "inertia": 156230.4607240508,
-      "silhouette_score": 0.13893096752723583
+      "inertia": 1129561.2835814347,
+      "silhouette_score": 0.14889940250795736
     },
     {
       "clusters": 8,
-      "inertia": 150374.51865811934,
-      "silhouette_score": 0.13483378760076875
+      "inertia": 1084049.5176085664,
+      "silhouette_score": 0.14626741693198803
     }
   ],
   "config": {
     "clusters": 5,
-    "duckdb_path": "warehouse/knightvision_benchmark.duckdb",
+    "duckdb_path": "warehouse/knightvision.duckdb",
     "min_games": 10,
     "output_dir": "models/player_style_clusters",
     "random_state": 42,
@@ -67,9 +67,9 @@
   ],
   "metrics": {
     "clusters": 5,
-    "eligible_players": 15566,
-    "inertia": 178156.43538375435,
-    "pca_explained_variance_ratio": 0.3015462171695604,
-    "silhouette_score": 0.13723902012171152
+    "eligible_players": 130863,
+    "inertia": 1247851.6156353292,
+    "pca_explained_variance_ratio": 0.38973391383117595,
+    "silhouette_score": 0.1827472685118949
   }
 }

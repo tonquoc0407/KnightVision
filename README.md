@@ -442,7 +442,7 @@ Implemented analytics cover parsed Lichess games, Bronze deduplication, Silver n
 
 Blunder analytics require an external UCI-compatible Stockfish binary and a bounded sampling run. Use `make blunders STOCKFISH_PATH=/path/to/stockfish` for the main lake, or `make sample-blunders STOCKFISH_PATH=/path/to/stockfish` after `make sample-pipeline`. See [docs/STOCKFISH_BLUNDER_ANALYTICS.md](docs/STOCKFISH_BLUNDER_ANALYTICS.md).
 
-The benchmark proof includes a 1,000-game Stockfish sample from the 100 MB monthly prefix. It produced 19,739 evaluated positions and 623 standard 200cp blunders.
+The December 2016 Stockfish run sampled 1,000 games and produced 59,667 evaluated positions and 4,342 standard 200cp blunders.
 
 Machine learning case studies are documented in [docs/MACHINE_LEARNING.md](docs/MACHINE_LEARNING.md). The current ML layer includes:
 
@@ -452,7 +452,33 @@ Machine learning case studies are documented in [docs/MACHINE_LEARNING.md](docs/
 
 ## Portfolio Metrics
 
-Latest deterministic fixture proof:
+Full real monthly run — December 2016:
+
+| Metric | Value |
+|---|---:|
+| Source | `lichess_db_standard_rated_2016-12.pgn.zst` |
+| Compressed download | 1.6 GB |
+| Games parsed | 9,433,412 |
+| Bronze rows | 9,433,412 |
+| Bronze duplicates removed | 0 |
+| Bronze quarantine rows | 0 |
+| Silver rows | 9,421,029 |
+| Silver quarantine rows | 2,207 |
+| Silver retention | 99.87% |
+| Suspicious rows (missing moves) | 33,563 |
+| Avg player Elo | 1,680 (σ = 251) |
+| Result split | white 49.5% · draw 4.0% · black 46.5% |
+| Gold player monthly rows | 217,257 |
+| Gold opening rows | 18,645 |
+| Gold blunder positions (Stockfish) | 59,667 evaluated · 4,342 blunders ≥200cp |
+| dbt models built | 12 |
+| dbt tests passed | 7 |
+| DuckDB warehouse size | 17 MB |
+| Machine | AMD Ryzen 5 6600H, 6 cores, 14 GiB RAM, Java 17 |
+
+Note: 2016-12 has no clock data (Lichess did not record move times in PGN at that period), so the time-pressure gold layer is empty. Clock coverage appeared in later dumps.
+
+Deterministic fixture proof (CI baseline):
 
 | Metric | Value |
 |---|---:|
@@ -461,61 +487,27 @@ Latest deterministic fixture proof:
 | Bronze rows | 3 |
 | Silver rows | 3 |
 | Silver retention | 100% |
-| Gold player monthly rows | 6 |
-| Gold opening rows | 3 |
-| Gold time-pressure rows | 3 |
 | dbt models built | 12 |
 | dbt tests passed | 7 |
-| Dashboard query rows | opening 3, player profile 1, time pressure 3 |
-| Runtime | Not formally benchmarked |
 
-Latest real Lichess API proof:
+Small real-API proof (20 games, `DrNykterstein`):
 
 | Metric | Value |
 |---|---:|
-| Source | Lichess public API PGN export for `DrNykterstein` |
-| Raw PGN file | `data/raw/real_sample/lichess_user_DrNykterstein_20.pgn` |
 | Raw PGN size | 56,033 bytes |
-| Raw PGN games | 20 |
-| Landing rows | 20 |
-| Bronze rows | 20 |
-| Silver rows | 20 |
-| Silver retention | 100% |
-| Gold player monthly rows | 7 |
+| Landing → Silver rows | 20 |
 | Gold opening rows | 18 |
 | Gold time-pressure rows | 14 |
-| dbt models built | 12 |
-| dbt tests passed | 7 |
-| Dashboard query rows | opening 10, player profile 3, time pressure 14, blunder 0 |
-| Warm parser runtime | 0.47s |
-| Spark/dbt stage runtime sum | about 70s |
-| Machine | AMD Ryzen 5 6600H, 6 cores / 12 threads, 14 GiB RAM, Java 17 |
 
-Real API proof command source:
+Monthly prefix benchmark (100 MB prefix, April 2026 archive):
 
-```bash
-curl -L -H 'Accept: application/x-chess-pgn' \
-  'https://lichess.org/api/games/user/DrNykterstein?max=20&clocks=true&opening=true&evals=false' \
-  -o data/raw/real_sample/lichess_user_DrNykterstein_20.pgn
-```
-
-The real API proof is still small. A bounded real monthly `.pgn.zst` benchmark now exists on a 100 MB prefix of the April 2026 standard archive, but a full uninterrupted monthly dump run is still unmeasured.
-
-| Monthly prefix benchmark | Value |
+| Metric | Value |
 |---|---:|
-| Source | `lichess_db_standard_rated_2026-04.pgn.zst` 100 MB prefix |
 | Raw games parsed | 322,789 |
-| Bronze rows | 322,789 |
 | Silver rows | 322,164 |
 | Silver retention | 99.81% |
-| Parser runtime | 15.98s |
-| Bronze runtime | 14.30s |
-| Silver runtime | 257.85s |
-| Silver quality runtime | 9.21s |
-| dbt run runtime | 5.36s |
-| dbt test runtime | 3.26s |
-| Gold runtimes | player 9.77s, opening 7.76s, time pressure 7.37s |
-| Benchmark warehouse views | silver 322,164, player stats 141,946, opening 9,069, time pressure 56 |
+| Gold player monthly rows | 141,946 |
+| Gold opening rows | 9,069 |
 
 ## Development
 

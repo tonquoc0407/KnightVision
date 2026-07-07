@@ -6,22 +6,22 @@ Three-class XGBoost classifier for normalized game outcome. This variant uses on
 
 ## Dataset
 
-- DuckDB warehouse: `warehouse/knightvision_benchmark.duckdb`
-- Rows: 322,164
-- white_win: 161,115
-- black_win: 149,561
-- draw: 11,488
-- Train/test split: 257,731/64,433
+- DuckDB warehouse: `warehouse/knightvision.duckdb`
+- Rows: 9,431,205
+- white_win: 4,673,397
+- black_win: 4,378,076
+- draw: 379,732
+- Train/test split: 7,544,964/1,886,241
 
 ## Metrics
 
 | Metric | Value |
 |---|---:|
-| accuracy | 0.3608 |
-| balanced_accuracy | 0.3981 |
-| macro_f1 | 0.3156 |
-| weighted_f1 | 0.4195 |
-| log_loss | 1.0689 |
+| accuracy | 0.4769 |
+| balanced_accuracy | 0.4523 |
+| macro_f1 | 0.4012 |
+| weighted_f1 | 0.5364 |
+| log_loss | 1.0195 |
 
 ## Artifacts
 
@@ -41,9 +41,9 @@ Three-class XGBoost classifier for normalized game outcome. This variant uses on
 
 | Baseline | Accuracy | Balanced Accuracy | Macro F1 | Log Loss |
 |---|---:|---:|---:|---:|
-| majority_class | 0.5001 | 0.3333 | 0.2223 | 18.0182 |
-| class_prior_probability | 0.5001 | 0.3333 | 0.2223 | 0.8217 |
-| elo_favorite | 0.5360 | 0.3704 | 0.3636 | 16.7232 |
+| majority_class | 0.4955 | 0.3333 | 0.2209 | 18.1831 |
+| class_prior_probability | 0.4955 | 0.3333 | 0.2209 | 0.8335 |
+| elo_favorite | 0.6143 | 0.4267 | 0.4178 | 13.9031 |
 
 ## Limitations
 

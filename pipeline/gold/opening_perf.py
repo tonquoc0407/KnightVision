@@ -21,7 +21,7 @@ def build_opening_performance(silver_df):
     )
 
 def run(input_path: str, output_path: str) -> None:
-    spark = build_spark("KnightVision Gold Opening Performance", master="local[*]")
+    spark = build_spark("KnightVision Gold Opening Performance", master="local[5]")
     try:
         build_opening_performance(spark.read.parquet(input_path)).write.mode("overwrite").partitionBy("year").parquet(
             output_path
