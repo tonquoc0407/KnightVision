@@ -13,4 +13,4 @@ pyarrow==17.0.0
 pydantic==2.9.2
 pyspark==3.5.3
 python-chess==1.999
-zstandard==0.23.0
+zstandard==0.25.0
