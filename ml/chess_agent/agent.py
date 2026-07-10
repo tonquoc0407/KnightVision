@@ -113,7 +113,8 @@ def build_agent(duckdb_path: str):
 
     tools = [search_chess_knowledge, query_analytics]
     agent = create_tool_calling_agent(llm, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, max_iterations=6, verbose=False, return_intermediate_steps=True)
+    verbose = os.environ.get("AGENT_VERBOSE", "").lower() in ("1", "true")
+    return AgentExecutor(agent=agent, tools=tools, max_iterations=6, verbose=verbose, return_intermediate_steps=True)
 
 
 _agent_cache: dict[str, Any] = {}
