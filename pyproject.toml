@@ -16,7 +16,7 @@ dependencies = [
     "langchain>=0.3.0,<0.4.0",
     "langchain-google-genai>=2.0.0,<3.0.0",
     "langchain-core>=0.3.0,<0.4.0",
-    "matplotlib==3.9.2",
+    "matplotlib==3.10.9",
     "nbformat==5.10.4",
     "numpy==1.26.4",
     "pandas==2.2.3",
