@@ -304,9 +304,10 @@ class ChatRequest(BaseModel):
 def chat_payload(message: str, history: list[dict[str, str]], source: str | None = None) -> dict[str, Any]:
     if not __import__("os").environ.get("GOOGLE_API_KEY"):
         return {"response": "GOOGLE_API_KEY is not set. Add it to your .env file to use the chat feature.", "tool_calls": []}
+    from langchain_core.messages import AIMessage, HumanMessage
+
     from dashboard_api.db import db_path_for
     from ml.chess_agent.agent import get_agent
-    from langchain_core.messages import AIMessage, HumanMessage
 
     duckdb_path = str(db_path_for(source))
     try:

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 from typing import Any
@@ -64,9 +63,9 @@ def _get_collection():
 
 def build_agent(duckdb_path: str):
     from langchain.agents import AgentExecutor, create_tool_calling_agent
-    from langchain_google_genai import ChatGoogleGenerativeAI
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
     from langchain_core.tools import tool
+    from langchain_google_genai import ChatGoogleGenerativeAI
 
     collection = _get_collection()
 
