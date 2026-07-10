@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Activity,
@@ -10,6 +10,7 @@ import {
   FileCheck2,
   GitBranch,
   LayoutDashboard,
+  MessageSquare,
   Search,
   ShieldCheck,
   Target,
@@ -25,7 +26,8 @@ const NAV_ITEMS = [
   ["blunders", Target, "Blunders"],
   ["time", Clock3, "Time Pressure"],
   ["ml", Brain, "ML Lab"],
-  ["quality", ShieldCheck, "Quality"]
+  ["quality", ShieldCheck, "Quality"],
+  ["chat", MessageSquare, "Ask AI"]
 ];
 
 const VALID_TABS = new Set(NAV_ITEMS.map(([id]) => id));
@@ -1067,6 +1069,104 @@ function qualityHighlights(card) {
   return [["rows", fmtCompact(card.primary_count)]];
 }
 
+const CHAT_EXAMPLES = [
+  "Which opening has the highest white win rate for 1400-1600 Elo players?",
+  "What is the Sicilian Defense and how does it perform in this dataset?",
+  "Show me the top 5 most active players by games played",
+  "How many total blunders were detected? What percentage of positions are blunders?",
+  "Explain what ECO codes are",
+];
+
+function Chat({ source }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  const send = useCallback(async (text) => {
+    const msg = (text ?? input).trim();
+    if (!msg || loading) return;
+    setInput("");
+    const nextMessages = [...messages, { role: "user", content: msg }];
+    setMessages(nextMessages);
+    setLoading(true);
+    try {
+      const history = messages.map((m) => ({ role: m.role, content: m.content }));
+      const params = source ? `?source=${source}` : "";
+      const res = await fetch(`/api/agent/chat${params}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg, history }),
+      });
+      const data = await res.json();
+      setMessages([...nextMessages, { role: "assistant", content: data.response, tool_calls: data.tool_calls || [] }]);
+    } catch (e) {
+      setMessages([...nextMessages, { role: "assistant", content: `Error: ${e.message}`, tool_calls: [] }]);
+    } finally {
+      setLoading(false);
+    }
+  }, [input, messages, loading, source]);
+
+  return (
+    <div className="chat-panel">
+      <div className="chat-messages">
+        {messages.length === 0 && (
+          <div className="chat-empty">
+            <p className="chat-empty-heading">Ask anything about the 9.4M December 2016 Lichess games.</p>
+            <div className="chat-examples">
+              {CHAT_EXAMPLES.map((ex, i) => (
+                <button key={i} className="chat-example" onClick={() => send(ex)}>{ex}</button>
+              ))}
+            </div>
+          </div>
+        )}
+        {messages.map((msg, i) => (
+          <div key={i} className={`chat-msg chat-msg--${msg.role}`}>
+            <div className="chat-bubble">{msg.content}</div>
+            {msg.tool_calls?.length > 0 && (
+              <details className="chat-tool-calls">
+                <summary>{msg.tool_calls.length} tool call{msg.tool_calls.length !== 1 ? "s" : ""}</summary>
+                {msg.tool_calls.map((tc, j) => (
+                  <div key={j} className="chat-tool-call">
+                    <span className="badge">{tc.tool}</span>
+                    <pre className="chat-tool-io">{tc.input}</pre>
+                    <pre className="chat-tool-io chat-tool-output">{tc.output}</pre>
+                  </div>
+                ))}
+              </details>
+            )}
+          </div>
+        ))}
+        {loading && (
+          <div className="chat-msg chat-msg--assistant">
+            <div className="chat-bubble chat-typing"><span /><span /><span /></div>
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+      <div className="chat-input-row">
+        <input
+          type="text"
+          className="chat-input"
+          placeholder="Ask about openings, players, blunders…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
+          disabled={loading}
+          autoFocus
+        />
+        <button className="chat-send" onClick={() => send()} disabled={loading || !input.trim()}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [active, setActive] = useState(activeTabFromHash());
   const [source, setSource] = useState("sample");
@@ -1086,7 +1186,8 @@ function App() {
     blunders: <Blunders source={source} year={year} />,
     time: <TimePressure source={source} year={year} />,
     ml: <MLLab />,
-    quality: <Quality />
+    quality: <Quality />,
+    chat: <Chat source={source} />
   }[active];
   return (
     <Shell

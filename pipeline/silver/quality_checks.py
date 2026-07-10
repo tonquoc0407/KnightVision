@@ -34,12 +34,14 @@ def detect_anomalies(current: dict, prev: dict) -> list[dict]:
     if p_count > 0:
         pct_change = abs(c_count - p_count) / p_count
         if pct_change > 0.20:
-            anomalies.append({
-                "check": "volume",
-                "message": f"Silver row count changed by {pct_change:.1%} (threshold ±20%)",
-                "current": c_count,
-                "previous": p_count,
-            })
+            anomalies.append(
+                {
+                    "check": "volume",
+                    "message": f"Silver row count changed by {pct_change:.1%} (threshold ±20%)",
+                    "current": c_count,
+                    "previous": p_count,
+                }
+            )
 
     # Result distribution: each result type within ±5 percentage points
     c_results = current.get("result_counts") or {}
@@ -51,12 +53,14 @@ def detect_anomalies(current: dict, prev: dict) -> list[dict]:
         p_rate = p_results.get(result_type, 0) / p_total
         drift = abs(c_rate - p_rate)
         if drift > 0.05:
-            anomalies.append({
-                "check": "result_distribution",
-                "message": f"{result_type} rate shifted by {drift:.1%} (threshold ±5pp)",
-                "current": round(c_rate, 4),
-                "previous": round(p_rate, 4),
-            })
+            anomalies.append(
+                {
+                    "check": "result_distribution",
+                    "message": f"{result_type} rate shifted by {drift:.1%} (threshold ±5pp)",
+                    "current": round(c_rate, 4),
+                    "previous": round(p_rate, 4),
+                }
+            )
 
     # Elo distribution: mean within ±2σ of previous month's stddev
     c_elo_mean = current.get("elo_mean")
@@ -65,14 +69,17 @@ def detect_anomalies(current: dict, prev: dict) -> list[dict]:
     if c_elo_mean is not None and p_elo_mean is not None and p_elo_std and p_elo_std > 0:
         z = abs(c_elo_mean - p_elo_mean) / p_elo_std
         if z > 2.0:
-            anomalies.append({
-                "check": "elo_distribution",
-                "message": f"Elo mean shifted by {z:.2f}σ (threshold 2σ)",
-                "current": round(c_elo_mean, 1),
-                "previous": round(p_elo_mean, 1),
-            })
+            anomalies.append(
+                {
+                    "check": "elo_distribution",
+                    "message": f"Elo mean shifted by {z:.2f}σ (threshold 2σ)",
+                    "current": round(c_elo_mean, 1),
+                    "previous": round(p_elo_mean, 1),
+                }
+            )
 
     return anomalies
+
 
 ACCEPTED_RESULTS = {"white_win", "black_win", "draw"}
 NON_NULL_COLUMNS = ["game_id", "white", "black", "result"]
@@ -90,10 +97,12 @@ REQUIRED_COLUMNS = {
     "game_length",
 }
 
+
 def require_columns(df, required: set[str], label: str) -> None:
     missing = sorted(required - set(df.columns))
     if missing:
         raise ValueError(f"{label} is missing required columns: {', '.join(missing)}")
+
 
 def validate_silver_quality(
     bronze_df,
@@ -151,12 +160,13 @@ def validate_silver_quality(
     if duplicate_game_ids:
         raise ValueError(f"silver contains {duplicate_game_ids} duplicated game_id values")
 
-    clock_rows = silver_df.filter(F.col("has_clock_data") == F.lit(True)).count() if "has_clock_data" in silver_df.columns else 0
+    clock_rows = (
+        silver_df.filter(F.col("has_clock_data") == F.lit(True)).count() if "has_clock_data" in silver_df.columns else 0
+    )
     clock_coverage = 0.0 if silver_count == 0 else clock_rows / silver_count
     result_counts = {row["result"]: row["count"] for row in silver_df.groupBy("result").count().collect()}
     partition_counts = [
-        row.asDict()
-        for row in silver_df.groupBy("year", "month").count().orderBy("year", "month").collect()
+        row.asDict() for row in silver_df.groupBy("year", "month").count().orderBy("year", "month").collect()
     ]
 
     elo_stats_row = silver_df.select(
@@ -185,6 +195,7 @@ def validate_silver_quality(
     }
     return metrics
 
+
 def filter_partitions(
     bronze_df,
     silver_df,
@@ -198,6 +209,7 @@ def filter_partitions(
         year, month_num = silver_month.split("-", 1)
         silver_df = silver_df.filter((F.col("year") == int(year)) & (F.col("month") == int(month_num)))
     return bronze_df, silver_df
+
 
 def _load_prev_metrics(metrics_output: Path, silver_month: str) -> dict | None:
     """Try to load the previous month's silver metrics JSON for anomaly comparison."""
@@ -247,6 +259,7 @@ def run(
     finally:
         spark.stop()
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run Bronze-to-Silver data quality checks.")
     parser.add_argument("--bronze", required=True, help="Bronze games Parquet path.")
@@ -278,6 +291,7 @@ def main() -> None:
         f"retention={metrics['retention']:.2%}, "
         f"anomalies={anomaly_count}"
     )
+
 
 if __name__ == "__main__":
     main()

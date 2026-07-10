@@ -296,6 +296,40 @@ def evidence_payload() -> dict[str, Any]:
     }
 
 
+class ChatRequest(BaseModel):
+    message: str
+    history: list[dict[str, str]] = []
+
+
+def chat_payload(message: str, history: list[dict[str, str]], source: str | None = None) -> dict[str, Any]:
+    if not __import__("os").environ.get("ANTHROPIC_API_KEY"):
+        return {"response": "ANTHROPIC_API_KEY is not set. Add it to your .env file to use the chat feature.", "tool_calls": []}
+    from dashboard_api.db import db_path_for
+    from ml.chess_agent.agent import get_agent
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    duckdb_path = str(db_path_for(source))
+    try:
+        agent = get_agent(duckdb_path)
+        chat_history = []
+        for msg in history:
+            if msg.get("role") == "user":
+                chat_history.append(HumanMessage(content=msg["content"]))
+            elif msg.get("role") == "assistant":
+                chat_history.append(AIMessage(content=msg["content"]))
+        result = agent.invoke({"input": message, "chat_history": chat_history})
+        tool_calls = []
+        for action, observation in result.get("intermediate_steps", []):
+            tool_calls.append({
+                "tool": action.tool,
+                "input": action.tool_input if isinstance(action.tool_input, str) else str(action.tool_input),
+                "output": str(observation)[:600],
+            })
+        return {"response": result["output"], "tool_calls": tool_calls}
+    except Exception as e:
+        return {"response": f"Agent error: {e}", "tool_calls": []}
+
+
 class BlunderInput(BaseModel):
     game_phase: str = "middlegame"
     time_remaining_seconds: float | None = None
@@ -478,6 +512,10 @@ def create_app() -> FastAPI:
     @app.get("/api/evidence")
     def evidence() -> dict[str, Any]:
         return evidence_payload()
+
+    @app.post("/api/agent/chat")
+    def agent_chat(body: ChatRequest, source: str | None = None) -> dict[str, Any]:
+        return chat_payload(body.message, body.history, source=source)
 
     return app
 

@@ -52,7 +52,7 @@ PLAYER_STYLE_OUTPUT_DIR ?= models/player_style_clusters
 PLAYER_STYLE_MIN_GAMES ?= 10
 PLAYER_STYLE_CLUSTERS ?= 5
 
-.PHONY: help setup install dashboard-install format lint test demo download parse bronze silver quality gold blunders sample-blunders train-blunder-model train-opening-outcome cluster-player-styles warehouse dbt-run dbt-test dbt-docs sample-dbt pipeline sample-pipeline dashboard dashboard-api dashboard-web dashboard-streamlit dashboard-sample airflow-up airflow-down airflow-logs airflow-smoke airflow-notify-test clean
+.PHONY: help setup install dashboard-install format lint test demo download parse bronze silver quality gold blunders sample-blunders train-blunder-model train-opening-outcome cluster-player-styles warehouse dbt-run dbt-test dbt-docs sample-dbt pipeline sample-pipeline dashboard dashboard-api dashboard-web dashboard-streamlit dashboard-sample airflow-up airflow-down airflow-logs airflow-smoke airflow-notify-test build-agent-index clean
 
 help:
 	@printf "KnightVision targets:\n"
@@ -67,6 +67,7 @@ help:
 	@printf "  make sample-pipeline       Run deterministic fixture pipeline\n"
 	@printf "  make blunders STOCKFISH_PATH=/path/to/stockfish\n"
 	@printf "  make sample-blunders STOCKFISH_PATH=/path/to/stockfish\n"
+	@printf "  make build-agent-index    Build Chroma vector index for the AI chat agent\n"
 	@printf "  make train-blunder-model Train XGBoost model from benchmark Stockfish rows\n"
 	@printf "  make train-opening-outcome Train XGBoost opening outcome models\n"
 	@printf "  make cluster-player-styles Train unsupervised player style clusters\n"
@@ -161,6 +162,9 @@ train-opening-outcome:
 
 cluster-player-styles:
 	$(PYTHON) -m ml.player_style_clustering.train --duckdb-path $(PLAYER_STYLE_DUCKDB) --output-dir $(PLAYER_STYLE_OUTPUT_DIR) --min-games $(PLAYER_STYLE_MIN_GAMES) --clusters $(PLAYER_STYLE_CLUSTERS)
+
+build-agent-index:
+	$(PYTHON) ml/chess_agent/build_index.py --duckdb-path $(DUCKDB_PATH)
 
 warehouse:
 	$(PYTHON) warehouse/init_db.py
