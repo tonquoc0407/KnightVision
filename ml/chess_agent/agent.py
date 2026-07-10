@@ -107,7 +107,7 @@ def build_agent(duckdb_path: str):
     )
 
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model=os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
         google_api_key=os.environ.get("GOOGLE_API_KEY", ""),
         max_output_tokens=1024,
     )
