@@ -64,7 +64,7 @@ def _get_collection():
 
 def build_agent(duckdb_path: str):
     from langchain.agents import AgentExecutor, create_tool_calling_agent
-    from langchain_anthropic import ChatAnthropic
+    from langchain_google_genai import ChatGoogleGenerativeAI
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
     from langchain_core.tools import tool
 
@@ -106,10 +106,10 @@ def build_agent(duckdb_path: str):
         ]
     )
 
-    llm = ChatAnthropic(
-        model="claude-haiku-4-5-20251001",
-        api_key=os.environ.get("ANTHROPIC_API_KEY", ""),
-        max_tokens=1024,
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
+        google_api_key=os.environ.get("GOOGLE_API_KEY", ""),
+        max_output_tokens=1024,
     )
 
     tools = [search_chess_knowledge, query_analytics]
